@@ -8,20 +8,12 @@
                     <h4 v-else class="text-center">CONTEO</h4>
                 </div>
                 <div class="card-body">
-                    <div class="col-sm-6" v-if="active">
-                        <div class="content-camara">
-                            <button v-if="activarCaptura==true" class="btn-activar-camara active"></button>
-                            <button @click="activeScanner()" v-else class="btn-activar-camara"></button>
-                            <v-quagga frecuency="4" :onDetected="logIt"  :readerTypes="['code_128_reader','ean_reader','codabar_reader']"></v-quagga>
-                        </div>
-                    </div>
                     <form v-if="iniciado==null"  v-on:submit.prevent="inicializar">
                         <div class="input-group mb-3">
                             <input id="txt-cod_barras" type="text" v-model="cod_barras" ref="cod_barras_ref" placeholder="Leer Codigo de barras" class="form-control">
                             <div class="input-group-append">
-                                <button class="btn btn-danger" type="submit" ref="ejecutar">Guardar</button>
+                                <button class="btn btn-danger" type="submit">Guardar</button>
                             </div>
-
                         </div>
                     </form>
                     <form v-else  v-on:submit.prevent="guardar">
@@ -34,7 +26,7 @@
                                 <div class="input-group mb-3">
                                     <input id="txt-cod_barras" type="text" v-model="cod_barras" ref="cod_barras_ref" placeholder="Leer Codigo de barras" class="form-control">
                                     <div class="input-group-append">
-                                        <button class="btn btn-danger" type="submit" ref="ejecutar">Guardar</button>
+                                        <button class="btn btn-danger" type="submit">Guardar</button>
                                     </div>
                                 </div>
                             </div>
@@ -52,9 +44,6 @@ export default {
             info: null,
             cod_barras: null,
             iniciado: null,
-            detecteds: [],
-            active: true, //Parpadeo de camara
-            activarCaptura: true,
         }
     },
     mounted() {
@@ -62,21 +51,6 @@ export default {
         this.seguroFocus();
     },
     methods: {
-        activeScanner(){
-            this.activarCaptura=true;
-        },
-        logIt (data) {
-            //Desactiva la lectura y registro
-            if (this.activarCaptura==true) {
-                this.activarCaptura=false;
-                this.active=false;
-                this.cod_barras=data.codeResult.code;
-                this.$refs.ejecutar.click();
-                setTimeout(() => {
-                    this.active=true;
-                }, 300);
-            }
-        },
         seguroFocus(){
             var t=this;
             setTimeout(() => {
@@ -104,35 +78,3 @@ export default {
     },
 }
 </script>
-<style>
-    .content-camara{
-        position: relative;
-    }
-    .btn-activar-camara{
-        height: 30px;
-        width: 30px;
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background-color: red;
-        z-index: 10;
-        color: #fff;
-        font-weight: 700;
-        border: 1px solid #fff;
-        border-radius: 50%;
-    }
-    .btn-activar-camara.active{
-        background-color: green;
-    }
-    .scanner canvas{
-        display: none;
-    }
-    .scanner video{
-        position: relative!important;
-        width: 100%;
-    }
-    .scanner{
-        display: block;
-
-    }
-</style>

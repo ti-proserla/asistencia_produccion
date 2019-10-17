@@ -14,6 +14,9 @@
 /**
  * Vistas
  */
+Route::get('/', function () {
+    return view('welcome');
+});
 Route::get('capturador', function () {
     return view('capturador');    
 });

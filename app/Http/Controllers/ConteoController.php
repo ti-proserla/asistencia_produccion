@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Model\Conteo;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+
+use App\Model\Conteo;
 
 class ConteoController extends Controller
 {
@@ -22,8 +24,11 @@ class ConteoController extends Controller
     public function reporte(Request $request){
         $fi=Carbon::parse($request->fi);
         $ff=Carbon::parse($request->ff);
-        $conteos=Conteo::where('created_at','>=',$fi)
-            ->where('created_at','<=',$ff)->get();
+        $conteos=Conteo::select(DB::raw('COUNT(cod_barras) as count, cod_linea'))
+            ->where('created_at','>=',$fi)
+            ->where('created_at','<=',$ff)
+            ->groupBy('cod_linea')
+            ->get();
         return response()->json($conteos);
     }
 }
