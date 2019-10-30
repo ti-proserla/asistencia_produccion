@@ -66,20 +66,6 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
-
             <div class="content">
                 {{-- <h3 class="">Procesos</h3> --}}
                 <div class="title m-b-md text-success">
@@ -89,6 +75,8 @@
                     <a href="capturador">Capturador con Lector</a>
                     <a href="scanner">Capturador con Movil</a>
                     <a href="reporte">Reportes</a>
+                    <a href="refresh">refresh Linea</a>
+                    <a href="refreshOperario">refresh Operario</a>
                 </div>
             </div>
         </div>

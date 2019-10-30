@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-sm-8">
                                 <div class="input-group mb-3">
-                                    <input id="txt-cod_barras" type="text" v-model="cod_barras" ref="cod_barras_ref" placeholder="Leer Codigo de barras" class="form-control">
+                                    <!-- <input id="txt-cod_barras" type="text" v-model="cod_barras" ref="cod_barras_ref" placeholder="Leer Codigo de barras" class="form-control"> -->
                                     <div class="input-group-append">
                                         <button class="btn btn-danger" type="submit" ref="ejecutar">Guardar</button>
                                     </div>
@@ -58,8 +58,8 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$refs.cod_barras_ref.focus);
-        this.seguroFocus();
+        // console.log(this.$refs.cod_barras_ref.focus);
+        // this.seguroFocus();
     },
     methods: {
         activeScanner(){
@@ -72,18 +72,19 @@ export default {
                 this.active=false;
                 this.cod_barras=data.codeResult.code;
                 this.$refs.ejecutar.click();
+                window.navigator.vibrate(200);
                 setTimeout(() => {
                     this.active=true;
                 }, 300);
             }
         },
-        seguroFocus(){
-            var t=this;
-            setTimeout(() => {
-                t.$refs.cod_barras_ref.focus();
-                t.seguroFocus();    
-            }, 1000);
-        },
+        // seguroFocus(){
+        //     var t=this;
+        //     setTimeout(() => {
+        //         t.$refs.cod_barras_ref.focus();
+        //         t.seguroFocus();    
+        //     }, 1000);
+        // },
         inicializar(){
             if (this.cod_barras.length==4) {
                 this.iniciado=this.cod_barras;

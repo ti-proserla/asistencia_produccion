@@ -20,6 +20,14 @@ var routes =[
         path: '/reporte', 
         component: require('./view/reporte.vue').default
     },
+    { 
+        path: '/refresh', 
+        component: require('./view/refresh.vue').default
+    },
+    { 
+        path: '/refreshOperario', 
+        component: require('./view/refreshOperario.vue').default
+    },
 ];
 var router=new VueRouter({
     mode: 'history',

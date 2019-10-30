@@ -12,3 +12,4 @@
 header("Access-Control-Allow-Origin: *");
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
+Route::get('conteoOperario','ConteoController@reporteOperario');

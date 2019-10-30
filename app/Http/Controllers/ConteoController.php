@@ -31,4 +31,17 @@ class ConteoController extends Controller
             ->get();
         return response()->json($conteos);
     }
+
+    public function reporteOperario(Request $request){
+        $fi=Carbon::parse($request->fi);
+        $ff=Carbon::parse($request->ff);
+        $conteos=Conteo::select(DB::raw('COUNT(cod_barras) as count, cod_barras'))
+            ->where('created_at','>=',$fi)
+            ->where('created_at','<=',$ff)
+            ->where(DB::raw('LENGTH(cod_barras)'),'=',8)
+            ->groupBy('cod_barras')
+            ->orderBy('count','desc')
+            ->get();
+        return response()->json($conteos);
+    }
 }

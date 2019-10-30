@@ -26,6 +26,12 @@ Route::get('reporte', function () {
 Route::get('scanner', function () {
     return view('scanner');    
 });
+Route::get('refresh', function () {
+    return view('scanner');    
+});
+Route::get('refreshOperario', function () {
+    return view('scanner');    
+});
 /**
  * Operaciones
  */
