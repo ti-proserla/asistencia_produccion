@@ -1,4 +1,1 @@
-<script>
-    window.url_base="{{ asset('api/') }}";
-</script>
-<script src="{{ asset('js/app.js')}}"></script>
+<script>window.url_base="{{ asset('api/') }}"</script><script src="{{ mix('js/app.js')}}"></script>
