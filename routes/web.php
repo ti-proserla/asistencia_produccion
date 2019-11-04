@@ -17,6 +17,9 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('operador', function () {
+    return view('reporte');    
+});
 Route::get('capturador', function () {
     return view('capturador');    
 });

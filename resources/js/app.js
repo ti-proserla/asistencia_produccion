@@ -9,6 +9,10 @@ window.moment = require('moment');
 
 var routes =[
     { 
+        path: '/operador', 
+        component: require('./view/operador.vue').default
+    },
+    { 
         path: '/capturador', 
         component: require('./view/capturador.vue').default
     },
