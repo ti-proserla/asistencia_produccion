@@ -3,15 +3,16 @@
         <div class="form-group-dragon" :class="{'focus': focus, 'active' : withContent }">
             <div class="form-group-content">
                 <label for="">{{ title }}</label>
-                <input @focus="OpenFocus" @blur="exitFocus" :type="type" ref="text" :value="value" @input="updateFormControl">
+                <input :readonly="readonly" @focus="OpenFocus" @blur="exitFocus" :type="type" ref="text" :value="value" @input="updateFormControl">
             </div>
         </div>
+        <strong class="form-dragon-error" v-if="error!=null">{{ error }}</strong>
     </div>
 </template>
 <script>
 export default {
     name: "dg-input",
-    props:['type','title','pName','pId','value'],
+    props:['type','title','pName','pId','value','error','readonly'],
     data() {
         return {
             focus: false,

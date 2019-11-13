@@ -11,10 +11,10 @@
     <link rel="stylesheet" href="{{ asset('css/dragon-desing.css') }}">
 </head>
 <body>
-    @include('header')
-    <div class="content">
+    <!-- @include('header') -->
+    <!-- <div class="content"> -->
         <div id="app"></div>
-    </div>
+    <!-- </div> -->
     @include('footer')
 </body>
 </html>

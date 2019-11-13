@@ -42,3 +42,7 @@ Route::get('linea', 'LineaController@index');
 Route::get('producto/nuevo','ProductoController@nuevo');
 Route::get('producto/editar','ProductoController@editar');
 Route::get('producto/eliminar','ProductoController@eliminar');
+
+Route::get('/{any}', function(){
+    return view('reporte');
+})->where('any', '.*')->name('home');

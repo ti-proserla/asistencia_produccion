@@ -13,6 +13,13 @@ var routes =[
         component: require('./view/operador.vue').default
     },
     { 
+        path: '/fotocheck/:id', 
+        component: require('./view/Operador/fotocheck.vue').default,
+        meta:{
+            layout: "empty",
+        },
+    },
+    { 
         path: '/capturador', 
         component: require('./view/capturador.vue').default
     },
@@ -40,6 +47,8 @@ var router=new VueRouter({
 });
 
 import Dashboard from './App.vue';
+Vue.component('empty',require("./layouts/empty.vue").default);
+Vue.component('panel',require("./layouts/panel.vue").default);
 
 const app = new Vue({
     el: '#app',

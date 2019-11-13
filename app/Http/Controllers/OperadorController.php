@@ -57,9 +57,10 @@ class OperadorController extends Controller
      * @param  \App\Model\Operador  $operador
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($dni)
     {
-        //
+        $operador=Operador::where('dni',$dni)->first();
+        return response()->json($operador);
     }
 
     /**
@@ -80,9 +81,16 @@ class OperadorController extends Controller
      * @param  \App\Model\Operador  $operador
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $dni)
     {
-        
+        $operador=Operador::where('dni',$dni)->first();
+        $operador->nom_operador=$request->nom_operador;        
+        $operador->ape_operador=$request->ape_operador;        
+        $operador->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Operador Actualizado"
+        ]);
     }
 
     /**

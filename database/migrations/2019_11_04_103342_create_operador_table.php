@@ -14,7 +14,8 @@ class CreateOperadorTable extends Migration
     public function up()
     {
         Schema::create('operador', function (Blueprint $table) {
-            $table->increments('dni');
+            $table->increments('id');
+            $table->string('dni',8);
             $table->string('nom_operador',50);
             $table->string('ape_operador',50);
             $table->timestamps();

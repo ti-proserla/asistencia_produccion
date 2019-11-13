@@ -15,6 +15,9 @@
     font-weight: 400;
     font-size: 15px;
 }
+img{
+    width: 100%;
+}
 .form-group-dragon input:focus,.form-group-dragon textarea:focus{
 	box-shadow:none;
 	outline:0;
@@ -25,6 +28,11 @@
     padding: 0px 12px;
     transition: border-color 0.36s cubic-bezier(0.4,0,0.2,1);    
     border-radius: 5px;
+}
+.form-dragon-error{
+    color: var(--danger-color);
+    font-size: 12px;
+    margin-left: 5px;
 }
 .form-group-dragon .form-group-content{
     position: relative;
@@ -267,3 +275,7 @@ a:hover{
 body{
     background-color: #F5F5F5;
 }
+
+.navbar{margin-bottom:15px;box-shadow:0 2px rgba(0,0,0,.2)}.navbar-brand{margin-left:auto;margin-right:auto}
+    .sidebar{
+    }
