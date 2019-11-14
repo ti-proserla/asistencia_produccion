@@ -7,13 +7,12 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Requests\NuevoOperador;
+use App\Http\Requests\OperadorEditar;
 
 class OperadorController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Visualiza todos los Operadores
      */
     public function index()
     {
@@ -22,20 +21,7 @@ class OperadorController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Registra un nuevo Operador
      */
     public function store(NuevoOperador $request)
     {
@@ -48,42 +34,21 @@ class OperadorController extends Controller
             "status"=> "OK",
             "data"  => "Operador Registrado"
         ]);
-        // dd($request->all());
     }
-
+    
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Model\Operador  $operador
-     * @return \Illuminate\Http\Response
+     * Visualiza datos de un solo operador
      */
-    public function show($dni)
+    public function show($id)
     {
-        $operador=Operador::where('dni',$dni)->first();
+        $operador=Operador::where('id',$id)->first();
         return response()->json($operador);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Model\Operador  $operador
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+        
+    public function update(OperadorEditar $request, $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Operador  $operador
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $dni)
-    {
-        $operador=Operador::where('dni',$dni)->first();
+        $operador=Operador::where('id',$id)->first();
+        $operador->dni=$request->dni;
         $operador->nom_operador=$request->nom_operador;        
         $operador->ape_operador=$request->ape_operador;        
         $operador->save();
@@ -94,13 +59,16 @@ class OperadorController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Model\Operador  $operador
-     * @return \Illuminate\Http\Response
+     * Desabilita al operador
      */
-    public function destroy($id)
+    public function estado($id)
     {
-        
+        $operador=Operador::where('id',$id)->first();
+        $operador->estado=($operador->estado=='0') ? '1' : '0';
+        $operador->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Estado Actualizado"
+        ]);
     }
 }

@@ -4,82 +4,68 @@ namespace App\Http\Controllers;
 
 use App\Model\Actividad;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+use App\Http\Requests\ActividadValidate;
 
 class ActividadController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Visualiza todos los actividades
      */
     public function index()
     {
-        //
+        $actividades=Actividad::paginate(8);
+        return response()->json($actividades);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Registra un nuevo actividad
      */
-    public function create()
+    public function store(ActividadValidate $request)
     {
-        //
+        $actividad=new Actividad();
+        $actividad->codigo=$request->codigo;
+        $actividad->nom_actividad=$request->nom_actividad;
+        $actividad->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Actividad Registrada"
+        ]);
+    }
+    
+    /**
+     * Visualiza datos de un solo actividad
+     */
+    public function show($id)
+    {
+        $actividad=Actividad::where('id',$id)->first();
+        return response()->json($actividad);
+    }
+        
+    public function update(ActividadValidate $request, $id)
+    {
+        $actividad=Actividad::where('id',$id)->first();
+        $actividad->codigo=$request->codigo;
+        $actividad->nom_actividad=$request->nom_actividad;      
+        $actividad->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Actividad Actualizada"
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Cambiar de estado a la actividad
      */
-    public function store(Request $request)
+    public function estado($id)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Model\Actividad  $actividad
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Actividad $actividad)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Model\Actividad  $actividad
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Actividad $actividad)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Actividad  $actividad
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Actividad $actividad)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Model\Actividad  $actividad
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Actividad $actividad)
-    {
-        //
+        $actividad=Actividad::where('id',$id)->first();
+        $actividad->estado=($actividad->estado=='0') ? '1' : '0';
+        $actividad->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Estado Actualizado"
+        ]);
     }
 }

@@ -12,7 +12,7 @@ import swal from 'sweetalert';
 var routes =[
     { 
         path: '/operador', 
-        component: require('./view/operador.vue').default
+        component: require('./view/Operador/index.vue').default
     },
     { 
         path: '/fotocheck/:id', 
@@ -20,6 +20,10 @@ var routes =[
         meta:{
             layout: "empty",
         },
+    },
+    { 
+        path: '/actividad', 
+        component: require('./view/Actividad/index.vue').default
     },
     { 
         path: '/capturador', 

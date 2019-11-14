@@ -1,10 +1,10 @@
 Gestionar datos Actividad:
-•	Crear, Editar o Desactivar una actividad.
-•	Enlazar código con código Nisira.
+•	(TERMINADO) Crear, Editar o Desactivar una actividad. 
+•	(TERMINADO) Enlazar código con código Nisira.
 Gestionar datos Operador:
-•	DNI como identificador.
+•	(TERMINADO) DNI como identificador.
 •	Guardar Foto , Generar Carnet de asistencia.
-•	Crear, Editar o Desactivar un operador.
+•	(TERMINADO) Crear, Editar o Desactivar un operador.
 •	Seleccionar una Actividad Fija según sea el caso.
 •	Tipo de Operador (Actividad Fija o Actividad Diaria).
 Apertura de Turno Diario:

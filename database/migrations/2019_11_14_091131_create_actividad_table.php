@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateOperadorTable extends Migration
+class CreateActividadTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateOperadorTable extends Migration
      */
     public function up()
     {
-        Schema::create('operador', function (Blueprint $table) {
+        Schema::create('actividad', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('dni',8);
-            $table->string('nom_operador',50);
-            $table->string('ape_operador',50);
+            $table->string('codigo',10);
+            $table->string('nom_actividad',50);
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreateOperadorTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('operador');
+        Schema::dropIfExists('actividad');
     }
 }
