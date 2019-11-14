@@ -2,11 +2,29 @@
     <div id="app">
         <div class="sidebar">
             <ul>
-                <li class="">
-                    <a href="#">
+                <li>
+                    <router-link to="marcador">
+                        <i class="material-icons">airplay</i>
+                        <p>marcador</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="operador">
                         <i class="material-icons">person</i>
                         <p>Operadores</p>
-                    </a>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="actividad">
+                        <i class="material-icons">work</i>
+                        <p>Actividad</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="turno">
+                        <i class="material-icons">schedule</i>
+                        <p>Turno</p>
+                    </router-link>
                 </li>
             </ul>            
         </div>

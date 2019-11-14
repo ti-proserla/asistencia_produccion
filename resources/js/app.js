@@ -11,6 +11,10 @@ import swal from 'sweetalert';
 
 var routes =[
     { 
+        path: '/marcador', 
+        component: require('./view/Operacion/marcador.vue').default
+    },
+    { 
         path: '/operador', 
         component: require('./view/Operador/index.vue').default
     },
@@ -24,6 +28,10 @@ var routes =[
     { 
         path: '/actividad', 
         component: require('./view/Actividad/index.vue').default
+    },
+    { 
+        path: '/turno', 
+        component: require('./view/Turno/index.vue').default
     },
     { 
         path: '/capturador', 

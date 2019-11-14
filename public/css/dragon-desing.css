@@ -201,7 +201,8 @@ img{
     bottom: 0;
     width: var(--width-sidebar);
     background-color: var(--sidebar-color);
-    border-right: 1px solid rgba(0,0,0,.4);
+    border-right: 1px solid rgba(0,0,0,.125);
+    /* border-right: 1px solid rgba(0,0,0,.4); */
 }
 .sidebar.close{
     display: none;
@@ -240,31 +241,26 @@ img{
     margin-left: 0;
     padding: 0;
 }
-.sidebar ul li,.sidebar ul a{
-    padding: 15px 10px;
-    color: var(--info-color)!important;
+.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 15px 10px;color: var(--info-color)!important}
+.sidebar ul li p{
+    font-size: 10px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin: 0;
 }
-.sidebar ul li.active{
-    background-color: var(--primary-color);
-}
-.sidebar ul li.active a{
-    color: #fff!important;
-    
+.sidebar ul li a.active{
+    background-color: var(--info-color);
+    color: #fff!important;    
 }
 .sidebar ul li i{
     font-size: 24px;
-    /* margin-right: 20px; */
 }
 .sidebar ul li,.sidebar a{
-    text-align: center;
-    font-weight: 300;
-    text-transform: uppercase;
-    font-size: 12px;
+    /* font-weight: 500; */
+    /* text-transform: uppercase; */
+    /* font-size: 12px; */
 }
-.sidebar ul li a{
-    /* display: flex; */
-    align-items: center;
-}
+
 @media (max-width: 992px){ 
     .show-sidebar{
         background-color: rgba(0,0,0,.4);

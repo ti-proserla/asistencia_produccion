@@ -9,8 +9,8 @@ Gestionar datos Operador:
 •	Tipo de Operador (Actividad Fija o Actividad Diaria).
 Apertura de Turno Diario:
 •	Configurar Hora automática para apertura de turno.
-•	Considerar generación manual de turno en caso no se generase automáticamente.
-•	Nombre Autonumérico combinación YYYYMMDD-TURNO ?.
+•	(TERMINADO) Considerar generación manual de turno en caso no se generase automáticamente.
+•	(TERMINADO) Nombre Autonumérico combinación YYYYMMDD-TURNO ?.
 Tareo de Actividad:
 •	Registrar Actividad, Turno de asignación y operador.
 •	Registro de primer punto de asistencia.

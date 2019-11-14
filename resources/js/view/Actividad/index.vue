@@ -107,7 +107,7 @@ export default {
         this.listar();
     },
     methods: {
-        listar(n){
+        listar(n=this.table.from){
             axios.get(url_base+'/actividad?page='+n)
             .then(response => {
                 this.table = response.data;
@@ -116,9 +116,8 @@ export default {
         iniactividad(){
             this.errors={};
             return {
-                dni: null,
+                codigo: null,
                 nom_actividad: null,
-                ape_actividad:null
             }
         },
         grabarNuevo(){

@@ -17,6 +17,8 @@ Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.
 Route::resource('actividad', 'ActividadController');
 Route::post('actividad/{id}/estado','ActividadController@estado')->name('actividad.estado');
 
+Route::resource('turno', 'TurnoController');
+
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');
