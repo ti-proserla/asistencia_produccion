@@ -24,28 +24,31 @@
                         <h4 class="card-title">Lista de Operadores</h4>
                     </div>
                     <div class="card-body">
-                        <table class="table">
+                        <table class="table table-striped">
                             <thead>
                                 <tr>
                                     <th>DNI</th>
-                                    <th>Nombre</th>
-                                    <th>Apellido</th>
+                                    <th>Nombres y Apellidos</th>
+                                    <th>Editar</th>
+                                    <th>Foto Check</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="operador in operadores">
+                                <tr v-for="operador in table.data">
                                     <td>{{operador.dni}}</td>
-                                    <td>{{operador.nom_operador}}</td>
-                                    <td>{{operador.ape_operador}}</td>
+                                    <td>{{operador.nom_operador}} {{operador.ape_operador}}</td>
                                     <td>
-                                        <button @click="abrirEditar(operador.dni)">Editar</button>
+                                        <button @click="abrirEditar(operador.dni)" class="btn btn-info"></button>
                                     </td>
                                     <td>
-                                        <button @click="verFotoCheck(operador.dni)">Foto Check</button>
+                                        <button @click="verFotoCheck(operador.dni)" class="btn btn-warning"></button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
+                        <div class="pagination">
+                            <a v-for="n in table.last_page" :class="{active: table.from==n}">{{n}}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,7 +110,10 @@ export default {
             operador_editar: this.iniOperador(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
-            operadores: [],
+            //Datos de Tabla:
+            table:{
+                data:[]
+            },
             url: null
         }
     },
@@ -118,7 +124,7 @@ export default {
         listar(){
             axios.get(url_base+'/operador')
             .then(response => {
-                this.operadores = response.data;
+                this.table = response.data;
             })
         },
         iniOperador(){
@@ -143,6 +149,7 @@ export default {
                         break;
                     case "OK":
                         this.operador=this.iniOperador();
+                        swal("", "Operador Registrado", "success");
                         this.listar();
                         break;
                     default:

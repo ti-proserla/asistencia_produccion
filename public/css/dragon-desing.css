@@ -165,6 +165,26 @@ img{
     padding-top: 10px;
     padding-bottom: 10px;
 }
+
+.pagination{text-align: right;
+    display: block;}
+.pagination a {
+    font-size: 14px;
+    color: black;
+    float: left;
+    padding: 6px 12px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color .3s;
+}
+
+.pagination a.active {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
 /**
 *   Sidebar
 */

@@ -17,7 +17,7 @@ class OperadorController extends Controller
      */
     public function index()
     {
-        $operadores=Operador::all();
+        $operadores=Operador::paginate(8);
         return response()->json($operadores);
     }
 

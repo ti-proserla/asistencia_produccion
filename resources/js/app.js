@@ -7,6 +7,8 @@ import VueQuagga from 'vue-quaggajs';
 Vue.use(VueQuagga);
 window.moment = require('moment');
 
+import swal from 'sweetalert';
+
 var routes =[
     { 
         path: '/operador', 
