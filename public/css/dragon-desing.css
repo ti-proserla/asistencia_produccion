@@ -36,14 +36,18 @@ img{
 }
 .form-group-dragon .form-group-content{
     position: relative;
+    height: 48px;
 }
 
 .form-group-dragon input{
-    height:34px;
+    position: absolute;
+    z-index: 2;
+    height: 48px;
     background-color: transparent;
     width: 100%;
     padding: 0;
-    margin-top: 14px;
+    padding-top: 14px;
+    top: 0;
     border-color: transparent;
     box-shadow: none;
     border: 0px;

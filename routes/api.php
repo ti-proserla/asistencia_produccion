@@ -19,6 +19,8 @@ Route::post('actividad/{id}/estado','ActividadController@estado')->name('activid
 
 Route::resource('turno', 'TurnoController');
 
+Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
+
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');

@@ -13,9 +13,13 @@ class TurnoController extends Controller
     /**
      * Visualiza todos los turnos
      */
-    public function index()
+    public function index(Request $request)
     {
-        $turnos=Turno::orderBy('id','DESC')->paginate(8);
+        if ($request->all==true) {
+            $turnos=Turno::all();
+        }else{
+            $turnos=Turno::orderBy('id','DESC')->paginate(8);
+        }
         return response()->json($turnos);
     }
 

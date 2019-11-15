@@ -1879,11 +1879,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "dg-input",
-  props: ['type', 'title', 'pName', 'pId', 'value', 'error', 'readonly'],
+  props: ['type', 'title', 'pName', 'pId', 'value', 'error', 'readonly', 'focusSelect'],
   data: function data() {
     return {
       focus: false
     };
+  },
+  mounted: function mounted() {
+    if (this.focusSelect == 'true') {
+      this.$refs.text.focus();
+    }
   },
   computed: {
     withContent: function withContent() {
@@ -2209,6 +2214,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../dragon-desing/dg-input.vue */ "./resources/js/dragon-desing/dg-input.vue");
 //
 //
 //
@@ -2226,13 +2232,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Input: _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
-      operador: null
+      turnos: [],
+      codigo_barras: null,
+      respuesta: null
     };
   },
-  methods: {}
+  mounted: function mounted() {
+    this.listarTurnos();
+  },
+  methods: {
+    listarTurnos: function listarTurnos() {
+      var _this = this;
+
+      axios.get(url_base + '/turno?all=true').then(function (response) {
+        _this.turnos = response.data;
+      });
+    },
+    guardar: function guardar() {
+      var _this2 = this;
+
+      this.$nextTick(function () {
+        if (_this2.codigo_barras.length == 8) {
+          var cod_barras_paso = _this2.codigo_barras;
+          _this2.codigo_barras = null;
+          axios.post(url_base + '/marcacion', {
+            codigo_barras: cod_barras_paso
+          }).then(function (response) {
+            _this2.respuesta = response.data;
+          });
+        } else {
+          _this2.codigo_barras = null;
+          _this2.respuesta = {
+            status: 'ERROR',
+            data: 'Código no Valido'
+          }; // console.log('codigo de barras no valido');
+          // alert('codigo de barras no valido');
+        }
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -80806,52 +80878,129 @@ var render = function() {
   return _c("div", { staticClass: "row" }, [
     _c("div", { staticClass: "col-sm-6" }, [
       _c("div", { staticClass: "card" }, [
+        _vm._m(0),
+        _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
-          _vm.operador != null
-            ? _c(
-                "div",
-                { staticClass: "fotocheck text-center" },
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-12 form-group" }, [
+              _c("label", { attrs: { for: "" } }, [
+                _vm._v("Seleccionar Turno:")
+              ]),
+              _vm._v(" "),
+              _c(
+                "select",
+                { staticClass: "form-control" },
+                _vm._l(_vm.turnos, function(turno) {
+                  return _c("option", { attrs: { value: "" } }, [
+                    _vm._v(_vm._s(turno.descripcion))
+                  ])
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12" }, [
+              _c(
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.guardar()
+                    }
+                  }
+                },
                 [
-                  _c("img", {
-                    attrs: {
-                      src:
-                        "https://cdn1.iconfinder.com/data/icons/user-avatars-2/300/10-512.png",
-                      alt: ""
+                  _c("Input", {
+                    attrs: { title: "Codigo de Barras", focusSelect: "true" },
+                    model: {
+                      value: _vm.codigo_barras,
+                      callback: function($$v) {
+                        _vm.codigo_barras = $$v
+                      },
+                      expression: "codigo_barras"
                     }
                   }),
                   _vm._v(" "),
-                  _c("p", [
-                    _c("b", [
-                      _vm._v(
-                        _vm._s(_vm.operador.nom_operador.split(" ")[0]) +
-                          " " +
-                          _vm._s(_vm.operador.ape_operador.split(" ")[0])
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("h6", [_vm._v("Jayanca Fruits")]),
-                  _vm._v(" "),
-                  _c("barcode", {
-                    attrs: {
-                      value: _vm.id,
-                      height: "30",
-                      width: "2",
-                      fontSize: "12"
-                    }
-                  })
+                  _c("button", { attrs: { type: "submit" } })
                 ],
                 1
               )
-            : _vm._e()
+            ])
+          ])
         ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-6" }, [
+      _c("div", { staticClass: "card" }, [
+        _vm.respuesta != null
+          ? _c("div", { staticClass: "card-body" }, [
+              _vm.respuesta.status == "OK"
+                ? _c(
+                    "div",
+                    { staticClass: "fotocheck text-center" },
+                    [
+                      _c("img", {
+                        attrs: {
+                          src:
+                            "https://cdn1.iconfinder.com/data/icons/user-avatars-2/300/10-512.png",
+                          alt: ""
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("p", [
+                        _c("b", [
+                          _vm._v(
+                            _vm._s(
+                              _vm.respuesta.data.nom_operador.split(" ")[0]
+                            ) +
+                              " " +
+                              _vm._s(
+                                _vm.respuesta.data.ape_operador.split(" ")[0]
+                              )
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("hr"),
+                      _vm._v(" "),
+                      _c("h6", [_vm._v("Jayanca Fruits")]),
+                      _vm._v(" "),
+                      _c("barcode", {
+                        attrs: {
+                          value: _vm.id,
+                          height: "30",
+                          width: "2",
+                          fontSize: "12"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                : _c("div", [
+                    _vm._v(
+                      "\n                    " +
+                        _vm._s(_vm.respuesta.data) +
+                        "\n                "
+                    )
+                  ])
+            ])
+          : _vm._e()
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", { staticClass: "card-title" }, [_vm._v("Registro de Marcación")])
+    ])
+  }
+]
 render._withStripped = true
 
 

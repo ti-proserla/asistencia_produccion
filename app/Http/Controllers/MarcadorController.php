@@ -7,7 +7,8 @@ use App\Model\Operador;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class MarcadorController extends Controller
 {
@@ -25,13 +26,36 @@ class MarcadorController extends Controller
      */
     public function store(Request $request) 
     {
-        $operador=Operador::where('id',$request->dni)->first();
+        $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
-            return response()->json();
+            if ($operador==) {
+                # code...
+            }
+
         }else{
-            $marcador=new Marcador();
-            $marcador->operador_id=$operador->id;
-            $marcador->save();
+            
+            $marcador=Marcador::where('operador_id',$operador->id)
+                ->orderBy('id','DESC')
+                ->first();
+            if ($marcador!=null) {
+                if (Carbon::now()->subMinute(0)<Carbon::parse($marcador->salida)) {
+                    return response()->json([
+                        "status"    =>  "ERROR",
+                        "data"      =>  "Usted marco recientemente"
+                    ]);
+                }
+            }
+
+            if ($marcador==null||(Carbon::parse($marcador->salida)!=Carbon::parse($marcador->ingreso))) {
+                $marcador=new Marcador();
+                $marcador->operador_id=$operador->id;
+                $marcador->ingreso=Carbon::now();
+                $marcador->salida=Carbon::now();
+                $marcador->save();
+            }else{
+                $marcador->salida=Carbon::now();
+                $marcador->save();
+            }
             return response()->json([
                 "status"=> "OK",
                 "data"  => $operador

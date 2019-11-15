@@ -12,10 +12,15 @@
 <script>
 export default {
     name: "dg-input",
-    props:['type','title','pName','pId','value','error','readonly'],
+    props:['type','title','pName','pId','value','error','readonly','focusSelect'],
     data() {
         return {
             focus: false,
+        }
+    },
+    mounted() {
+        if (this.focusSelect=='true'){
+            this.$refs.text.focus();   
         }
     },
     computed: {
