@@ -1984,6 +1984,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
@@ -2259,6 +2265,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2268,7 +2278,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       turnos: [],
       codigo_barras: null,
-      respuesta: null
+      respuesta: null,
+      turno_id: 0
     };
   },
   mounted: function mounted() {
@@ -2280,6 +2291,10 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get(url_base + '/turno?all=true').then(function (response) {
         _this.turnos = response.data;
+
+        if (_this.turnos.length > 0) {
+          _this.turno_id = _this.turnos[0].id;
+        }
       });
     },
     guardar: function guardar() {
@@ -2290,7 +2305,8 @@ __webpack_require__.r(__webpack_exports__);
           var cod_barras_paso = _this2.codigo_barras;
           _this2.codigo_barras = null;
           axios.post(url_base + '/marcacion', {
-            codigo_barras: cod_barras_paso
+            codigo_barras: cod_barras_paso,
+            turno_id: _this2.turno_id
           }).then(function (response) {
             _this2.respuesta = response.data;
           });
@@ -2623,6 +2639,70 @@ __webpack_require__.r(__webpack_exports__);
         _this5.operador_editar = response.data;
       });
       $('#modal-editar').modal();
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      reporte: []
+    };
+  },
+  mounted: function mounted() {
+    this.listar();
+  },
+  methods: {
+    listar: function listar() {
+      var _this = this;
+
+      axios.get(url_base + '/reporte-turno').then(function (response) {
+        _this.reporte = response.data;
+      });
     }
   }
 });
@@ -80530,6 +80610,18 @@ var render = function() {
             ])
           ],
           1
+        ),
+        _vm._v(" "),
+        _c(
+          "li",
+          [
+            _c("router-link", { attrs: { to: "reporte-turno" } }, [
+              _c("i", { staticClass: "material-icons" }, [_vm._v("book")]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Reporte por Turno")])
+            ])
+          ],
+          1
         )
       ])
     ]),
@@ -80889,9 +80981,34 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "select",
-                { staticClass: "form-control" },
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.turno_id,
+                      expression: "turno_id"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.turno_id = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
                 _vm._l(_vm.turnos, function(turno) {
-                  return _c("option", { attrs: { value: "" } }, [
+                  return _c("option", { domProps: { value: turno.id } }, [
                     _vm._v(_vm._s(turno.descripcion))
                   ])
                 }),
@@ -80922,7 +81039,7 @@ var render = function() {
                     }
                   }),
                   _vm._v(" "),
-                  _c("button", { attrs: { type: "submit" } })
+                  _c("button", { attrs: { type: "submit", hidden: "" } })
                 ],
                 1
               )
@@ -80934,12 +81051,48 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "col-sm-6" }, [
       _c("div", { staticClass: "card" }, [
+        _vm._m(1),
+        _vm._v(" "),
         _vm.respuesta != null
           ? _c("div", { staticClass: "card-body" }, [
               _vm.respuesta.status == "OK"
                 ? _c(
                     "div",
-                    { staticClass: "fotocheck text-center" },
+                    {
+                      staticClass: "alert alert-success",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                    Marcado Correcto\n                "
+                      )
+                    ]
+                  )
+                : _c(
+                    "div",
+                    {
+                      staticClass: "alert alert-danger",
+                      attrs: { role: "alert" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(_vm.respuesta.data) +
+                          "\n                "
+                      )
+                    ]
+                  ),
+              _vm._v(" "),
+              _vm.respuesta.status == "OK"
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "fotocheck text-center",
+                      staticStyle: {
+                        "margin-right": "auto",
+                        "margin-left": "auto"
+                      }
+                    },
                     [
                       _c("img", {
                         attrs: {
@@ -80965,26 +81118,10 @@ var render = function() {
                       _vm._v(" "),
                       _c("hr"),
                       _vm._v(" "),
-                      _c("h6", [_vm._v("Jayanca Fruits")]),
-                      _vm._v(" "),
-                      _c("barcode", {
-                        attrs: {
-                          value: _vm.id,
-                          height: "30",
-                          width: "2",
-                          fontSize: "12"
-                        }
-                      })
-                    ],
-                    1
+                      _c("h6", [_vm._v("Jayanca Fruits")])
+                    ]
                   )
-                : _c("div", [
-                    _vm._v(
-                      "\n                    " +
-                        _vm._s(_vm.respuesta.data) +
-                        "\n                "
-                    )
-                  ])
+                : _vm._e()
             ])
           : _vm._e()
       ])
@@ -80998,6 +81135,14 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("h4", { staticClass: "card-title" }, [_vm._v("Registro de Marcación")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", { staticClass: "card-title" }, [_vm._v("Respuesta")])
     ])
   }
 ]
@@ -81516,6 +81661,91 @@ var staticRenderFns = [
         },
         [_vm._v("Close")]
       )
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e&":
+/*!***********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e& ***!
+  \***********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("table", { staticClass: "table" }, [
+      _vm._m(0),
+      _vm._v(" "),
+      _c(
+        "tbody",
+        _vm._l(_vm.reporte, function(item) {
+          return _c("tr", [
+            _c("td", [_vm._v(_vm._s(item.dni))]),
+            _vm._v(" "),
+            _c("td", [
+              _vm._v(
+                _vm._s(item.nom_operador) + " " + _vm._s(item.ape_operador)
+              )
+            ]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Lunes))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Martes))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Miercoles))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Jueves))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Viernes))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Sabado))]),
+            _vm._v(" "),
+            _c("td", [_vm._v(_vm._s(item.Domingo))])
+          ])
+        }),
+        0
+      )
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", [_vm._v("CODIGO")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Nombre y Apellidos")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("LUNES")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("MARTES")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("MIERCOLES")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("JUEVES")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("VIERNES")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("SABADO")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("DOMINGO")])
+      ])
     ])
   }
 ]
@@ -100577,6 +100807,9 @@ var routes = [{
   path: '/turno',
   component: __webpack_require__(/*! ./view/Turno/index.vue */ "./resources/js/view/Turno/index.vue")["default"]
 }, {
+  path: '/reporte-turno',
+  component: __webpack_require__(/*! ./view/Reportes/turno.vue */ "./resources/js/view/Reportes/turno.vue")["default"]
+}, {
   path: '/capturador',
   component: __webpack_require__(/*! ./view/capturador.vue */ "./resources/js/view/capturador.vue")["default"]
 }, {
@@ -101177,6 +101410,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_74f0925a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_index_vue_vue_type_template_id_74f0925a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/view/Reportes/turno.vue":
+/*!**********************************************!*\
+  !*** ./resources/js/view/Reportes/turno.vue ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./turno.vue?vue&type=template&id=cde1a73e& */ "./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e&");
+/* harmony import */ var _turno_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./turno.vue?vue&type=script&lang=js& */ "./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _turno_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/view/Reportes/turno.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js&":
+/*!***********************************************************************!*\
+  !*** ./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_turno_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./turno.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/view/Reportes/turno.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_turno_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e&":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e& ***!
+  \*****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./turno.vue?vue&type=template&id=cde1a73e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/view/Reportes/turno.vue?vue&type=template&id=cde1a73e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_turno_vue_vue_type_template_id_cde1a73e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

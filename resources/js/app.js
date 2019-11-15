@@ -34,6 +34,10 @@ var routes =[
         component: require('./view/Turno/index.vue').default
     },
     { 
+        path: '/reporte-turno', 
+        component: require('./view/Reportes/turno.vue').default
+    },
+    { 
         path: '/capturador', 
         component: require('./view/capturador.vue').default
     },

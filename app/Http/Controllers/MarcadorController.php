@@ -28,39 +28,41 @@ class MarcadorController extends Controller
     {
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
-            if ($operador==) {
-                # code...
-            }
-
-        }else{
-            
-            $marcador=Marcador::where('operador_id',$operador->id)
-                ->orderBy('id','DESC')
-                ->first();
-            if ($marcador!=null) {
-                if (Carbon::now()->subMinute(0)<Carbon::parse($marcador->salida)) {
-                    return response()->json([
-                        "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente"
-                    ]);
-                }
-            }
-
-            if ($marcador==null||(Carbon::parse($marcador->salida)!=Carbon::parse($marcador->ingreso))) {
-                $marcador=new Marcador();
-                $marcador->operador_id=$operador->id;
-                $marcador->ingreso=Carbon::now();
-                $marcador->salida=Carbon::now();
-                $marcador->save();
-            }else{
-                $marcador->salida=Carbon::now();
-                $marcador->save();
-            }
-            return response()->json([
-                "status"=> "OK",
-                "data"  => $operador
-            ]);
+            $operador=new Operador();
+            $operador->dni=$request->codigo_barras;
+            $operador->nom_operador="Nuevo";
+            $operador->ape_operador="Trabajador";
+            $operador->save();
         }
+            
+        $marcador=Marcador::where('operador_id',$operador->id)
+            ->orderBy('id','DESC')
+            ->first();
+        if ($marcador!=null) {
+            if (Carbon::now()->subMinute(1)<Carbon::parse($marcador->salida)) {
+                return response()->json([
+                    "status"    =>  "ERROR",
+                    "data"      =>  "Usted marco recientemente"
+                ]);
+            }
+        }
+
+        if ($marcador==null||(Carbon::parse($marcador->salida)!=Carbon::parse($marcador->ingreso))) {
+            $marcador=new Marcador();
+            $marcador->operador_id=$operador->id;
+            $marcador->turno_id=$request->turno_id;
+            $marcador->ingreso=Carbon::now();
+            $marcador->salida=Carbon::now();
+            $marcador->save();
+        }else{
+            $marcador->salida=Carbon::now();
+            $marcador->save();
+        }
+        return response()->json([
+            "status"=> "OK",
+            "data"  => $operador
+        ]);
+        
     }
     
     /**

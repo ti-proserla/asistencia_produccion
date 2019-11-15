@@ -21,6 +21,8 @@ Route::resource('turno', 'TurnoController');
 
 Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
 
+Route::get('reporte-turno', 'ReporteController@turno');
+
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');

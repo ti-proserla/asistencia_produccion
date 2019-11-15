@@ -16,7 +16,7 @@ class TurnoController extends Controller
     public function index(Request $request)
     {
         if ($request->all==true) {
-            $turnos=Turno::all();
+            $turnos=Turno::orderBy('id','DESC')->get();
         }else{
             $turnos=Turno::orderBy('id','DESC')->paginate(8);
         }

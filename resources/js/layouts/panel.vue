@@ -26,6 +26,12 @@
                         <p>Turno</p>
                     </router-link>
                 </li>
+                <li>
+                    <router-link to="reporte-turno">
+                        <i class="material-icons">book</i>
+                        <p>Reporte por Turno</p>
+                    </router-link>
+                </li>
             </ul>            
         </div>
         <div class="content">
