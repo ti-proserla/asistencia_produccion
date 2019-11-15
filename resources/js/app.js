@@ -30,6 +30,10 @@ var routes =[
         component: require('./view/Actividad/index.vue').default
     },
     { 
+        path: '/labor', 
+        component: require('./view/Labor/index.vue').default
+    },
+    { 
         path: '/turno', 
         component: require('./view/Turno/index.vue').default
     },

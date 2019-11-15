@@ -17,6 +17,9 @@ Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.
 Route::resource('actividad', 'ActividadController');
 Route::post('actividad/{id}/estado','ActividadController@estado')->name('actividad.estado');
 
+Route::resource('labor', 'LaborController');
+Route::post('labor/{id}/estado','LaborController@estado')->name('labor.estado');
+
 Route::resource('turno', 'TurnoController');
 
 Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
