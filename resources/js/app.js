@@ -15,6 +15,10 @@ var routes =[
         component: require('./view/Operacion/marcador.vue').default
     },
     { 
+        path: '/tareo', 
+        component: require('./view/Operacion/tareo.vue').default
+    },
+    { 
         path: '/operador', 
         component: require('./view/Operador/index.vue').default
     },
@@ -26,8 +30,12 @@ var routes =[
         },
     },
     { 
-        path: '/actividad', 
-        component: require('./view/Actividad/index.vue').default
+        path: '/proceso', 
+        component: require('./view/Proceso/index.vue').default
+    },
+    { 
+        path: '/area', 
+        component: require('./view/Area/index.vue').default
     },
     { 
         path: '/labor', 

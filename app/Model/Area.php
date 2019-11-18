@@ -4,7 +4,7 @@ namespace App\Model;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tareo extends Model
+class Area extends Model
 {
-    protected $table="tareo";
+    protected $table="area";
 }

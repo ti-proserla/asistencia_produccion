@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateLaborTable extends Migration
+class CreateProcesoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateLaborTable extends Migration
      */
     public function up()
     {
-        Schema::create('labor', function (Blueprint $table) {
+        Schema::create('proceso', function (Blueprint $table) {
             $table->increments('id');
             $table->string('codigo',10);
-            $table->string('nom_labor',50);
+            $table->string('nom_proceso',50);
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
-            $table->integer('area_id')->unsigned();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreateLaborTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('labor');
+        Schema::dropIfExists('proceso');
     }
 }

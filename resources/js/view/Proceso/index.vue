@@ -4,16 +4,12 @@
             <div class="col-sm-4">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Nueva Labor</h4>
+                        <h4 class="card-title">Nuevo Proceso</h4>
                     </div>
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="Codigo:" v-model="labor.codigo" :error="errors.codigo"></Input>
-                            <Input title="Nombre:" v-model="labor.nom_labor" :error="errors.nom_labor"></Input>
-                            <Select title="Cargo:" v-model="labor.area_id" :error="errors.area_id">
-                                <option value=""></option>
-                                <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
-                            </Select>
+                            <Input title="Codigo:" v-model="proceso.codigo" :error="errors.codigo"></Input>
+                            <Input title="Nombre:" v-model="proceso.nom_proceso" :error="errors.nom_proceso"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -24,7 +20,7 @@
             <div class="col-sm-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de labores</h4>
+                        <h4 class="card-title">Lista de procesos</h4>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -37,19 +33,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="labor in table.data">
-                                    <td>{{labor.codigo}}</td>
-                                    <td>{{labor.nom_labor}}</td>
+                                <tr v-for="proceso in table.data">
+                                    <td>{{proceso.codigo}}</td>
+                                    <td>{{proceso.nom_proceso}}</td>
                                     <td>
-                                        <button @click="abrirEditar(labor.id)" class="btn btn-info">
+                                        <button @click="abrirEditar(proceso.id)" class="btn btn-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>
                                     <td>
-                                        <button v-if="labor.estado=='0'" @click="actualizarEstado(labor.id)" class="btn btn-info">
+                                        <button v-if="proceso.estado=='0'" @click="actualizarEstado(proceso.id)" class="btn btn-info">
                                             <i class="material-icons">radio_button_checked</i>
                                         </button>
-                                        <button v-else @click="actualizarEstado(labor.id)" class="btn btn-gray">
+                                        <button v-else @click="actualizarEstado(proceso.id)" class="btn btn-gray">
                                             <i class="material-icons">radio_button_unchecked</i>
                                         </button>
                                     </td>
@@ -68,18 +64,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Editar labor</h5>
+                        <h5 class="modal-title">Editar proceso</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="Codigo:" v-model="labor_editar.codigo" :error="errors_editar.codigo"></Input>
-                            <Input title="Nombre:" v-model="labor_editar.nom_labor" :error="errors_editar.nom_labor"></Input>
-                            <Select title="Cargo:" v-model="labor_editar.area_id" :error="errors_editar.area_id">
-                                <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
-                            </Select>
+                            <Input title="Codigo:" v-model="proceso_editar.codigo" :error="errors_editar.codigo"></Input>
+                            <Input title="Nombre:" v-model="proceso_editar.nom_proceso" :error="errors_editar.nom_proceso"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -93,17 +86,14 @@
 </template>
 <script>
 import Input from '../../dragon-desing/dg-input.vue'
-import Select from '../../dragon-desing/dg-select.vue'
 export default {
     components:{
-        Input,
-        Select
+        Input
     },
     data() {
         return {
-            areas: [],
-            labor: this.inilabor(), //datos de logeo
-            labor_editar: this.inilabor(),
+            proceso: this.iniproceso(), //datos de logeo
+            proceso_editar: this.iniproceso(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
             //Datos de Tabla:
@@ -115,30 +105,23 @@ export default {
     },
     mounted() {
         this.listar();
-        this.listarAreas();
     },
     methods: {
-        listarAreas(){
-            axios.get(url_base+'/area?all=true')
-            .then(response => {
-                this.areas = response.data;
-            })
-        },
         listar(n=this.table.from){
-            axios.get(url_base+'/labor?page='+n)
+            axios.get(url_base+'/proceso?page='+n)
             .then(response => {
                 this.table = response.data;
             })
         },
-        inilabor(){
+        iniproceso(){
             this.errors={};
             return {
                 codigo: null,
-                nom_labor: null,
+                nom_proceso: null,
             }
         },
         grabarNuevo(){
-            axios.post(url_base+'/labor',this.labor)
+            axios.post(url_base+'/proceso',this.proceso)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -146,8 +129,8 @@ export default {
                         this.errors=respuesta.data;
                         break;
                     case "OK":
-                        this.labor=this.inilabor();
-                        swal("", "labor Registrado", "success");
+                        this.proceso=this.iniproceso();
+                        swal("", "proceso Registrado", "success");
                         this.listar();
                         break;
                     default:
@@ -156,7 +139,7 @@ export default {
             });
         },
         actualizarEstado(id){
-            axios.post(url_base+'/labor/'+id+'/estado')
+            axios.post(url_base+'/proceso/'+id+'/estado')
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -170,7 +153,7 @@ export default {
             });
         },
         grabarEditar(){
-            axios.post(url_base+'/labor/'+this.labor_editar.id+'?_method=PUT',this.labor_editar)
+            axios.post(url_base+'/proceso/'+this.proceso_editar.id+'?_method=PUT',this.proceso_editar)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -178,9 +161,9 @@ export default {
                         this.errors_editar=respuesta.data;
                         break;
                     case "OK":
-                        this.labor_editar=this.inilabor();
+                        this.proceso_editar=this.iniproceso();
                         this.listar();
-                        swal("", "labor Actualizado", "success");
+                        swal("", "proceso Actualizado", "success");
                         $('#modal-editar').modal('hide');
                         break;
                     default:
@@ -189,9 +172,9 @@ export default {
             });
         },
         abrirEditar(id){
-            axios.get(url_base+'/labor/'+id)
+            axios.get(url_base+'/proceso/'+id)
             .then(response => {
-                this.labor_editar = response.data;
+                this.proceso_editar = response.data;
             })
             $('#modal-editar').modal();
         }

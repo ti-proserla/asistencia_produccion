@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class ActividadValidate extends FormRequest
+class AreaValidate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,7 +28,7 @@ class ActividadValidate extends FormRequest
     {
         return [
             'codigo' => 'required|max:10',
-            'nom_actividad' => 'required|max:50',
+            'nom_area' => 'required|max:50',
         ];
     }
     

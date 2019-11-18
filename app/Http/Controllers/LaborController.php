@@ -13,9 +13,13 @@ class LaborController extends Controller
     /**
      * Visualiza todos los Labores
      */
-    public function index()
+    public function index(Request $request)
     {
-        $Labores=Labor::paginate(8);
+        if ($request->all==true) {
+            $Labores=Labor::all();
+        }else{
+            $Labores=Labor::paginate(8);
+        }
         return response()->json($Labores);
     }
 
@@ -27,6 +31,7 @@ class LaborController extends Controller
         $Labor=new Labor();
         $Labor->codigo=$request->codigo;
         $Labor->nom_labor=$request->nom_labor;
+        $Labor->area_id=$request->area_id;
         $Labor->save();
         return response()->json([
             "status"=> "OK",
@@ -47,7 +52,8 @@ class LaborController extends Controller
     {
         $Labor=Labor::where('id',$id)->first();
         $Labor->codigo=$request->codigo;
-        $Labor->nom_Labor=$request->nom_Labor;      
+        $Labor->nom_labor=$request->nom_labor;    
+        $Labor->area_id=$request->area_id;
         $Labor->save();
         return response()->json([
             "status"=> "OK",

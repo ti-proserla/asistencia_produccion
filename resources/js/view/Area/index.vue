@@ -4,12 +4,12 @@
             <div class="col-sm-4">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Nuevo Actividad</h4>
+                        <h4 class="card-title">Nuevo Area</h4>
                     </div>
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="Codigo:" v-model="actividad.codigo" :error="errors.codigo"></Input>
-                            <Input title="Nombre:" v-model="actividad.nom_actividad" :error="errors.nom_actividad"></Input>
+                            <Input title="Codigo:" v-model="area.codigo" :error="errors.codigo"></Input>
+                            <Input title="Nombre:" v-model="area.nom_area" :error="errors.nom_area"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -20,7 +20,7 @@
             <div class="col-sm-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de Actividades</h4>
+                        <h4 class="card-title">Lista de Areas</h4>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -33,19 +33,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="actividad in table.data">
-                                    <td>{{actividad.codigo}}</td>
-                                    <td>{{actividad.nom_actividad}}</td>
+                                <tr v-for="area in table.data">
+                                    <td>{{area.codigo}}</td>
+                                    <td>{{area.nom_area}}</td>
                                     <td>
-                                        <button @click="abrirEditar(actividad.id)" class="btn btn-info">
+                                        <button @click="abrirEditar(area.id)" class="btn btn-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>
                                     <td>
-                                        <button v-if="actividad.estado=='0'" @click="actualizarEstado(actividad.id)" class="btn btn-info">
+                                        <button v-if="area.estado=='0'" @click="actualizarEstado(area.id)" class="btn btn-info">
                                             <i class="material-icons">radio_button_checked</i>
                                         </button>
-                                        <button v-else @click="actualizarEstado(actividad.id)" class="btn btn-gray">
+                                        <button v-else @click="actualizarEstado(area.id)" class="btn btn-gray">
                                             <i class="material-icons">radio_button_unchecked</i>
                                         </button>
                                     </td>
@@ -64,15 +64,15 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Editar Actividad</h5>
+                        <h5 class="modal-title">Editar Area</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="Codigo:" v-model="actividad_editar.codigo" :error="errors_editar.codigo"></Input>
-                            <Input title="Nombre:" v-model="actividad_editar.nom_actividad" :error="errors_editar.nom_actividad"></Input>
+                            <Input title="Codigo:" v-model="area_editar.codigo" :error="errors_editar.codigo"></Input>
+                            <Input title="Nombre:" v-model="area_editar.nom_area" :error="errors_editar.nom_area"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -92,8 +92,8 @@ export default {
     },
     data() {
         return {
-            actividad: this.iniactividad(), //datos de logeo
-            actividad_editar: this.iniactividad(),
+            area: this.iniarea(), //datos de logeo
+            area_editar: this.iniarea(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
             //Datos de Tabla:
@@ -108,20 +108,20 @@ export default {
     },
     methods: {
         listar(n=this.table.from){
-            axios.get(url_base+'/actividad?page='+n)
+            axios.get(url_base+'/area?page='+n)
             .then(response => {
                 this.table = response.data;
             })
         },
-        iniactividad(){
+        iniarea(){
             this.errors={};
             return {
                 codigo: null,
-                nom_actividad: null,
+                nom_area: null,
             }
         },
         grabarNuevo(){
-            axios.post(url_base+'/actividad',this.actividad)
+            axios.post(url_base+'/area',this.area)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -129,8 +129,8 @@ export default {
                         this.errors=respuesta.data;
                         break;
                     case "OK":
-                        this.actividad=this.iniactividad();
-                        swal("", "actividad Registrado", "success");
+                        this.area=this.iniarea();
+                        swal("", "area Registrado", "success");
                         this.listar();
                         break;
                     default:
@@ -139,7 +139,7 @@ export default {
             });
         },
         actualizarEstado(id){
-            axios.post(url_base+'/actividad/'+id+'/estado')
+            axios.post(url_base+'/area/'+id+'/estado')
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -153,7 +153,7 @@ export default {
             });
         },
         grabarEditar(){
-            axios.post(url_base+'/actividad/'+this.actividad_editar.id+'?_method=PUT',this.actividad_editar)
+            axios.post(url_base+'/area/'+this.area_editar.id+'?_method=PUT',this.area_editar)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {
@@ -161,9 +161,9 @@ export default {
                         this.errors_editar=respuesta.data;
                         break;
                     case "OK":
-                        this.actividad_editar=this.iniactividad();
+                        this.area_editar=this.iniarea();
                         this.listar();
-                        swal("", "actividad Actualizado", "success");
+                        swal("", "area Actualizado", "success");
                         $('#modal-editar').modal('hide');
                         break;
                     default:
@@ -172,9 +172,9 @@ export default {
             });
         },
         abrirEditar(id){
-            axios.get(url_base+'/actividad/'+id)
+            axios.get(url_base+'/area/'+id)
             .then(response => {
-                this.actividad_editar = response.data;
+                this.area_editar = response.data;
             })
             $('#modal-editar').modal();
         }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class LaborValidate extends FormRequest
+class ProcesoValidate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,8 +28,7 @@ class LaborValidate extends FormRequest
     {
         return [
             'codigo' => 'required|max:10',
-            'nom_labor' => 'required|max:50',
-            'area_id'   => 'required'
+            'nom_proceso' => 'required|max:50',
         ];
     }
     

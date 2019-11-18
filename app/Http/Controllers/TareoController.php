@@ -3,29 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Model\Tareo;
+use App\Model\Operador;
 use Illuminate\Http\Request;
 
 class TareoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -35,51 +17,23 @@ class TareoController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Model\Tareo  $tareo
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Tareo $tareo)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Model\Tareo  $tareo
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Tareo $tareo)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Model\Tareo  $tareo
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Tareo $tareo)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Model\Tareo  $tareo
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Tareo $tareo)
-    {
-        //
+        $operador=Operador::where('dni',$request->codigo_barras)->first();
+        if ($operador==null) {
+            $operador=new Operador();
+            $operador->dni=$request->codigo_barras;
+            $operador->nom_operador="Nuevo";
+            $operador->ape_operador="Trabajador";
+            $operador->save();
+        }
+        $tareo=new Tareo();
+        $tareo->operador_id=$operador->id;
+        $tareo->proceso_id=$request->proceso_id;
+        $tareo->labor_id=$request->labor_id;
+        $tareo->area_id=$request->area_id;
+        $tareo->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => $operador
+        ]);
     }
 }

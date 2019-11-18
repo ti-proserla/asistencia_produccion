@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateActividadTable extends Migration
+class CreateAreaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateActividadTable extends Migration
      */
     public function up()
     {
-        Schema::create('actividad', function (Blueprint $table) {
+        Schema::create('area', function (Blueprint $table) {
             $table->increments('id');
             $table->string('codigo',10);
-            $table->string('nom_actividad',50);
+            $table->string('nom_area',50);
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
             $table->timestamps();
         });
@@ -29,6 +29,6 @@ class CreateActividadTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('actividad');
+        Schema::dropIfExists('area');
     }
 }

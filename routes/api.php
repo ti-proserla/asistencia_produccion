@@ -14,15 +14,18 @@ header("Access-Control-Allow-Origin: *");
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
 
-Route::resource('actividad', 'ActividadController');
-Route::post('actividad/{id}/estado','ActividadController@estado')->name('actividad.estado');
+Route::resource('area', 'AreaController');
+Route::post('area/{id}/estado','AreaController@estado')->name('area.estado');
 
 Route::resource('labor', 'LaborController');
 Route::post('labor/{id}/estado','LaborController@estado')->name('labor.estado');
+Route::resource('proceso', 'ProcesoController');
+Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.estado');
 
 Route::resource('turno', 'TurnoController');
 
 Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
+Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
 

@@ -9,15 +9,33 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="tareo">
+                        <i class="material-icons">airplay</i>
+                        <p>tareo</p>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="operador">
                         <i class="material-icons">person</i>
                         <p>Operadores</p>
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="actividad">
+                    <router-link to="proceso">
                         <i class="material-icons">work</i>
-                        <p>Actividad</p>
+                        <p>proceso</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="area">
+                        <i class="material-icons">work</i>
+                        <p>Area</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="labor">
+                        <i class="material-icons">work</i>
+                        <p>labor</p>
                     </router-link>
                 </li>
                 <li>

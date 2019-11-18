@@ -39,7 +39,7 @@ img{
     height: 48px;
 }
 
-.form-group-dragon input{
+.form-group-dragon input,.form-group-dragon select{
     position: absolute;
     z-index: 2;
     height: 48px;
