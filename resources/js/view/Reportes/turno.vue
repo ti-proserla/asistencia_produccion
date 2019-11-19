@@ -30,7 +30,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>CODIGO</th>
+                            <th>DNI</th>
                             <th>Nombre y Apellidos</th>
                             <th>Periodo</th>
                             <th>Cod. Actividad</th>
@@ -78,8 +78,8 @@ export default {
         return {
             reporte:[],
             consulta:{
-                year: 2019,
-                week: 46
+                year: moment().format('YYYY'),
+                week: moment().week()
             }
         }
     },

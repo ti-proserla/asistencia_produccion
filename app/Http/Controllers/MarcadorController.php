@@ -39,7 +39,7 @@ class MarcadorController extends Controller
             ->orderBy('id','DESC')
             ->first();
         if ($marcador!=null) {
-            if (Carbon::now()->subMinute(35)<Carbon::parse($marcador->salida)) {
+            if (Carbon::now()->subMinute(0)<Carbon::parse($marcador->salida)) {
                 return response()->json([
                     "status"    =>  "ERROR",
                     "data"      =>  "Usted marco recientemente"

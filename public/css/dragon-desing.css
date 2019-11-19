@@ -245,7 +245,7 @@ img{
     margin-left: 0;
     padding: 0;
 }
-.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 15px 10px;color: var(--info-color)!important}
+.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 12px 10px;color: var(--info-color)!important}
 .sidebar ul li p{
     font-size: 10px;
     text-transform: uppercase;

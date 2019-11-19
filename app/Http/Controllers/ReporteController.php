@@ -24,12 +24,13 @@ class ReporteController extends Controller
         return response()->json($resultado);
     }
 
-    public function pendientes(){
-        $dia=Carbon::now()->format('Y-m-d');
+    public function pendientes(Request $request){
         $resultado=Operador::join('marcador','marcador.operador_id','=','operador.id')
-            ->where(DB::raw('DATE(marcador.ingreso)'),$dia)
+            ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE turno_id='.$request->turno_id.') AS T'),'T.operador_id','=','operador.id')
+            ->where('marcador.turno_id',$request->turno_id)
+            ->whereNull('T.id')
             ->groupBy('operador.dni')
             ->get();
-        dd($resultado);
+        return response()->json($resultado);
     }
 }

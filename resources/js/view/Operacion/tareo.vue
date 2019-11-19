@@ -32,7 +32,7 @@
                 </div>
                 <div v-if="respuesta!=null" class="card-body">
                     <div v-if="respuesta.status=='OK'" class="alert alert-success" role="alert">
-                        Marcado Correcto
+                        Tareo Registrado
                     </div>
                     <div v-else class="alert alert-danger" role="alert">
                         {{ respuesta.data }}
@@ -104,7 +104,7 @@ export default {
             .then(response => {
                 this.turnos = response.data;
                 if (this.turnos.length>0) {
-                    this.turno_id=this.turnos[0].id;
+                    this.tareo.turno_id=this.turnos[0].id;
                 }
             });
         },
@@ -113,7 +113,7 @@ export default {
             .then(response => {
                 this.procesos = response.data;
                 if (this.procesos.length>0) {
-                    this.proceso_id=this.procesos[0].id;
+                    this.tareo.proceso_id=this.procesos[0].id;
                 }
             });
         },

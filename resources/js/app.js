@@ -50,6 +50,10 @@ var routes =[
         component: require('./view/Reportes/turno.vue').default
     },
     { 
+        path: '/reporte-pendientes', 
+        component: require('./view/Reportes/pendientes.vue').default
+    },
+    { 
         path: '/capturador', 
         component: require('./view/capturador.vue').default
     },

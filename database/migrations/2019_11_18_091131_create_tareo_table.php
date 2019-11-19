@@ -15,6 +15,7 @@ class CreateTareoTable extends Migration
     {
         Schema::create('tareo', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('turno_id')->unsigned();
             $table->integer('operador_id')->unsigned();
             $table->integer('proceso_id')->unsigned();
             $table->integer('labor_id')->unsigned();

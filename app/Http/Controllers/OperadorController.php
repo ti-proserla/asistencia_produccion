@@ -27,8 +27,8 @@ class OperadorController extends Controller
     {
         $operador=new Operador();
         $operador->dni=$request->dni;
-        $operador->nom_operador=$request->nom_operador;
-        $operador->ape_operador=$request->ape_operador;
+        $operador->nom_operador=strtoupper($request->nom_operador);
+        $operador->ape_operador=strtoupper($request->ape_operador);
         $operador->save();
         return response()->json([
             "status"=> "OK",
@@ -49,8 +49,8 @@ class OperadorController extends Controller
     {
         $operador=Operador::where('id',$id)->first();
         $operador->dni=$request->dni;
-        $operador->nom_operador=$request->nom_operador;        
-        $operador->ape_operador=$request->ape_operador;        
+        $operador->nom_operador=strtoupper($request->nom_operador);        
+        $operador->ape_operador=strtoupper($request->ape_operador);        
         $operador->save();
         return response()->json([
             "status"=> "OK",

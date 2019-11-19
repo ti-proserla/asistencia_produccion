@@ -34,3 +34,12 @@ Registro de Producción Palet:
 •	Cuando se complete la cantidad de Cajas por Palet cerrar el Palet automáticamente.
 Reportes:
 •	(TERMINADO) Reporte por turno de asistencia (Nombre, Actividad, Horas Trabajadas, Horas Nocturnas Trabajadas).
+
+19/11/2019
+
+* Regularizar Marcas.
+* Subir Directamente Foto.
+* Reporte diario de Meche.
+* Procedencia
+* Guardado en Mayusculas.
+

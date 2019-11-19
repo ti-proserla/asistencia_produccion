@@ -26,6 +26,7 @@ class TareoController extends Controller
             $operador->save();
         }
         $tareo=new Tareo();
+        $tareo->turno_id=$request->turno_id;
         $tareo->operador_id=$operador->id;
         $tareo->proceso_id=$request->proceso_id;
         $tareo->labor_id=$request->labor_id;

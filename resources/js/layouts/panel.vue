@@ -50,15 +50,28 @@
                         <p>Reporte por Turno</p>
                     </router-link>
                 </li>
+                <li>
+                    <router-link to="reporte-pendientes">
+                        <i class="material-icons">book</i>
+                        <p>Reporte de Pendientes</p>
+                    </router-link>
+                </li>
             </ul>            
         </div>
         <div class="content">
+            <nav>
+                <!-- <img src="" alt=""> -->
+            </nav>
             <slot/>
         </div>
     </div>
 </template>
 <script>
 export default {
-    
+    methods: {
+        url(){
+            // return 
+        }
+    },
 }
 </script>
