@@ -12,12 +12,12 @@ Apertura de Turno Diario:
 •	(TERMINADO) Considerar generación manual de turno en caso no se generase automáticamente.
 •	(TERMINADO) Nombre Autonumérico combinación YYYYMMDD-TURNO ?.
 Tareo de Actividad:
-•	Registrar Actividad, Turno de asignación y operador.
-•	Registro de primer punto de asistencia.
+•	(TERMINADO) Registrar Actividad, Turno de asignación y operador.
+•	(TERMINADO) Registro de primer punto de asistencia.
 Marcado de Asistencia:
-•	Guardar Hora de Ingreso y de Salida de un personal.
-•	Configurar la restricción de diferencia de tiempo entre un ítem de Marcado de asistencia, para evitar el marcado anticipado.
-•	Guardar id de turno en cada ítem de Marcado.
+•	(TERMINADO) Guardar Hora de Ingreso y de Salida de un personal.
+•	(TERMINADO) Configurar la restricción de diferencia de tiempo entre un ítem de Marcado de asistencia, para evitar el marcado anticipado.
+•	(TERMINADO) Guardar id de turno en cada ítem de Marcado.
 Gestionar datos Producto:
 •	Crear, Editar o Desactivar una Producto.
 Gestionar datos Paquete:
@@ -33,4 +33,4 @@ Registro de Producción Palet:
 •	Restringir el registro de doble tipo de actividad por CajaPalet.
 •	Cuando se complete la cantidad de Cajas por Palet cerrar el Palet automáticamente.
 Reportes:
-•	Reporte por turno de asistencia (Nombre, Actividad, Horas Trabajadas, Horas Nocturnas Trabajadas).
+•	(TERMINADO) Reporte por turno de asistencia (Nombre, Actividad, Horas Trabajadas, Horas Nocturnas Trabajadas).

@@ -9,6 +9,9 @@
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+use App\Exports\HorasSemanaTrabajadorExport;
+use Maatwebsite\Excel\Facades\Excel;
+
 header("Access-Control-Allow-Origin: *");
 
 Route::resource('operador', 'OperadorController');
@@ -28,7 +31,13 @@ Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
 Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
+Route::get('reporte-pendientes', 'ReporteController@pendientes');
 
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');
+
+
+Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
+    return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana), "horas-semana-$anio-$semana.xlsx");
+});

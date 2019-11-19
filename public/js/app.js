@@ -3351,6 +3351,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../dragon-desing/dg-input.vue */ "./resources/js/dragon-desing/dg-input.vue");
 //
 //
 //
@@ -3384,20 +3385,67 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    Input: _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   data: function data() {
     return {
-      reporte: []
+      reporte: [],
+      consulta: {
+        year: 2019,
+        week: 46
+      }
     };
   },
-  mounted: function mounted() {
-    this.listar();
+  computed: {
+    url: function url() {
+      return url_base + '/horas-semana/' + this.consulta.year + '/' + this.consulta.week;
+    }
   },
   methods: {
     listar: function listar() {
       var _this = this;
 
-      axios.get(url_base + '/reporte-turno').then(function (response) {
+      axios.get(url_base + '/reporte-turno?year=' + this.consulta.year + '&week=' + this.consulta.week).then(function (response) {
         _this.reporte = response.data;
       });
     }
@@ -83396,42 +83444,149 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("table", { staticClass: "table" }, [
+    _c("div", { staticClass: "card" }, [
       _vm._m(0),
       _vm._v(" "),
-      _c(
-        "tbody",
-        _vm._l(_vm.reporte, function(item) {
-          return _c("tr", [
-            _c("td", [_vm._v(_vm._s(item.dni))]),
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "row" }, [
+          _vm._m(1),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-6 col-sm-2" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.consulta.year,
+                  expression: "consulta.year"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "number" },
+              domProps: { value: _vm.consulta.year },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.consulta, "year", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-6 col-sm-1" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.consulta.week,
+                  expression: "consulta.week"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { type: "number" },
+              domProps: { value: _vm.consulta.week },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.consulta, "week", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-sm-3" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info",
+                on: {
+                  click: function($event) {
+                    return _vm.listar()
+                  }
+                }
+              },
+              [_vm._v("\n                        Buscar\n                    ")]
+            ),
             _vm._v(" "),
-            _c("td", [
-              _vm._v(
-                _vm._s(item.nom_operador) + " " + _vm._s(item.ape_operador)
-              )
-            ]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Lunes))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Martes))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Miercoles))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Jueves))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Viernes))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Sabado))]),
-            _vm._v(" "),
-            _c("td", [_vm._v(_vm._s(item.Domingo))])
+            _c(
+              "a",
+              { staticClass: "btn btn-success", attrs: { href: _vm.url } },
+              [_vm._v("Excel")]
+            )
           ])
-        }),
-        0
-      )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("table", { staticClass: "table" }, [
+          _vm._m(2),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.reporte, function(item) {
+              return _c("tr", [
+                _c("td", [_vm._v(_vm._s(item.codigo))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.NombreApellido) + " ")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.periodo) + " ")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.codActividad) + " ")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.codLabor) + " ")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.codProceso) + " ")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Lunes))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Martes))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Miercoles))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Jueves))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Viernes))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Sabado))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(item.Domingo))])
+              ])
+            }),
+            0
+          )
+        ])
+      ])
     ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h4", { staticClass: "card-title" }, [
+        _vm._v("Reporte Horas por Semana")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-sm-1" }, [
+      _c("label", { staticClass: "my-2", attrs: { for: "" } }, [
+        _c("b", [_vm._v("Año/Semana:")])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -83442,19 +83597,27 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Nombre y Apellidos")]),
         _vm._v(" "),
-        _c("th", [_vm._v("LUNES")]),
+        _c("th", [_vm._v("Periodo")]),
         _vm._v(" "),
-        _c("th", [_vm._v("MARTES")]),
+        _c("th", [_vm._v("Cod. Actividad")]),
         _vm._v(" "),
-        _c("th", [_vm._v("MIERCOLES")]),
+        _c("th", [_vm._v("Cod.Labor")]),
         _vm._v(" "),
-        _c("th", [_vm._v("JUEVES")]),
+        _c("th", [_vm._v("Cod.Proceso")]),
         _vm._v(" "),
-        _c("th", [_vm._v("VIERNES")]),
+        _c("th", [_vm._v("Dia 01")]),
         _vm._v(" "),
-        _c("th", [_vm._v("SABADO")]),
+        _c("th", [_vm._v("Dia 02")]),
         _vm._v(" "),
-        _c("th", [_vm._v("DOMINGO")])
+        _c("th", [_vm._v("Dia 03")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Dia 04")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Dia 05")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Dia 06")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Dia 07")])
       ])
     ])
   }
