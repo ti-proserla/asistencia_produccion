@@ -18,6 +18,7 @@ class CreateOperadorTable extends Migration
             $table->string('dni',8);
             $table->string('nom_operador',50);
             $table->string('ape_operador',50);
+            $table->string('foto',15)->nullable();
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
             $table->timestamps();
         });

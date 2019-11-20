@@ -11,6 +11,9 @@
 */
 use App\Exports\HorasSemanaTrabajadorExport;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Model\Operador;
+use Peru\Http\ContextClient;
+use Peru\Jne\{Dni, DniParser};
 
 header("Access-Control-Allow-Origin: *");
 
@@ -32,11 +35,38 @@ Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
 Route::get('reporte-pendientes', 'ReporteController@pendientes');
+Route::get('reporte-marcas', 'ReporteController@marcas');
 
 Route::post('conteo','ConteoController@nuevo');
 Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');
 
+
+Route::get('jne/dni/{dni}', function ($dni) {
+    $operador=Operador::where('dni',$dni)->first();
+    if ($operador!=null) {
+        $id=$operador->id;
+        return json_encode([
+            "status" => "INFO",
+            "data"   => "El Trabajador ya se encuentra registrado",
+            "id"     => $id
+        ]); 
+    }
+    $cs = new Dni(new ContextClient(), new DniParser());
+    $person = $cs->get($dni);
+    if (!$person) {
+        return json_encode([
+            "status" => "ERROR",
+            "data"   => "No encontrado"
+        ]);
+        // echo 'Not found';
+        exit();
+    }
+    return json_encode([
+            "status" => "OK",
+            "data"   =>$person
+        ]);
+});
 
 Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana), "horas-semana-$anio-$semana.xlsx");

@@ -17,6 +17,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('prueba', function () {
+    
+    dd(glob(public_path('storage/operador/7738*')));
+});
 Route::get('operador', function () {
     return view('reporte');    
 });

@@ -33,4 +33,9 @@ class ReporteController extends Controller
             ->get();
         return response()->json($resultado);
     }
+
+    public function marcas(){
+        $resultado=Operador::with(['marcas'])->get();
+        return response()->json($resultado);
+    }
 }

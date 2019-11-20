@@ -28,7 +28,6 @@ class OperadorEditar extends FormRequest
     public function rules()
     {
         return [
-            'dni' => 'required',
             'nom_operador' => 'required',
             'ape_operador' => 'required',
         ];

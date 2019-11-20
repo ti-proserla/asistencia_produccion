@@ -38,8 +38,10 @@ Reportes:
 19/11/2019
 
 * Regularizar Marcas.
-* Subir Directamente Foto.
+* (Terminado) Subir Directamente Foto.
 * Reporte diario de Meche.
-* Procedencia
-* Guardado en Mayusculas.
+* (Terminado) Guardado en Mayusculas.
+* (Terminado) DNI unico
 
+* Cantidad x labor
+* Procedencia

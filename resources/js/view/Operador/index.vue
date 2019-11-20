@@ -1,29 +1,39 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-lg-4">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Nuevo Operador</h4>
                     </div>
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="DNI:" v-model="operador.dni" :error="errors.dni"></Input>
+                            <label for="" hidden>{{consulta}}</label>
+                            <Input title="DNI:" v-model="operador.dni" :error="errors.dni" ></Input>
                             <Input title="Nombre:" v-model="operador.nom_operador" :error="errors.nom_operador"></Input>
                             <Input title="Apellido:" v-model="operador.ape_operador" :error="errors.ape_operador"></Input>
+                            <div class="croppa-center">
+                                <croppa v-model="myCroppa" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
+                            </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success">Guardar</button>
+                                <button type="submit" class="btn btn-success my-3">Guardar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-8">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Lista de Operadores</h4>
                     </div>
                     <div class="card-body">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="">Buscar: </label>
+                                <input @keyup="listar()" class="form-control" v-model="search"></input>
+                            </div>
+                        </div>
                         <table class="table table-striped">
                             <thead>
                                 <tr>
@@ -78,9 +88,11 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="DNI:" v-model="operador_editar.dni" :error="errors_editar.dni"></Input>
                             <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
                             <Input title="Apellido:" v-model="operador_editar.ape_operador" :error="errors_editar.ape_operador"></Input>
+                            <div class="croppa-center">
+                                <croppa  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
+                            </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -119,6 +131,7 @@ export default {
     },
     data() {
         return {
+            search: null,
             operador: this.iniOperador(), //datos de logeo
             operador_editar: this.iniOperador(),
             errors: {}, //datos de errores
@@ -127,7 +140,58 @@ export default {
             table:{
                 data:[]
             },
-            url: null
+            url: null,
+            myCroppa: {}, 
+            myCroppa2: {}, 
+            croppaConfig: {
+                horizontal:  225,
+                vertical:  300 ,
+                quality: 2
+            }
+        }
+    },
+    computed: {
+        consulta(){
+            if (this.operador.dni!=null) {
+                console.log(this.operador);
+                if (this.operador.dni.length==8) {
+                    axios.get(url_base+'/jne/dni/'+this.operador.dni)
+                    .then(response => {
+                        var respuesta=response.data;
+                        switch (respuesta.status) {
+                            case "INFO":
+                                swal({
+                                    text:respuesta.data, 
+                                    icon: "info",
+                                    buttons: true,
+                                    buttons: ["Salir", "Desea Cambiar los datos?"],
+                                    warningMode: true
+                                }).then((opt) => {
+                                    if (opt) {
+                                        this.abrirEditar(respuesta.id);
+                                    } else {
+
+                                    };
+                                });
+                                this.operador=this.iniOperador();
+                                break;
+                            case "OK":
+                                this.operador.nom_operador=respuesta.data.nombres;
+                                this.operador.ape_operador=respuesta.data.apellidoPaterno+" "+respuesta.data.apellidoMaterno;
+                                break;
+                            default:
+                                break;
+                        }
+                        // this.table = response.data;
+                    });
+                    return true;
+                }
+            }
+            return false;
+        },
+        searching(){
+            this.listar();
+            return true
         }
     },
     mounted() {
@@ -135,7 +199,7 @@ export default {
     },
     methods: {
         listar(n=this.table.from){
-            axios.get(url_base+'/operador?page='+n)
+            axios.get(url_base+'/operador?page='+n+'&search='+this.search)
             .then(response => {
                 this.table = response.data;
             })
@@ -153,22 +217,33 @@ export default {
             $('#modal-fotocheck').modal();
         },
         grabarNuevo(){
-            axios.post(url_base+'/operador',this.operador)
-            .then(response => {
-                var respuesta=response.data;
-                switch (respuesta.status) {
-                    case "VALIDATION":
-                        this.errors=respuesta.data;
-                        break;
-                    case "OK":
-                        this.operador=this.iniOperador();
-                        swal("", "Operador Registrado", "success");
-                        this.listar();
-                        break;
-                    default:
-                        break;
+            this.myCroppa.generateBlob((blob) => {
+                var formData = new FormData()
+                if (blob!=null) {
+                    formData.append('foto', blob,'imagen.'+blob.type.split('/')[1]);
                 }
-            });
+                $.each(this.operador, function(key, value){
+                    formData.append(key, value);
+                })
+                axios.post(url_base+'/operador',formData,{header : {'Content-Type' : 'multipart/form-data'}})
+                .then(response => {
+                    var respuesta=response.data;
+                    switch (respuesta.status) {
+                        case "VALIDATION":
+                            this.errors=respuesta.data;
+                            break;
+                        case "OK":
+                            this.operador=this.iniOperador();
+                            swal("", "Operador Registrado", "success");
+                            this.myCroppa.remove();
+                            this.listar();
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }, 'image/jpeg');
+            
         },
         actualizarEstado(id){
             axios.post(url_base+'/operador/'+id+'/estado')
@@ -185,23 +260,35 @@ export default {
             });
         },
         grabarEditar(){
-            axios.post(url_base+'/operador/'+this.operador_editar.id+'?_method=PUT',this.operador_editar)
-            .then(response => {
-                var respuesta=response.data;
-                switch (respuesta.status) {
-                    case "VALIDATION":
-                        this.errors_editar=respuesta.data;
-                        break;
-                    case "OK":
-                        this.operador_editar=this.iniOperador();
-                        this.listar();
-                        swal("", "Operador Actualizado", "success");
-                        $('#modal-editar').modal('hide');
-                        break;
-                    default:
-                        break;
+            this.myCroppa2.generateBlob((blob) => {
+                var formData = new FormData()
+                if (blob!=null) {
+                    formData.append('foto', blob,'imagen.'+blob.type.split('/')[1]);
                 }
-            });
+                $.each(this.operador_editar, function(key, value){
+                    formData.append(key, value);
+                })
+            
+                axios.post(url_base+'/operador/'+this.operador_editar.id+'?_method=PUT',formData,{header : {'Content-Type' : 'multipart/form-data'}})
+                .then(response => {
+                    var respuesta=response.data;
+                    switch (respuesta.status) {
+                        case "VALIDATION":
+                            this.errors_editar=respuesta.data;
+                            break;
+                        case "OK":
+                            this.operador_editar=this.iniOperador();
+                            this.myCroppa2.remove();
+                            this.listar();
+                            swal("", "Operador Actualizado", "success");
+                            $('#modal-editar').modal('hide');
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }, 'image/jpeg');
+
         },
         abrirEditar(id){
             axios.get(url_base+'/operador/'+id)

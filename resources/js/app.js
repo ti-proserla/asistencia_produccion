@@ -7,6 +7,9 @@ import VueQuagga from 'vue-quaggajs';
 Vue.use(VueQuagga);
 window.moment = require('moment');
 
+import Croppa from 'vue-croppa'
+ Vue.use(Croppa)   
+
 import swal from 'sweetalert';
 
 var routes =[

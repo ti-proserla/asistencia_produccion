@@ -4,7 +4,7 @@
             <button class="oculto-impresion btn btn-warning" @click="imprimir()">Imprimir</button>
         </div>
         <div class="fotocheck text-center">
-            <img src="https://cdn1.iconfinder.com/data/icons/user-avatars-2/300/10-512.png" alt="">
+            <img :src="url(this.operador.foto)" alt="">
             <p><b>{{ operador.nom_operador.split(' ')[0] }} {{ operador.ape_operador.split(' ')[0] }}</b></p>
             <hr>
             <h6>Jayanca Fruits</h6>
@@ -44,13 +44,15 @@ export default {
         }
     },
     mounted() {
-        
         axios.get(url_base+'/operador/'+this.id)
         .then(response => {
             this.operador = response.data;
         })
     },
     methods: {
+        url(foto){
+            return url_base+'/../storage/operador/'+foto;
+        },
         imprimir() {
             window.print();
         },
