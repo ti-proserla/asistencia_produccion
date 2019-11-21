@@ -37,12 +37,12 @@ Reportes:
 
 19/11/2019
 
-* Regularizar Marcas.
 * (Terminado) Subir Directamente Foto.
-* Reporte diario de Meche.
+* (Terminado) Reporte diario de Meche.
 * (Terminado) Guardado en Mayusculas.
 * (Terminado) DNI unico
-* Revisión de Horas del personal.
+* Regularizar Marcas.
+* Revisión de Horas del personal pantalla.
 * Pasar inactivo al editar
 
 * Cantidad de personas x labor
