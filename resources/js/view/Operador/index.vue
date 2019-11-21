@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-lg-4">
+            <div class="col-md-4">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Nuevo Operador</h4>
@@ -16,59 +16,63 @@
                                 <croppa v-model="myCroppa" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success my-3">Guardar</button>
+                                <button type="submit" class="btn btn-success mt-3">Guardar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-8">
+            <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Lista de Operadores</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-4">
-                                <label for="">Buscar: </label>
+                            <div class="col-2">
+                                <label for="" class="my-3">Buscar: </label>
+                            </div>
+                            <div class="col-8">
                                 <input @keyup="listar()" class="form-control" v-model="search"></input>
                             </div>
                         </div>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>DNI</th>
-                                    <th>Nombres y Apellidos</th>
-                                    <th>Editar</th>
-                                    <th>Foto Check</th>
-                                    <th>Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr v-for="operador in table.data">
-                                    <td>{{operador.dni}}</td>
-                                    <td>{{operador.nom_operador}} {{operador.ape_operador}}</td>
-                                    <td>
-                                        <button @click="abrirEditar(operador.id)" class="btn btn-info">
-                                            <i class="material-icons">create</i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button @click="verFotoCheck(operador.id)" class="btn btn-warning">
-                                            <i class="material-icons">assignment_ind</i>
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <button v-if="operador.estado=='0'" @click="actualizarEstado(operador.id)" class="btn btn-info">
-                                            <i class="material-icons">radio_button_checked</i>
-                                        </button>
-                                        <button v-else @click="actualizarEstado(operador.id)" class="btn btn-gray">
-                                            <i class="material-icons">radio_button_unchecked</i>
-                                        </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>DNI</th>
+                                        <th>Nombres y Apellidos</th>
+                                        <th>Editar</th>
+                                        <th>Foto Check</th>
+                                        <th>Estado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="operador in table.data">
+                                        <td>{{operador.dni}}</td>
+                                        <td>{{operador.nom_operador}} {{operador.ape_operador}}</td>
+                                        <td>
+                                            <button @click="abrirEditar(operador.id)" class="btn-link-info">
+                                                <i class="material-icons">create</i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button @click="verFotoCheck(operador.id)" class="btn-link-warning">
+                                                <i class="material-icons">assignment_ind</i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button v-if="operador.estado=='0'" @click="actualizarEstado(operador.id)" class="btn-link-info">
+                                                <i class="material-icons">radio_button_checked</i>
+                                            </button>
+                                            <button v-else @click="actualizarEstado(operador.id)" class="btn-link-gray">
+                                                <i class="material-icons">radio_button_unchecked</i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="pagination">
                             <a v-for="n in table.last_page" :class="{active: table.from==n}" @click="listar(n)">{{n}}</a>
                         </div>

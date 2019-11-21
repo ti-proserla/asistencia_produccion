@@ -57,6 +57,10 @@ var routes =[
         component: require('./view/Reportes/pendientes.vue').default
     },
     { 
+        path: '/reporte-marcas', 
+        component: require('./view/Reportes/marcas.vue').default
+    },
+    { 
         path: '/capturador', 
         component: require('./view/capturador.vue').default
     },

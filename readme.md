@@ -42,6 +42,9 @@ Reportes:
 * Reporte diario de Meche.
 * (Terminado) Guardado en Mayusculas.
 * (Terminado) DNI unico
+* Revisión de Horas del personal.
+* Pasar inactivo al editar
 
-* Cantidad x labor
+* Cantidad de personas x labor
+* Cantidad de personas x Tareo dia anterior, mostrar observacion.
 * Procedencia

@@ -37,15 +37,15 @@
                                     <td>{{proceso.codigo}}</td>
                                     <td>{{proceso.nom_proceso}}</td>
                                     <td>
-                                        <button @click="abrirEditar(proceso.id)" class="btn btn-info">
+                                        <button @click="abrirEditar(proceso.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>
                                     <td>
-                                        <button v-if="proceso.estado=='0'" @click="actualizarEstado(proceso.id)" class="btn btn-info">
+                                        <button v-if="proceso.estado=='0'" @click="actualizarEstado(proceso.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>
                                         </button>
-                                        <button v-else @click="actualizarEstado(proceso.id)" class="btn btn-gray">
+                                        <button v-else @click="actualizarEstado(proceso.id)" class="btn-link-gray">
                                             <i class="material-icons">radio_button_unchecked</i>
                                         </button>
                                     </td>

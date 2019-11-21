@@ -34,7 +34,7 @@
                                 <tr v-for="turno in table.data">
                                     <td>{{turno.descripcion}}</td>
                                     <td>
-                                        <button @click="abrirEditar(turno.id)" class="btn btn-info">
+                                        <button @click="abrirEditar(turno.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>

@@ -36,7 +36,7 @@
                         {{ respuesta.data }}
                     </div>
                     <div v-if="respuesta.status=='OK'"  class="fotocheck text-center" style="margin-right: auto;margin-left: auto">
-                        <img src="https://cdn1.iconfinder.com/data/icons/user-avatars-2/300/10-512.png" alt="">
+                        <img :src="url(respuesta.data.foto)" alt="">
                         <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
                         <hr>
                         <h6>Jayanca Fruits</h6>
@@ -64,6 +64,9 @@ export default {
         this.listarTurnos();
     },
     methods: {
+        url(foto){
+            return url_base+'/../storage/operador/'+foto;
+        },
         listarTurnos(){
             axios.get(url_base+'/turno?all=true')
             .then(response => {

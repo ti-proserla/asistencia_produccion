@@ -37,15 +37,15 @@
                                     <td>{{area.codigo}}</td>
                                     <td>{{area.nom_area}}</td>
                                     <td>
-                                        <button @click="abrirEditar(area.id)" class="btn btn-info">
+                                        <button @click="abrirEditar(area.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>
                                     <td>
-                                        <button v-if="area.estado=='0'" @click="actualizarEstado(area.id)" class="btn btn-info">
+                                        <button v-if="area.estado=='0'" @click="actualizarEstado(area.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>
                                         </button>
-                                        <button v-else @click="actualizarEstado(area.id)" class="btn btn-gray">
+                                        <button v-else @click="actualizarEstado(area.id)" class="btn-link-gray">
                                             <i class="material-icons">radio_button_unchecked</i>
                                         </button>
                                     </td>

@@ -31,11 +31,15 @@ class ReporteController extends Controller
             ->whereNull('T.id')
             ->groupBy('operador.dni')
             ->get();
-        return response()->json($resultado);
-    }
-
-    public function marcas(){
-        $resultado=Operador::with(['marcas'])->get();
+            return response()->json($resultado);
+        }
+        
+    public function marcas(Request $request){
+        $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
+            ->select('dni','nom_operador','ape_operador',DB::raw('GROUP_CONCAT(CONCAT(marcador.ingreso,"@",marcador.salida) SEPARATOR "@") AS marcas'),DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,marcador.salida)/60 ),2) AS total'))
+            ->where('marcador.turno_id',$request->turno_id)
+            ->groupBy('operador.dni')
+            ->get();
         return response()->json($resultado);
     }
 }

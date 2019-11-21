@@ -1,6 +1,6 @@
 <template>
-    <div id="app">
-        <div class="sidebar">
+    <div id="app" :class="(statusSidebar) ? 'open':''">
+        <div class="sidebar" >
             <ul>
                 <li>
                     <router-link to="marcador">
@@ -58,19 +58,31 @@
                 </li>
             </ul>            
         </div>
+        <div class="background-sidebar" @click="closeSidebar()"></div>
+        <nav class="navbar">
+            <button @click="openSidebar()">A</button>
+        </nav>
         <div class="content">
-            <nav>
-                <!-- <img src="" alt=""> -->
-            </nav>
             <slot/>
         </div>
     </div>
 </template>
 <script>
 export default {
+    data() {
+        return {
+            statusSidebar: false
+        }
+    },
     methods: {
         url(){
             // return 
+        },
+        closeSidebar(){
+            this.statusSidebar=false;
+        },
+        openSidebar(){
+            this.statusSidebar=true;
         }
     },
 }

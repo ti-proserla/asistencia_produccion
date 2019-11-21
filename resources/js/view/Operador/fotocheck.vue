@@ -4,7 +4,7 @@
             <button class="oculto-impresion btn btn-warning" @click="imprimir()">Imprimir</button>
         </div>
         <div class="fotocheck text-center">
-            <img :src="url(this.operador.foto)" alt="">
+            <img :src="url(operador.foto)" alt="">
             <p><b>{{ operador.nom_operador.split(' ')[0] }} {{ operador.ape_operador.split(' ')[0] }}</b></p>
             <hr>
             <h6>Jayanca Fruits</h6>
