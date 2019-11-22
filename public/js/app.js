@@ -3776,7 +3776,7 @@ __webpack_require__.r(__webpack_exports__);
     listar: function listar() {
       var _this = this;
 
-      axios.get(url_base + '/reporte-turno?year=' + this.consulta.year + '&week=' + this.consulta.week).then(function (response) {
+      axios.get(url_base + '/reporte-turno2?year=' + this.consulta.year + '&week=' + this.consulta.week).then(function (response) {
         _this.reporte = response.data;
       });
     }

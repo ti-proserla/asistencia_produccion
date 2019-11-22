@@ -90,7 +90,7 @@ export default {
     },
     methods: {
         listar(){
-            axios.get(url_base+'/reporte-turno?year='+this.consulta.year+'&week='+this.consulta.week)
+            axios.get(url_base+'/reporte-turno2?year='+this.consulta.year+'&week='+this.consulta.week)
             .then(response => {
                 this.reporte = response.data;
             })
