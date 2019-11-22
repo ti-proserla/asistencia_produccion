@@ -34,6 +34,7 @@ Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
 Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
+Route::get('reporte-turno2', 'ReporteController@turno2');
 Route::get('reporte-pendientes', 'ReporteController@pendientes');
 Route::get('reporte-marcas', 'ReporteController@marcas');
 

@@ -12,7 +12,7 @@ class ReporteController extends Controller
 {
     public function turno(Request $request){
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
-            ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE WEEK(tareo.created_at,3)='.$request->week.' AND YEAR(tareo.created_at)='.$request->year.') AS T'),'T.operador_id','=','operador.id')
+            ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE WEEK(tareo.created_at,3)='.$request->week.' AND YEAR(tareo.created_at)='.$request->year.' GROUP BY operador_id) AS T'),'T.operador_id','=','operador.id')
             ->leftJoin('labor','labor.id','=','T.labor_id')
             ->leftJoin('area','area.id','=','labor.area_id')
             ->leftJoin('proceso','proceso.id','=','T.proceso_id')
@@ -24,6 +24,19 @@ class ReporteController extends Controller
         return response()->json($resultado);
     }
 
+    public function turno2(Request $request){
+        $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
+            ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE WEEK(tareo.created_at,3)='.$request->week.' AND YEAR(tareo.created_at)='.$request->year.') AS T'),'T.operador_id','=','operador.id')
+            ->leftJoin('labor','labor.id','=','T.labor_id')
+            ->leftJoin('area','area.id','=','labor.area_id')
+            ->leftJoin('proceso','proceso.id','=','T.proceso_id')
+            ->select(DB::raw("operador.dni As codigo, CONCAT(operador.nom_operador,' ',operador.ape_operador) As NombreApellido, CONCAT(YEAR(ingreso),MONTH(ingreso),'-',WEEK(ingreso,3)) AS periodo, area.codigo As codActividad, labor.codigo AS codLabor, proceso.codigo As codProceso, labor.nom_labor,ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=2 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Lunes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=3 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Martes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=4 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Miercoles, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=5 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Jueves, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=6 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Viernes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=7 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Sabado,ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=1 THEN (TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ELSE 0 END),2) as Domingo"))
+            ->groupBy('codigo','procesos.operador.nom_operador','procesos.operador.ape_operador')
+            ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
+            ->where(DB::raw('YEAR(ingreso)'),$request->year)
+            ->toSql();
+        return response()->json($resultado);
+    }
     public function pendientes(Request $request){
         $resultado=Operador::join('marcador','marcador.operador_id','=','operador.id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE turno_id='.$request->turno_id.') AS T'),'T.operador_id','=','operador.id')

@@ -8,7 +8,7 @@
             <p><b>{{ operador.nom_operador.split(' ')[0] }} {{ operador.ape_operador.split(' ')[0] }}</b></p>
             <hr>
             <h6>Jayanca Fruits</h6>
-            <barcode :value="id" height="30" width="2" fontSize="12"></barcode>
+            <barcode :value="operador.dni" height="30" width="2" fontSize="12"></barcode>
         </div>
     </div>
 </template>

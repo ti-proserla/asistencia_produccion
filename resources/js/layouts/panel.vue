@@ -60,7 +60,7 @@
         </div>
         <div class="background-sidebar" @click="closeSidebar()"></div>
         <nav class="navbar">
-            <button @click="openSidebar()">A</button>
+            <button @click="openSidebar()"></button>
         </nav>
         <div class="content">
             <slot/>

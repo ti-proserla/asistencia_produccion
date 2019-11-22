@@ -83673,17 +83673,13 @@ var render = function() {
       }),
       _vm._v(" "),
       _c("nav", { staticClass: "navbar" }, [
-        _c(
-          "button",
-          {
-            on: {
-              click: function($event) {
-                return _vm.openSidebar()
-              }
+        _c("button", {
+          on: {
+            click: function($event) {
+              return _vm.openSidebar()
             }
-          },
-          [_vm._v("A")]
-        )
+          }
+        })
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "content" }, [_vm._t("default")], 2)
@@ -84865,7 +84861,12 @@ var render = function() {
         _c("h6", [_vm._v("Jayanca Fruits")]),
         _vm._v(" "),
         _c("barcode", {
-          attrs: { value: _vm.id, height: "30", width: "2", fontSize: "12" }
+          attrs: {
+            value: _vm.operador.dni,
+            height: "30",
+            width: "2",
+            fontSize: "12"
+          }
         })
       ],
       1
