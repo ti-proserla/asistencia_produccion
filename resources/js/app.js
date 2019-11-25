@@ -12,18 +12,59 @@ import Croppa from 'vue-croppa'
 
 import swal from 'sweetalert';
 
+/**
+ * Vuex session
+ */
+import Vuex from 'vuex'
+Vue.use(Vuex)
+
+window.store=new Vuex.Store({
+    state: {
+      cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null
+    },
+    mutations: {
+      auth_success(state,cuenta){
+        state.cuenta=cuenta;
+        local.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
+        axios.defaults.headers.common['Authorization'] = state.cuenta.token;
+      }
+    },
+    actions: {}
+});
+if (store.state.cuenta!=null) {
+    axios.defaults.headers.common['Authorization'] = store.state.cuenta.token;
+}
+/**
+ * ROUTER VUE
+ */
+var auth=(to, from,next)=>{
+    console.log(store.state.cuenta);
+    if(store.state.cuenta===null){
+        next('/login');
+    }else{
+        next(); 
+    }
+}
 var routes =[
+    {
+        path: '/',
+        component: require('./view/index.vue').default,
+        beforeEnter: auth
+    },
     { 
         path: '/marcador', 
-        component: require('./view/Operacion/marcador.vue').default
+        component: require('./view/Operacion/marcador.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/tareo', 
-        component: require('./view/Operacion/tareo.vue').default
+        component: require('./view/Operacion/tareo.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/operador', 
-        component: require('./view/Operador/index.vue').default
+        component: require('./view/Operador/index.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/fotocheck/:id', 
@@ -31,54 +72,67 @@ var routes =[
         meta:{
             layout: "empty",
         },
+        beforeEnter: auth
     },
     { 
         path: '/proceso', 
-        component: require('./view/Proceso/index.vue').default
+        component: require('./view/Proceso/index.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/area', 
-        component: require('./view/Area/index.vue').default
+        component: require('./view/Area/index.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/labor', 
-        component: require('./view/Labor/index.vue').default
+        component: require('./view/Labor/index.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/turno', 
-        component: require('./view/Turno/index.vue').default
+        component: require('./view/Turno/index.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/reporte-turno', 
-        component: require('./view/Reportes/turno.vue').default
+        component: require('./view/Reportes/turno.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/reporte-pendientes', 
-        component: require('./view/Reportes/pendientes.vue').default
+        component: require('./view/Reportes/pendientes.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/reporte-marcas', 
-        component: require('./view/Reportes/marcas.vue').default
+        component: require('./view/Reportes/marcas.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/capturador', 
-        component: require('./view/capturador.vue').default
+        component: require('./view/capturador.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/scanner', 
-        component: require('./view/scanner.vue').default
+        component: require('./view/scanner.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/reporte', 
-        component: require('./view/reporte.vue').default
+        component: require('./view/reporte.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/refresh', 
-        component: require('./view/refresh.vue').default
+        component: require('./view/refresh.vue').default,
+        beforeEnter: auth
     },
     { 
         path: '/refreshOperario', 
-        component: require('./view/refreshOperario.vue').default
+        component: require('./view/refreshOperario.vue').default,
+        beforeEnter: auth
     },
 ];
 var router=new VueRouter({
@@ -90,6 +144,7 @@ var router=new VueRouter({
 import Dashboard from './App.vue';
 Vue.component('empty',require("./layouts/empty.vue").default);
 Vue.component('panel',require("./layouts/panel.vue").default);
+
 
 const app = new Vue({
     el: '#app',
