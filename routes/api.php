@@ -17,6 +17,8 @@ use Peru\Jne\{Dni, DniParser};
 
 header("Access-Control-Allow-Origin: *");
 
+Route::resource('cuenta', 'CuentaController');
+Route::post('login','CuentaController@login')->name('cuenta.login');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
 

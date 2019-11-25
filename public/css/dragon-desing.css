@@ -343,3 +343,19 @@ body{
 .croppa-center{
     text-align: center;
 }
+/**
+*   Diseño Caso de Uso
+*/
+body{
+    height: 100%;
+}
+body >div{
+    height: 100%;
+}
+#empty{
+    background-color: #fff;
+    height: 100%;
+}
+.login{
+    padding-top: 10%;
+}

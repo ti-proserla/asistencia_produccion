@@ -25,7 +25,7 @@ window.store=new Vuex.Store({
     mutations: {
       auth_success(state,cuenta){
         state.cuenta=cuenta;
-        local.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
+        localStorage.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
         axios.defaults.headers.common['Authorization'] = state.cuenta.token;
       }
     },
@@ -38,12 +38,11 @@ if (store.state.cuenta!=null) {
  * ROUTER VUE
  */
 var auth=(to, from,next)=>{
-    // console.log(store.state.cuenta);
-    // if(store.state.cuenta===null){
-    //     next('/login');
-    // }else{
+    if(store.state.cuenta===null){
+        next('/login');
+    }else{
         next(); 
-    // }
+    }
 }
 var routes =[
     {
@@ -62,9 +61,21 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/cuenta', 
+        component: require('./view/Cuenta/index.vue').default,
+        beforeEnter: auth
+    },
+    { 
         path: '/operador', 
         component: require('./view/Operador/index.vue').default,
         beforeEnter: auth
+    },
+    { 
+        path: '/login', 
+        component: require('./view/login.vue').default,
+        meta:{
+            layout: "empty",
+        },
     },
     { 
         path: '/fotocheck/:id', 
@@ -149,5 +160,6 @@ Vue.component('panel',require("./layouts/panel.vue").default);
 const app = new Vue({
     el: '#app',
     router,
+    store,
     render: h => h(Dashboard)
 });
