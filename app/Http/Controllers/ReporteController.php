@@ -52,10 +52,9 @@ class ReporteController extends Controller
         
     public function marcas(Request $request){
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
-            ->select('dni','nom_operador','ape_operador',DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) SEPARATOR "@") AS marcas'),DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,marcador.salida)/60 ),2) AS total'))
+            ->select('dni','nom_operador','ape_operador',DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,marcador.salida)/60 ),2) AS total'))
             ->where('marcador.turno_id',$request->turno_id)
             ->groupBy('operador.dni')
-            ->orderBy('marcador.id', 'ASC')
             ->get();
         return response()->json($resultado);
     }

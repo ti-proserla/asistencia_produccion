@@ -38,12 +38,12 @@ if (store.state.cuenta!=null) {
  * ROUTER VUE
  */
 var auth=(to, from,next)=>{
-    console.log(store.state.cuenta);
-    if(store.state.cuenta===null){
-        next('/login');
-    }else{
+    // console.log(store.state.cuenta);
+    // if(store.state.cuenta===null){
+    //     next('/login');
+    // }else{
         next(); 
-    }
+    // }
 }
 var routes =[
     {

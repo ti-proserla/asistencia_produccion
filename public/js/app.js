@@ -106382,20 +106382,18 @@ if (store.state.cuenta != null) {
 
 
 var auth = function auth(to, from, next) {
-  console.log(store.state.cuenta);
-
-  if (store.state.cuenta === null) {
-    next('/login');
-  } else {
-    next();
-  }
+  // console.log(store.state.cuenta);
+  // if(store.state.cuenta===null){
+  //     next('/login');
+  // }else{
+  next(); // }
 };
 
 var routes = [{
   path: '/',
   component: __webpack_require__(/*! ./view/index.vue */ "./resources/js/view/index.vue")["default"],
   beforeEnter: auth
-}, {}, {
+}, {
   path: '/marcador',
   component: __webpack_require__(/*! ./view/Operacion/marcador.vue */ "./resources/js/view/Operacion/marcador.vue")["default"],
   beforeEnter: auth
