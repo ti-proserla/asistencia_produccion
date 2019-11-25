@@ -74,7 +74,7 @@
                             </table>
                         </div>
                         <div class="pagination">
-                            <a v-for="n in table.last_page" :class="{active: table.from==n}" @click="listar(n)">{{n}}</a>
+                            <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)">{{n}}</a>
                         </div>
                     </div>
                 </div>

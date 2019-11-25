@@ -11,7 +11,9 @@ import Croppa from 'vue-croppa'
  Vue.use(Croppa)   
 
 import swal from 'sweetalert';
+import vSelect from 'vue-select'
 
+Vue.component('v-select', vSelect)
 /**
  * Vuex session
  */
@@ -58,6 +60,11 @@ var routes =[
     { 
         path: '/tareo', 
         component: require('./view/Operacion/tareo.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/regularizar', 
+        component: require('./view/Operacion/regularizar.vue').default,
         beforeEnter: auth
     },
     { 

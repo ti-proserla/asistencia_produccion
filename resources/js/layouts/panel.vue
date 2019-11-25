@@ -56,11 +56,19 @@
                         <p>Reporte de Pendientes</p>
                     </router-link>
                 </li>
+                <li>
+                    <router-link to="reporte-marcas">
+                        <i class="material-icons">book</i>
+                        <p>Reporte de Marcas</p>
+                    </router-link>
+                </li>
             </ul>            
         </div>
         <div class="background-sidebar" @click="closeSidebar()"></div>
         <nav class="navbar">
-            <button @click="openSidebar()"></button>
+            <button @click="openSidebar()" class="btn-link-success"><i class="material-icons">
+menu
+</i></button>
         </nav>
         <div class="content">
             <slot/>

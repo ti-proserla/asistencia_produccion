@@ -17,7 +17,10 @@ class OperadorController extends Controller
      */
     public function index(Request $request)
     {
-        // dd($request->search);
+        if ($request->all==true) {
+            $operadores=Operador::all();       
+            return response()->json($operadores); 
+        }
         if ($request->search==null||$request->search=="null") {
             $request->search="";
         }
