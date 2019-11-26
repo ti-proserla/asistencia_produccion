@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\DB;
 
 class MarcadorController extends Controller
 {
+    public function index(Request $request){
+        $marcas=Marcador::where('operador_id',$request->operador_id)
+            ->where('turno_id',$request->turno_id)
+            ->get();
+        return response()->json($marcas);
+    }
     /**
      * Evalua el DNI y Registra una marcacion
      */
@@ -30,7 +36,7 @@ class MarcadorController extends Controller
             ->orderBy('id','DESC')
             ->first();
         if ($marcador!=null) {
-            $fecha_limite=Carbon::now()->subMinute(0);
+            $fecha_limite=Carbon::now()->subMinute(10);
             if(($marcador->salida==null&&$fecha_limite<Carbon::parse($marcador->ingreso))||($marcador->salida!=null&&$fecha_limite<Carbon::parse($marcador->salida))) {
                 return response()->json([
                     "status"    =>  "ERROR",
@@ -56,6 +62,16 @@ class MarcadorController extends Controller
         
     }
     
+    public function update(Request $request,$id){
+        $marcador=Marcador::where('id',$id)->first();
+        $marcador->ingreso=$request->ingreso;
+        $marcador->salida=$request->salida;
+        $marcador->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Marca actualizada"
+        ]);
+    }
     /**
      * Visualiza datos de un solo actividad
      */

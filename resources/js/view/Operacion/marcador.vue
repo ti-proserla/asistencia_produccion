@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-12">
                             <form v-on:submit.prevent="guardar()">
-                                <Input title="Codigo de Barras" focusSelect="true" v-model="codigo_barras"></Input>
+                                <Input title="Codigo de Barras" :focusSelect="true" v-model="codigo_barras"></Input>
                                 <button type="submit" hidden></button>
                             </form>
                         </div>
@@ -28,14 +28,11 @@
                 <div class="card-header">
                     <h4 class="card-title">Respuesta</h4>
                 </div>
-                <div v-if="respuesta!=null" class="card-body">
-                    <div v-if="respuesta.status=='OK'" class="alert alert-success" role="alert">
-                        Marcado Correcto
+                <div class="card-body">
+                    <div v-if="alert!=null" :class="'alert alert-'+alert.status" role="alert">
+                        {{ alert.data }}
                     </div>
-                    <div v-else class="alert alert-danger" role="alert">
-                        {{ respuesta.data }}
-                    </div>
-                    <div v-if="respuesta.status=='OK'"  class="fotocheck text-center" style="margin-right: auto;margin-left: auto">
+                    <div v-if="respuesta!=null && respuesta.status=='OK'"  class="fotocheck text-center" style="margin-right: auto;margin-left: auto">
                         <img :src="url(respuesta.data.foto)" alt="">
                         <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
                         <hr>
@@ -57,7 +54,8 @@ export default {
             turnos:[],
             codigo_barras: null,
             respuesta: null,
-            turno_id: 0
+            turno_id: 0,
+            alert: null
         }
     },
     mounted() {
@@ -81,20 +79,37 @@ export default {
                 if (this.codigo_barras.length==8) {
                     var cod_barras_paso=this.codigo_barras;
                     this.codigo_barras=null;
-                    axios.post(url_base+'/marcacion',{ codigo_barras: cod_barras_paso,turno_id: this.turno_id})
+                    axios.post(url_base+'/marcador',{ codigo_barras: cod_barras_paso,turno_id: this.turno_id})
                     .then(response => {
                         this.respuesta=response.data;
+                        var resp=response.data;
+                        switch (resp.status) {
+                            case "VALIDATION":
+                                this.errors_editar=resp.data;
+                                break;
+                            case "OK":
+                                this.alert={
+                                    status: 'success',
+                                    data: 'Marca Correcta.'
+                                }
+                                break;
+                        }
+                        this.clearAlert();
                     })
                 }else{
                     this.codigo_barras=null;
-                    this.respuesta={
-                        status: 'ERROR',
+                    this.alert={
+                        status: 'danger',
                         data: 'Código no Valido'
                     }
-                    // console.log('codigo de barras no valido');
-                    // alert('codigo de barras no valido');
+                    this.clearAlert();
                 }
             })
+        },
+        clearAlert(){
+            setTimeout(() => {
+                this.alert=null;
+            }, 1000);
         }
     },
 }

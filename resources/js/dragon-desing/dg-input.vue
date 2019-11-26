@@ -3,7 +3,7 @@
         <div class="form-group-dragon" :class="{'focus': focus, 'active' : withContent }">
             <div class="form-group-content">
                 <label for="">{{ title }}</label>
-                <input :readonly="readonly" @focus="OpenFocus" @blur="exitFocus" :type="type" ref="text" :value="value" @input="updateFormControl">
+                <input :readonly="readonly||readonlyFocusInit" @focus="OpenFocus" @blur="exitFocus" :type="type" ref="text" :value="value" @input="updateFormControl">
             </div>
         </div>
         <strong class="form-dragon-error" v-if="error!=null">{{ error }}</strong>
@@ -16,11 +16,12 @@ export default {
     data() {
         return {
             focus: false,
+            readonlyFocusInit: false
         }
     },
     mounted() {
-        if (this.focusSelect=='true'){
-            this.$refs.text.focus();   
+        if (this.focusSelect){
+            this.$refs.text.focus();
         }
     },
     computed: {
@@ -41,6 +42,12 @@ export default {
     },
     methods: {
         OpenFocus(){
+            if (this.focusSelect){
+                this.readonlyFocusInit=true;
+                setTimeout(() => {
+                    this.readonlyFocusInit=false;
+                },300 );
+            }
             this.focus=true;
         },
         exitFocus(){

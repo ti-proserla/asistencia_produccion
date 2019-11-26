@@ -32,7 +32,7 @@ Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.est
 
 Route::resource('turno', 'TurnoController');
 
-Route::post('marcacion', 'MarcadorController@store')->name('marcacion.store');
+Route::resource('marcador', 'MarcadorController');
 Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');

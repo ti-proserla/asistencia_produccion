@@ -19,7 +19,7 @@
                         <option v-for="labor in labores" :value="labor.id">{{ labor.nom_labor }}</option>
                     </Select>
                     <form v-on:submit.prevent="guardar()">
-                        <Input title="Codigo de Barras" focusSelect="true" v-model="tareo.codigo_barras"></Input>
+                        <Input title="Codigo de Barras" :focusSelect='true' v-model="tareo.codigo_barras"></Input>
                         <button type="submit" hidden></button>
                     </form>
                 </div>
