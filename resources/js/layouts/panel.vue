@@ -21,6 +21,12 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="linea">
+                        <i class="material-icons">work</i>
+                        <p>Linea</p>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="proceso">
                         <i class="material-icons">work</i>
                         <p>proceso</p>

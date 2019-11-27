@@ -40,6 +40,7 @@ if (store.state.cuenta!=null) {
  * ROUTER VUE
  */
 var auth=(to, from,next)=>{
+    $('.modal-backdrop').remove();
     if(store.state.cuenta===null){
         next('/login');
     }else{
@@ -110,6 +111,11 @@ var routes =[
     { 
         path: '/turno', 
         component: require('./view/Turno/index.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/linea', 
+        component: require('./view/Linea/index.vue').default,
         beforeEnter: auth
     },
     { 

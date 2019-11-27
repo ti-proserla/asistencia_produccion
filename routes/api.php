@@ -22,6 +22,7 @@ Route::post('login','CuentaController@login')->name('cuenta.login');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
 
+Route::get('area/labor','AreaController@labor')->name('area.labor');
 Route::resource('area', 'AreaController');
 Route::post('area/{id}/estado','AreaController@estado')->name('area.estado');
 
@@ -29,6 +30,8 @@ Route::resource('labor', 'LaborController');
 Route::post('labor/{id}/estado','LaborController@estado')->name('labor.estado');
 Route::resource('proceso', 'ProcesoController');
 Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.estado');
+Route::resource('linea', 'LineaController');
+Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');
 
 Route::resource('turno', 'TurnoController');
 

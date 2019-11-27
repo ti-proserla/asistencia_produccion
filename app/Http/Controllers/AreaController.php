@@ -22,7 +22,13 @@ class AreaController extends Controller
         }
         return response()->json($Areas);
     }
-
+    /**
+     * Area Labor , muestra un JSON de Areas con un sub-Json de sus Labores 
+     */
+    public function labor(Request $request){
+        $areas=Area::with('labores')->get();
+        return response()->json($areas);
+    }
     /**
      * Registra un nuevo Area
      */

@@ -144,11 +144,20 @@ img{
 }
 
 .btn{
+    font-weight: 500;
     text-transform: uppercase;
     font-size: 12px;
-    /* min-width: 150px; */
     padding: 10px 30px;
 }
+.btn-sm{
+    padding: .25rem .5rem !important;
+    font-size: .875rem !important;
+}
+.btn-float-right{
+    float: right;
+}
+
+
 [class*="btn-link-"]{
     background-color: transparent;
     border: 0;
@@ -290,7 +299,7 @@ img{
     margin-left: 0;
     padding: 0;
 }
-.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 12px 10px;color: #8d98ac!important}
+.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 10px;color: #8d98ac!important}
 .sidebar ul li p{
     font-size: 10px;
     text-transform: uppercase;
@@ -302,7 +311,7 @@ img{
     color: #fff!important;    
 }
 .sidebar ul li i{
-    font-size: 24px;
+    font-size: 20px;
 }
 .navbar{margin-left: 100px; background-color: #fff;padding: 15px 20px;}
 
@@ -394,7 +403,7 @@ body >div{
     color: #fff;
   }
 
-@media (max-width: 992px){
+/* @media (max-width: 992px){
     .alert-danger,.alert-success,.alert-info,.alert-warning{
         z-index: 1;
         position: fixed;
@@ -402,4 +411,4 @@ body >div{
         left: 10px;
         right: 10px;
     }
-}
+} */

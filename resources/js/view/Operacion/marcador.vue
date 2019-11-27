@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-12">
                             <form v-on:submit.prevent="guardar()">
-                                <Input title="Codigo de Barras" :focusSelect="true" v-model="codigo_barras"></Input>
+                                <Input title="Codigo de Barras" type="number" :focusSelect="true" v-model="codigo_barras"></Input>
                                 <button type="submit" hidden></button>
                             </form>
                         </div>
@@ -109,7 +109,7 @@ export default {
         clearAlert(){
             setTimeout(() => {
                 this.alert=null;
-            }, 1000);
+            }, 10000);
         }
     },
 }

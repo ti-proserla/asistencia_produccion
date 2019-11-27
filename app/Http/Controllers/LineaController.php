@@ -4,83 +4,56 @@ namespace App\Http\Controllers;
 
 use App\Model\Linea;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
+use App\Http\Requests\LineaValidate;
 
 class LineaController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Visualiza todos los Lineaes
      */
-    public function index()
+    public function index(Request $request)
     {
-        $lineas=Linea::all();
-        return view('capturador',compact('lineas'));
+        if ($request->all==true) {
+            $Lineas=Linea::all();
+        }else{
+            $Lineas=Linea::paginate(8);
+        }
+        return response()->json($Lineas);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Registra un nuevo Linea
      */
-    public function create()
+    public function store(LineaValidate $request)
     {
-        //
+        $Linea=new Linea();
+        $Linea->nombre=$request->nombre;
+        $Linea->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Linea Registrada"
+        ]);
     }
-
+    
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * Visualiza datos de un solo Linea
      */
-    public function store(Request $request)
+    public function show($id)
     {
-        //
+        $Linea=Linea::where('id',$id)->first();
+        return response()->json($Linea);
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Linea  $linea
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Linea $linea)
+        
+    public function update(LineaValidate $request, $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Linea  $linea
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Linea $linea)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Linea  $linea
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Linea $linea)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Linea  $linea
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Linea $linea)
-    {
-        //
+        $Linea=Linea::where('id',$id)->first();
+        $Linea->nombre=$request->nombre;      
+        $Linea->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Linea Actualizada"
+        ]);
     }
 }

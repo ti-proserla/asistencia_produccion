@@ -41,7 +41,7 @@ Reportes:
 * (Terminado) Reporte diario de Meche.
 * (Terminado) Guardado en Mayusculas.
 * (Terminado) DNI unico
-* Regularizar Marcas.
+* (Terminado) Regularizar Marcas.
 * Revisión de Horas del personal pantalla.
 * Pasar inactivo al editar
 

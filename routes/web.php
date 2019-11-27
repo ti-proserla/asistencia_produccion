@@ -42,7 +42,7 @@ Route::get('refreshOperario', function () {
 /**
  * Operaciones
  */
-Route::get('linea', 'LineaController@index');
+// Route::get('linea', 'LineaController@index');
 Route::get('producto/nuevo','ProductoController@nuevo');
 Route::get('producto/editar','ProductoController@editar');
 Route::get('producto/eliminar','ProductoController@eliminar');

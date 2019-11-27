@@ -2,7 +2,8 @@
 <div>
     <div class="row">
         <div class="col-sm-4">
-            <v-select :options="opt" @search="getOperadores" :filterable="false" v-model="hola">
+            <v-select :options="opt" @search="getOperadores"  v-model="hola">
+            <!-- <v-select :options="opt" @search="getOperadores" :filterable="false" v-model="hola"> -->
                 <template slot="no-options">
                     Buscar Operadores..
                 </template>
@@ -12,12 +13,12 @@
                         {{ option.nom_operador }}
                     </div>
                 </template>
-                <template slot="selected-option" slot-scope="option">
+                <!-- <template slot="selected-option" slot-scope="option">
                     <div class="selected d-center v-select-options">
                         <img :src='url(option.foto)'/> 
                         {{ option.nom_operador }}
                     </div>
-                </template>
+                </template> -->
             </v-select>
         </div>
         <div class="col-sm-2">
