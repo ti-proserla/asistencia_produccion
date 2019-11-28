@@ -89,12 +89,17 @@ export default {
                                 break;
                             case "OK":
                                 this.alert={
-                                    status: 'success',
+                                    status: 'primary',
                                     data: 'Marca Correcta.'
                                 }
                                 break;
+                            case "ERROR":
+                                this.alert={
+                                    status: 'warning',
+                                    data: resp.data
+                                }
+                                break;
                         }
-                        this.clearAlert();
                     })
                 }else{
                     this.codigo_barras=null;

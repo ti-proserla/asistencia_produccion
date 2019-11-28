@@ -6,6 +6,8 @@ use App\Model\Operador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Peru\Http\ContextClient;
+use Peru\Jne\{Dni, DniParser};
 
 use App\Http\Requests\NuevoOperador;
 use App\Http\Requests\OperadorEditar;
@@ -17,12 +19,12 @@ class OperadorController extends Controller
      */
     public function index(Request $request)
     {
-        if ($request->all==true) {
-            $operadores=Operador::all();       
-            return response()->json($operadores); 
-        }
         if ($request->search==null||$request->search=="null") {
             $request->search="";
+        }
+        if ($request->all==true) {
+            $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->get();       
+            return response()->json($operadores); 
         }
         $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->paginate(8);
         return response()->json($operadores);
@@ -96,5 +98,33 @@ class OperadorController extends Controller
             "status"=> "OK",
             "data"  => "Estado Actualizado"
         ]);
+    }
+
+    public function jne(Request $request,$dni){
+        if ($request->all!=true) {
+            $operador=Operador::where('dni',$dni)->first();
+            if ($operador!=null) {
+                $id=$operador->id;
+                return json_encode([
+                    "status" => "INFO",
+                    "data"   => "El Trabajador ya se encuentra registrado",
+                    "id"     => $id
+                ]); 
+            }
+        }
+        $cs = new Dni(new ContextClient(), new DniParser());
+        $person = $cs->get($dni);
+        if (!$person) {
+            return json_encode([
+                "status" => "ERROR",
+                "data"   => "No encontrado"
+            ]);
+            // echo 'Not found';
+            exit();
+        }
+        return json_encode([
+                "status" => "OK",
+                "data"   =>$person
+            ]);
     }
 }

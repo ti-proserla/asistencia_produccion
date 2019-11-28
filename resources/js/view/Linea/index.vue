@@ -59,7 +59,6 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="Codigo:" v-model="linea_editar.codigo" :error="errors_editar.codigo"></Input>
                             <Input title="Nombre:" v-model="linea_editar.nombre" :error="errors_editar.nombre"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>

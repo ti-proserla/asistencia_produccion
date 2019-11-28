@@ -23,7 +23,7 @@
         @foreach ($operadores as $key=>$operador)
             <tr>
                 <td>{{ str_pad($key+1, 4, "0", STR_PAD_LEFT) }}</td>
-                <td>{{ $operador->codigo."" }}</td>
+                <td>{{ str_pad($operador->codigo, 8, "0", STR_PAD_LEFT) }}</td>
                 <td>{{ $operador->NombreApellido }}</td>
                 <td>{{ $operador->periodo }}</td>
                 <td>{{ $operador->codActividad }}</td>
@@ -31,13 +31,13 @@
                 <td>{{ $operador->codProceso }}</td>
                 <td></td>
                 <td>N</td>
-                <td>{{ $operador->Lunes }}</td>
-                <td>{{ $operador->Martes }}</td>
-                <td>{{ $operador->Miercoles }}</td>
-                <td>{{ $operador->Jueves }}</td>
-                <td>{{ $operador->Viernes }}</td>
-                <td>{{ $operador->Sabado }}</td>
-                <td>{{ $operador->Domingo }}</td>
+                <td>{{ ($operador->Lunes==0) ? '': $operador->Lunes }}</td>
+                <td>{{ ($operador->Martes==0) ? '': $operador->Martes}}</td>
+                <td>{{ ($operador->Miercoles==0) ? '': $operador->Miercoles }}</td>
+                <td>{{ ($operador->Jueves==0) ? '': $operador->Jueves}}</td>
+                <td>{{ ($operador->Viernes==0) ? '': $operador->Viernes }}</td>
+                <td>{{ ($operador->Sabado==0) ? '': $operador->Sabado}}</td>
+                <td>{{ ($operador->Domingo==0) ? '': $operador->Domingo}}</td>
             </tr>
         @endforeach
     </tbody>

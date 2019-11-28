@@ -6,15 +6,18 @@
             </div>
             <div class="card-body">
                 <div class="row form-group">
-                    <div class="col-sm-3">
+                    <div class="col-lg-4">
                         <select v-model="turno_id" class="form-control">
                             <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
                         </select>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-lg-2">
                         <button @click="listar()" class="btn btn-info">
                             Buscar
                         </button>
+                    </div>
+                    <div class="col-lg-2">
+                        <a :href="url" class="btn btn-success">Excel</a>
                     </div>
                 </div>
                  <table class="table table-striped">
@@ -63,8 +66,9 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/'+this.consulta.year+'/'+this.consulta.week;
+            return url_base+'/marcas-tuno/'+this.turno_id;
         }
+    
     },
     methods: {
         listarTurnos(){

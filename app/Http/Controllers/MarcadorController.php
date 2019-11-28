@@ -64,8 +64,8 @@ class MarcadorController extends Controller
     
     public function update(Request $request,$id){
         $marcador=Marcador::where('id',$id)->first();
-        $marcador->ingreso=$request->ingreso;
-        $marcador->salida=$request->salida;
+        $marcador->ingreso=($request->ingreso == null) ? $marcador->ingreso : $request->ingreso;
+        $marcador->salida=($request->salida == null) ? $marcador->salida : $request->salida;
         $marcador->save();
         return response()->json([
             "status"=> "OK",

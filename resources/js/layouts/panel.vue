@@ -15,6 +15,12 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="regularizar">
+                        <i class="material-icons">airplay</i>
+                        <p>Regularizar Horas</p>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="operador">
                         <i class="material-icons">person</i>
                         <p>Operadores</p>
@@ -56,12 +62,12 @@
                         <p>Reporte por Turno</p>
                     </router-link>
                 </li>
-                <li>
+                <!-- <li>
                     <router-link to="reporte-pendientes">
                         <i class="material-icons">book</i>
                         <p>Reporte de Pendientes</p>
                     </router-link>
-                </li>
+                </li> -->
                 <li>
                     <router-link to="reporte-marcas">
                         <i class="material-icons">book</i>

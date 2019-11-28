@@ -10,7 +10,7 @@
                         <form action="" v-on:submit.prevent="grabarNuevo()">
                             <Input title="Codigo:" v-model="labor.codigo" :error="errors.codigo"></Input>
                             <Input title="Nombre:" v-model="labor.nom_labor" :error="errors.nom_labor"></Input>
-                            <Select title="Cargo:" v-model="labor.area_id" :error="errors.area_id">
+                            <Select title="Area:" v-model="labor.area_id" :error="errors.area_id">
                                 <option value=""></option>
                                 <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
                             </Select>
@@ -77,7 +77,7 @@
                         <form action="" v-on:submit.prevent="grabarEditar()">
                             <Input title="Codigo:" v-model="labor_editar.codigo" :error="errors_editar.codigo"></Input>
                             <Input title="Nombre:" v-model="labor_editar.nom_labor" :error="errors_editar.nom_labor"></Input>
-                            <Select title="Cargo:" v-model="labor_editar.area_id" :error="errors_editar.area_id">
+                            <Select title="Area:" v-model="labor_editar.area_id" :error="errors_editar.area_id">
                                 <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
                             </Select>
                             <div class="text-center">

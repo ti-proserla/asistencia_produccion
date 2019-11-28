@@ -110,7 +110,8 @@ export default {
             respuesta: null,
             alert: null,
             /**Lista de Pendientes */
-            reporte:[]
+            reporte:[],
+            areasLabor:[]
         }
     },
     mounted() {
@@ -119,10 +120,20 @@ export default {
         this.listarAreas();
         this.listarLabor();
         this.listarLineas();
+        this.listarAreasLabor();
     },
     methods: {
         url(foto){
             return url_base+'/../storage/operador/'+foto;
+        },
+        listarAreasLabor(){
+            axios.get(url_base+'/labor/areas')
+            .then(response => {
+                this.areasLabor = response.data;
+                // if (this.areasLabor.length>0) {
+                //     this.tareo.labor_id=this.areasLabor[0].id;
+                // }
+            });
         },
         listarLabor(){
             axios.get(url_base+'/labor?all=true')

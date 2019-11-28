@@ -48,3 +48,10 @@ Reportes:
 * Cantidad de personas x labor
 * Cantidad de personas x Tareo dia anterior, mostrar observacion.
 * Procedencia
+
+44487844
+
+TESTEO:
+* Regularizacion tiene que mostrar DNI
+* Reporte turno comprobar Horas acumulativas.
+* Reporte de Marcas total 0 cuando no tiene marcas

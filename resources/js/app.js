@@ -11,9 +11,10 @@ import Croppa from 'vue-croppa'
  Vue.use(Croppa)   
 
 import swal from 'sweetalert';
-import vSelect from 'vue-select'
+// import vSelect from 'vue-select'
 
-Vue.component('v-select', vSelect)
+// Vue.component('v-select', vSelect)
+Vue.component('v-select', VueSelect.VueSelect)
 /**
  * Vuex session
  */

@@ -92,7 +92,14 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
+                            <div class="row">
+                                <div class="col-10">
+                                    <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
+                                </div>
+                                <div class="col-2">
+                                    <a class="btn btn-sm btn-success" @click="consultaJNE()">JNE</a>
+                                </div>
+                            </div>
                             <Input title="Apellido:" v-model="operador_editar.ape_operador" :error="errors_editar.ape_operador"></Input>
                             <div class="croppa-center">
                                 <croppa  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
@@ -157,7 +164,6 @@ export default {
     computed: {
         consulta(){
             if (this.operador.dni!=null) {
-                console.log(this.operador);
                 if (this.operador.dni.length==8) {
                     axios.get(url_base+'/jne/dni/'+this.operador.dni)
                     .then(response => {
@@ -202,6 +208,26 @@ export default {
         this.listar();
     },
     methods: {
+        consultaJNE(){
+            if (this.operador_editar.dni!=null) {
+                if (this.operador_editar.dni.length==8) {
+                    axios.get(url_base+'/jne/dni/'+this.operador_editar.dni+'?all=true')
+                    .then(response => {
+                        var respuesta=response.data;
+                        switch (respuesta.status) {
+                            case "OK":
+                                this.operador_editar.nom_operador=respuesta.data.nombres;
+                                this.operador_editar.ape_operador=respuesta.data.apellidoPaterno+" "+respuesta.data.apellidoMaterno;
+                                break;
+                            default:
+                                break;
+                        }
+                        // this.table = response.data;
+                    });
+                    return true;
+                }
+            }
+        },
         listar(n=this.table.from){
             axios.get(url_base+'/operador?page='+n+'&search='+this.search)
             .then(response => {

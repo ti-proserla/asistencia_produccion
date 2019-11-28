@@ -10,10 +10,10 @@
 |
 */
 use App\Exports\HorasSemanaTrabajadorExport;
+use App\Exports\MarcasTurnoTrabajadorExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Operador;
-use Peru\Http\ContextClient;
-use Peru\Jne\{Dni, DniParser};
+
 
 header("Access-Control-Allow-Origin: *");
 
@@ -48,32 +48,11 @@ Route::get('conteo','ConteoController@reporte');
 Route::get('conteoOperario','ConteoController@reporteOperario');
 
 
-Route::get('jne/dni/{dni}', function ($dni) {
-    $operador=Operador::where('dni',$dni)->first();
-    if ($operador!=null) {
-        $id=$operador->id;
-        return json_encode([
-            "status" => "INFO",
-            "data"   => "El Trabajador ya se encuentra registrado",
-            "id"     => $id
-        ]); 
-    }
-    $cs = new Dni(new ContextClient(), new DniParser());
-    $person = $cs->get($dni);
-    if (!$person) {
-        return json_encode([
-            "status" => "ERROR",
-            "data"   => "No encontrado"
-        ]);
-        // echo 'Not found';
-        exit();
-    }
-    return json_encode([
-            "status" => "OK",
-            "data"   =>$person
-        ]);
-});
+Route::get('jne/dni/{dni}', 'OperadorController@jne');
 
 Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana), "horas-semana-$anio-$semana.xlsx");
+});
+Route::get('/marcas-tuno/{turno_id}', function ($turno_id) {
+    return Excel::download(new MarcasTurnoTrabajadorExport($turno_id), "marcas-turno-$turno_id.xlsx");
 });
