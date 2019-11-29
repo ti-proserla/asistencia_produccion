@@ -6,14 +6,20 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="col-sm-1">
+                    <div class="col-lg-1">
                         <label for="" class="my-2"><b>Año/Semana:</b></label>
                     </div>
-                    <div class="col-6 col-sm-2">
+                    <div class="col-6 col-lg-2">
                         <input type="number" v-model="consulta.year" class="form-control">
                     </div>
                     <div class="col-6 col-sm-1">
                         <input type="number" v-model="consulta.week" class="form-control">
+                    </div>
+                    <div class="col-lg-1">
+                        <label for="" class="my-2"><b>Nombre:</b></label>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
                     <div class="col-sm-3">
                         <button @click="listar()" class="btn btn-info">
@@ -26,7 +32,6 @@
         </div>
         <div class="card">
             <div class="card-body">
-                    
                 <table class="table">
                     <thead>
                         <tr>
@@ -46,8 +51,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in reporte">
-                            <td>{{ item.codigo }}</td>
+                        <tr v-for="item in table.data">
+                            <td>{{ item.dni }}</td>
                             <td>{{ item.NombreApellido }} </td>
                             <td>{{ item.periodo }} </td>
                             <td>{{ item.codActividad }} </td>
@@ -63,6 +68,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)">{{n}}</a>
+                </div>
             </div>
         </div>
         <!-- {{reporte}} -->
@@ -80,7 +88,11 @@ export default {
             consulta:{
                 year: moment().format('YYYY'),
                 week: moment().week()
-            }
+            },
+            search: '',
+            table:{
+                data:[]
+            },
         }
     },
     computed: {
@@ -89,10 +101,10 @@ export default {
         }
     },
     methods: {
-        listar(){
-            axios.get(url_base+'/reporte-turno2?year='+this.consulta.year+'&week='+this.consulta.week)
+        listar(n=this.table.current_page){
+            axios.get(url_base+'/reporte-turno2?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&page='+n)
             .then(response => {
-                this.reporte = response.data;
+                this.table = response.data;
             })
         }
     },

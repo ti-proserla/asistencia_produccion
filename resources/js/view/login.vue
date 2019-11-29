@@ -8,13 +8,15 @@
                 <div class="col-lg-4 col-sm-6">
                     <div class="card card-login my-5">
                         <div class="card-body">
-                            <Input title="Usuario" v-model="cuenta.usuario"></Input>
-                            <Input title="Contraseña" type="password" v-model="cuenta.password"></Input>
-                            <div class="text-center">
-                                <button @click="ingresar" class="btn btn-danger">
-                                    Ingresar
-                                </button>
-                            </div>
+                            <form v-on:submit.prevent="ingresar">
+                                <Input title="Usuario" v-model="cuenta.usuario"></Input>
+                                <Input title="Contraseña" type="password" v-model="cuenta.password"></Input>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-danger">
+                                        Ingresar
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -6,10 +6,16 @@
             </div>
             <div class="card-body">
                 <div class="row form-group">
-                    <div class="col-lg-4">
+                    <div class="col-lg-3">
                         <select v-model="turno_id" class="form-control">
                             <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
                         </select>
+                    </div>
+                    <div class="col-lg-1">
+                        <label for="" class="my-2"><b>Nombre:</b></label>
+                    </div>
+                    <div class="col-lg-4">
+                        <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
                     <div class="col-lg-2">
                         <button @click="listar()" class="btn btn-info">
@@ -35,7 +41,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="item in reporte">
+                        <tr v-for="item in table.data">
                             <td>{{ item.dni }}</td>
                             <td>{{ item.nom_operador }} {{ item.ape_operador }}</td>
                             <td>{{ item.marcas.split('@')[0]}}</td>
@@ -48,6 +54,9 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="pagination">
+                    <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)">{{n}}</a>
+                </div>
             </div>
         </div>
     </div>
@@ -58,7 +67,11 @@ export default {
         return {
             reporte:[],
             turno_id: 0,
-            turnos:[]
+            turnos:[],
+            table:{
+                data:[]
+            },
+            search: '',
         }
     },
     mounted() {
@@ -80,10 +93,10 @@ export default {
                 }
             });
         },
-        listar(){
-            axios.get(url_base+'/reporte-marcas?turno_id='+this.turno_id)
+        listar(n=this.table.current_page){
+            axios.get(url_base+'/reporte-marcas?turno_id='+this.turno_id+'&search='+this.search+'&page='+n)
             .then(response => {
-                this.reporte = response.data;
+                this.table = response.data;
             })
         }
     },

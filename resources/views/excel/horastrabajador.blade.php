@@ -23,7 +23,7 @@
         @foreach ($operadores as $key=>$operador)
             <tr>
                 <td>{{ str_pad($key+1, 4, "0", STR_PAD_LEFT) }}</td>
-                <td>{{ str_pad($operador->codigo, 8, "0", STR_PAD_LEFT) }}</td>
+                <td>{{ str_pad($operador->dni, 8, "0", STR_PAD_LEFT) }}</td>
                 <td>{{ $operador->NombreApellido }}</td>
                 <td>{{ $operador->periodo }}</td>
                 <td>{{ $operador->codActividad }}</td>

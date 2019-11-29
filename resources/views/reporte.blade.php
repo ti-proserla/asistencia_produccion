@@ -15,10 +15,10 @@
 <body>
     <div id="app"></div>
     <!-- include VueJS first -->
-    <script src="https://unpkg.com/vue@latest"></script>
+    {{-- <script src="https://unpkg.com/vue@latest"></script> --}}
 
     <!-- use the latest vue-select release -->
-    <script src="https://unpkg.com/vue-select@latest"></script>
+    {{-- <script src="https://unpkg.com/vue-select@latest"></script> --}}
     @include('footer')
 </body>
 </html>

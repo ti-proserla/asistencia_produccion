@@ -78,9 +78,8 @@
         </div>
         <div class="background-sidebar" @click="closeSidebar()"></div>
         <nav class="navbar">
-            <button @click="openSidebar()" class="btn-link-success"><i class="material-icons">
-menu
-</i></button>
+            <button @click="openSidebar()" class="btn-link-success"><i class="material-icons">menu</i></button>
+            <button @click="cerrar()" class="btn btn-danger btn-sm btn-float-right">Salir</button>
         </nav>
         <div class="content">
             <slot/>
@@ -103,6 +102,10 @@ export default {
         },
         openSidebar(){
             this.statusSidebar=true;
+        },
+        cerrar(){
+            this.$store.commit('auth_close');
+            this.$router.push({path: "/login"} );
         }
     },
 }

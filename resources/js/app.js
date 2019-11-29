@@ -11,10 +11,10 @@ import Croppa from 'vue-croppa'
  Vue.use(Croppa)   
 
 import swal from 'sweetalert';
-// import vSelect from 'vue-select'
+import vSelect from 'vue-select'
 
-// Vue.component('v-select', vSelect)
-Vue.component('v-select', VueSelect.VueSelect)
+Vue.component('v-select', vSelect)
+// Vue.component('v-select', VueSelect.VueSelect)
 /**
  * Vuex session
  */
@@ -30,6 +30,10 @@ window.store=new Vuex.Store({
         state.cuenta=cuenta;
         localStorage.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
         axios.defaults.headers.common['Authorization'] = state.cuenta.token;
+      },
+      auth_close(state){
+        state.cuenta=null;
+        localStorage.removeItem('cuenta_sistema');
       }
     },
     actions: {}
@@ -51,8 +55,9 @@ var auth=(to, from,next)=>{
 var routes =[
     {
         path: '/',
-        component: require('./view/index.vue').default,
-        beforeEnter: auth
+        redirect: '/marcador'
+        // component: require('./view/index.vue').default,
+        // beforeEnter: auth
     },
     { 
         path: '/marcador', 

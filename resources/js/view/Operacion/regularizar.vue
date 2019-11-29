@@ -127,8 +127,8 @@ export default {
         selectEdit(index){
             this.marca_edit_index=index;
             this.marca_edit=JSON.parse(JSON.stringify(this.marcas[index]));
-            this.marca_edit.ingreso=moment(this.marca_edit.ingreso,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
-            this.marca_edit.salida=moment(this.marca_edit.salida,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss');
+            this.marca_edit.ingreso=(this.marca_edit.salida!=null) ? moment(this.marca_edit.ingreso,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss') : null;
+            this.marca_edit.salida=(this.marca_edit.salida!=null) ? moment(this.marca_edit.salida,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss'): null;
         },
         editar(){
             axios.post(url_base+'/marcador/'+this.marca_edit.id+'?_method=PUT',this.marca_edit)
