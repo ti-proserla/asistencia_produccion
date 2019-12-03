@@ -3917,6 +3917,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -87284,21 +87288,58 @@ var render = function() {
             _c(
               "div",
               { staticClass: "pagination" },
-              _vm._l(_vm.table.last_page, function(n) {
-                return _c(
+              [
+                _c(
                   "a",
                   {
-                    class: { active: _vm.table.current_page == n },
+                    class: { active: _vm.table.current_page == 1 },
                     on: {
                       click: function($event) {
-                        return _vm.listar(n)
+                        return _vm.listar(1)
                       }
                     }
                   },
-                  [_vm._v(_vm._s(n))]
-                )
-              }),
-              0
+                  [_vm._v("1")]
+                ),
+                _vm._v(" "),
+                _c("a"),
+                _vm._v(" "),
+                _vm._l(_vm.table.last_page, function(n) {
+                  return _vm.table.current_page + 3 > n &&
+                    _vm.table.current_page - 3 < n
+                    ? _c(
+                        "a",
+                        {
+                          class: { active: _vm.table.current_page == n },
+                          on: {
+                            click: function($event) {
+                              return _vm.listar(n)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(n))]
+                      )
+                    : _vm._e()
+                }),
+                _vm._v(" "),
+                _vm.table.last_page > 2
+                  ? _c(
+                      "a",
+                      {
+                        class: {
+                          active: _vm.table.current_page == _vm.table.last_page
+                        },
+                        on: {
+                          click: function($event) {
+                            return _vm.listar(_vm.table.last_page)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.table.last_page))]
+                    )
+                  : _vm._e()
+              ],
+              2
             )
           ])
         ])
