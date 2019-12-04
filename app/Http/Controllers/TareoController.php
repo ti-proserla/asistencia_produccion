@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Tareo;
 use App\Model\Operador;
+use App\Model\Turno;
 use App\Model\Marcador;
 use Illuminate\Http\Request;
 
@@ -30,6 +31,10 @@ class TareoController extends Controller
             ->where('turno_id',$request->turno_id)
             ->first();
         if ($marcador==null) {
+            $turno=Turno::where('id',$request->turno_id)->first();
+            $marcador=Marcador::where('operador_id',$operador->id)
+                ->where('turno_id',$request->turno_id)
+                ->first();
             return response()->json([
                 "status"    =>"WARNING",
                 "data"  =>'Operador no marco Asistencia.'

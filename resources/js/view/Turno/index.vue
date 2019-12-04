@@ -8,7 +8,12 @@
                     </div>
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="Nombre:" v-model="turno.descripcion" :error="errors.descripcion"></Input>
+                            <Input title="Fecha:" v-model="datos.fecha" type="date"></Input>
+                            <Select title="Turno:" v-model="datos.turno">
+                                <option value="1">TURNO 1</option>
+                                <option value="2">TURNO 2</option>
+                                <option value="2">TURNO 3</option>
+                            </Select>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -26,6 +31,7 @@
                             <thead>
                                 <tr>
                                     <th>Turno</th>
+                                    <th>Fecha</th>
                                     <th>Editar</th>
                                     <!-- <th>Estado</th> -->
                                 </tr>
@@ -33,19 +39,12 @@
                             <tbody>
                                 <tr v-for="turno in table.data">
                                     <td>{{turno.descripcion}}</td>
+                                    <td>{{turno.fecha}}</td>
                                     <td>
                                         <button @click="abrirEditar(turno.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
                                     </td>
-                                    <!-- <td>
-                                        <button v-if="turno.estado=='0'" @click="actualizarEstado(turno.id)" class="btn btn-info">
-                                            <i class="material-icons">radio_button_checked</i>
-                                        </button>
-                                        <button v-else @click="actualizarEstado(turno.id)" class="btn btn-gray">
-                                            <i class="material-icons">radio_button_unchecked</i>
-                                        </button>
-                                    </td> -->
                                 </tr>
                             </tbody>
                         </table>
@@ -81,14 +80,20 @@
     </div>
 </template>
 <script>
+
+import Select from '../../dragon-desing/dg-select.vue'
 import Input from '../../dragon-desing/dg-input.vue'
 export default {
     components:{
-        Input
+        Input,
+        Select
     },
     data() {
         return {
-            turno: this.initurno(), //datos de logeo
+            datos:{
+                fecha: null,
+                turno: null,
+            },
             turno_editar: this.initurno(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
@@ -116,7 +121,7 @@ export default {
             }
         },
         grabarNuevo(){
-            axios.post(url_base+'/turno',this.turno)
+            axios.post(url_base+'/turno',this.datos)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {

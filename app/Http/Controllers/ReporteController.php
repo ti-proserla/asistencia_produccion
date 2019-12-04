@@ -26,9 +26,9 @@ class ReporteController extends Controller
 
     public function turno2(Request $request){
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
-            ->leftJoin(DB::raw('(SELECT * FROM tareo where WEEK(tareo.created_at,3) = '.$request->week.' and YEAR(tareo.created_at) = '.$request->year.'  GROUP BY operador_id) AS T'),function($join){
+            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY operador_id,turno_id) AS T'),function($join){
                 $join->on('T.operador_id', '=', 'marcador.operador_id');
-                $join->on(DB::raw('DATE(T.created_at)'), '=', DB::raw('DATE(marcador.ingreso)'));
+                $join->on('T.turno_id', '=', 'marcador.turno_id');
             })
             ->leftJoin('labor','labor.id','=','T.labor_id')
             ->leftJoin('area','area.id','=','labor.area_id')

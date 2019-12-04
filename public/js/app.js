@@ -4714,8 +4714,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../dragon-desing/dg-input.vue */ "./resources/js/dragon-desing/dg-input.vue");
-//
+/* harmony import */ var _dragon_desing_dg_select_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../dragon-desing/dg-select.vue */ "./resources/js/dragon-desing/dg-select.vue");
+/* harmony import */ var _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../dragon-desing/dg-input.vue */ "./resources/js/dragon-desing/dg-input.vue");
 //
 //
 //
@@ -4798,14 +4798,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    Input: _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
+    Input: _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Select: _dragon_desing_dg_select_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
-      turno: this.initurno(),
-      //datos de logeo
+      datos: {
+        fecha: null,
+        turno: null
+      },
       turno_editar: this.initurno(),
       errors: {},
       //datos de errores
@@ -4839,7 +4843,7 @@ __webpack_require__.r(__webpack_exports__);
     grabarNuevo: function grabarNuevo() {
       var _this2 = this;
 
-      axios.post(url_base + '/turno', this.turno).then(function (response) {
+      axios.post(url_base + '/turno', this.datos).then(function (response) {
         var respuesta = response.data;
 
         switch (respuesta.status) {
@@ -88593,15 +88597,40 @@ var render = function() {
               },
               [
                 _c("Input", {
-                  attrs: { title: "Nombre:", error: _vm.errors.descripcion },
+                  attrs: { title: "Fecha:", type: "date" },
                   model: {
-                    value: _vm.turno.descripcion,
+                    value: _vm.datos.fecha,
                     callback: function($$v) {
-                      _vm.$set(_vm.turno, "descripcion", $$v)
+                      _vm.$set(_vm.datos, "fecha", $$v)
                     },
-                    expression: "turno.descripcion"
+                    expression: "datos.fecha"
                   }
                 }),
+                _vm._v(" "),
+                _c(
+                  "Select",
+                  {
+                    attrs: { title: "Turno:" },
+                    model: {
+                      value: _vm.datos.turno,
+                      callback: function($$v) {
+                        _vm.$set(_vm.datos, "turno", $$v)
+                      },
+                      expression: "datos.turno"
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "1" } }, [
+                      _vm._v("TURNO 1")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "2" } }, [
+                      _vm._v("TURNO 2")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "2" } }, [_vm._v("TURNO 3")])
+                  ]
+                ),
                 _vm._v(" "),
                 _vm._m(1)
               ],
@@ -88624,6 +88653,8 @@ var render = function() {
                 _vm._l(_vm.table.data, function(turno) {
                   return _c("tr", [
                     _c("td", [_vm._v(_vm._s(turno.descripcion))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(turno.fecha))]),
                     _vm._v(" "),
                     _c("td", [
                       _c(
@@ -88762,6 +88793,8 @@ var staticRenderFns = [
     return _c("thead", [
       _c("tr", [
         _c("th", [_vm._v("Turno")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
         _vm._v(" "),
         _c("th", [_vm._v("Editar")])
       ])

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Requests\TurnoValidate;
+use Carbon\Carbon;
 
 class TurnoController extends Controller
 {
@@ -29,11 +30,12 @@ class TurnoController extends Controller
     public function store(TurnoValidate $request)
     {
         $turno=new Turno();
-        $turno->descripcion=$request->descripcion;
+        $turno->descripcion=Carbon::parse($request->fecha)->format('Ymd')."TURNO$request->turno";
+        $turno->fecha=$request->fecha;
         $turno->save();
         return response()->json([
             "status"=> "OK",
-            "data"  => "Turno Registrada"
+            "data"  => "Turno Registrado."
         ]);
     }
     

@@ -27,7 +27,7 @@ class TurnoValidate extends FormRequest
     public function rules()
     {
         return [
-            'descripcion' => 'required|max:50',
+            'fecha' => 'required|date',
         ];
     }
     
