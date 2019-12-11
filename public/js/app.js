@@ -4806,10 +4806,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      datos: {
-        fecha: null,
-        turno: null
-      },
+      datos: this.initurno(),
       turno_editar: this.initurno(),
       errors: {},
       //datos de errores
@@ -4837,7 +4834,8 @@ __webpack_require__.r(__webpack_exports__);
     initurno: function initurno() {
       this.errors = {};
       return {
-        descripcion: null
+        fecha: null,
+        turno: null
       };
     },
     grabarNuevo: function grabarNuevo() {

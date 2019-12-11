@@ -56,3 +56,20 @@ Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
 Route::get('/marcas-tuno/{turno_id}', function ($turno_id) {
     return Excel::download(new MarcasTurnoTrabajadorExport($turno_id), "marcas-turno-$turno_id.xlsx");
 });
+
+Route::get('/producto', function () {
+    return response()->json([
+        [
+            "id"    =>  1,
+            "nombre"=>  "UVA"
+        ],
+        [
+            "id"    =>  2,
+            "nombre"=>  "MANGO"
+        ],
+        [
+            "id"    =>  3,
+            "nombre"=>  "LIMON"
+        ]
+    ]);
+});

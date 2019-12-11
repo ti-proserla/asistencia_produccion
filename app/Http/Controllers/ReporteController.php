@@ -38,7 +38,7 @@ class ReporteController extends Controller
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
             ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')
-            ->paginate(5);
+            ->paginate(8);
         return response()->json($resultado);
     }
     public function pendientes(Request $request){
@@ -57,7 +57,7 @@ class ReporteController extends Controller
             ->where('marcador.turno_id',$request->turno_id)
             ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')
             ->groupBy('operador.dni')
-            ->paginate(5);
+            ->paginate(8);
         return response()->json($resultado);
     }
 }

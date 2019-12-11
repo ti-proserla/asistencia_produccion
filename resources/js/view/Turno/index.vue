@@ -90,10 +90,7 @@ export default {
     },
     data() {
         return {
-            datos:{
-                fecha: null,
-                turno: null,
-            },
+            datos:this.initurno(),
             turno_editar: this.initurno(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
@@ -117,7 +114,8 @@ export default {
         initurno(){
             this.errors={};
             return {
-                descripcion: null,
+                fecha: null,
+                turno: null,
             }
         },
         grabarNuevo(){
