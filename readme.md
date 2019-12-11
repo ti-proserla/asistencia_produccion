@@ -49,6 +49,10 @@ Reportes:
 * Cantidad de personas x Tareo dia anterior, mostrar observacion.
 * Procedencia
 
+11/12/2019
+============
+* Pendientes de regularizar, listas los que les falte una marca para regularizar.
+
 44487844
 
 TESTEO:
