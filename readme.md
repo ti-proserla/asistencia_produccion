@@ -52,6 +52,7 @@ Reportes:
 11/12/2019
 ============
 * Pendientes de regularizar, listas los que les falte una marca para regularizar.
+* Tipo de planilla.
 
 44487844
 
