@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Marcador;
 use App\Model\Operador;
+use App\Model\Turno;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -45,6 +46,14 @@ class MarcadorController extends Controller
             }
         }
         if ($marcador==null||$marcador->salida!=null) {
+            $turno=Turno::where('id',$request->turno_id)->first();
+            // dd(($turno->fecha==Carbon::now()->format('Y-m-d')));
+            if ($turno->fecha!=Carbon::now()->format('Y-m-d')) {
+                return response()->json([
+                    "status"    =>  "ERROR",
+                    "data"      =>  "Turno no corresponde al día actual."
+                ]);
+            }
             $marcador=new Marcador();
             $marcador->operador_id=$operador->id;
             $marcador->turno_id=$request->turno_id;

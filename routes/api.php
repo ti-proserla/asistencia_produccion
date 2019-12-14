@@ -73,3 +73,10 @@ Route::get('/producto', function () {
         ]
     ]);
 });
+
+/**
+ * Para trabajadores
+ */
+Route::get('/consulta/marcas', function ($id) {
+    
+});

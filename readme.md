@@ -57,6 +57,6 @@ Reportes:
 44487844
 
 TESTEO:
-* Regularizacion tiene que mostrar DNI
-* Reporte turno comprobar Horas acumulativas.
+* (Comprobado) Regularizacion tiene que mostrar DNI
+* (Comprobado) Reporte turno comprobar Horas acumulativas.
 * Reporte de Marcas total 0 cuando no tiene marcas

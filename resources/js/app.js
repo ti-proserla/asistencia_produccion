@@ -92,6 +92,13 @@ var routes =[
         },
     },
     { 
+        path: '/consulta/marcas', 
+        component: require('./view/consulta/marcas').default,
+        meta:{
+            layout: "empty",
+        },
+    },
+    { 
         path: '/fotocheck/:id', 
         component: require('./view/Operador/fotocheck.vue').default,
         meta:{
