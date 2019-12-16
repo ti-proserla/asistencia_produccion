@@ -65,3 +65,6 @@ TESTEO:
 
 MODULO DE ACOPIO (Garita y Acopio)
 =======
+# Garita
+* Registro de Transportista
+* Registro de Vehiculos
