@@ -39,6 +39,7 @@ class OperadorController extends Controller
         $operador->dni=$request->dni;
         $operador->nom_operador=strtoupper($request->nom_operador);
         $operador->ape_operador=strtoupper($request->ape_operador);
+        $operador->planilla_id=$request->planilla_id;
         $operador->save();
         if($request->file('foto')!=null){
             $foto = $request->file('foto');
@@ -68,7 +69,8 @@ class OperadorController extends Controller
     {
         $operador=Operador::where('id',$id)->first();
         $operador->nom_operador=strtoupper($request->nom_operador);        
-        $operador->ape_operador=strtoupper($request->ape_operador);        
+        $operador->ape_operador=strtoupper($request->ape_operador);
+        $operador->planilla_id=$request->planilla_id;
         $operador->save();
         if($request->file('foto')!=null){
             $conteo=glob(public_path('storage/operador/'.$operador->dni.'*'));

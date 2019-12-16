@@ -12,6 +12,10 @@
                             <Input title="DNI:" v-model="operador.dni" :error="errors.dni" ></Input>
                             <Input title="Nombre:" v-model="operador.nom_operador" :error="errors.nom_operador"></Input>
                             <Input title="Apellido:" v-model="operador.ape_operador" :error="errors.ape_operador"></Input>
+                            <Select title="Area:" v-model="operador.planilla_id" :error="errors.planilla_id">
+                                <option value=""></option>
+                                <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
+                            </Select>
                             <div class="croppa-center">
                                 <croppa v-model="myCroppa" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
                             </div>
@@ -74,11 +78,14 @@
                             </table>
                         </div>
                         <div class="pagination">
-                            <a :class="{active: table.current_page==1}" @click="listar(1)">1</a>
+                            <select name="" id="">
+                                <option v-for="n in table.last_page" @click="listar(n)">{{n}}</option>
+                            </select>
+                            <!-- <a :class="{active: table.current_page==1}" @click="listar(n)">{{n}}</a>
                             <a></a>
                             <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)" v-if="((table.current_page+3)>n&&(table.current_page-3)<n)">{{n}}</a>
                             
-                            <a v-if="table.last_page>2" :class="{active: table.current_page==table.last_page}" @click="listar(table.last_page)">{{ table.last_page }}</a>
+                            <a v-if="table.last_page>2" :class="{active: table.current_page==table.last_page}" @click="listar(table.last_page)">{{ table.last_page }}</a> -->
                         </div>
                     </div>
                 </div>
@@ -105,6 +112,10 @@
                                 </div>
                             </div>
                             <Input title="Apellido:" v-model="operador_editar.ape_operador" :error="errors_editar.ape_operador"></Input>
+                            <Select title="Area:" v-model="operador_editar.planilla_id" :error="errors.planilla_id">
+                                <option value=""></option>
+                                <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
+                            </Select>
                             <div class="croppa-center">
                                 <croppa  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
                             </div>
@@ -140,15 +151,19 @@
 </template>
 <script>
 import Input from '../../dragon-desing/dg-input.vue'
+import Select from '../../dragon-desing/dg-select.vue'
+
 export default {
     components:{
-        Input
+        Input,
+        Select
     },
     data() {
         return {
             search: null,
             operador: this.iniOperador(), //datos de logeo
             operador_editar: this.iniOperador(),
+            planillas:[],
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
             //Datos de Tabla:
@@ -210,6 +225,7 @@ export default {
     },
     mounted() {
         this.listar();
+        this.listarPlanilla();
     },
     methods: {
         consultaJNE(){
@@ -238,12 +254,19 @@ export default {
                 this.table = response.data;
             })
         },
+        listarPlanilla(n=this.table.from){
+            axios.get(url_base+'/planilla?all=true')
+            .then(response => {
+                this.planillas = response.data;
+            })
+        },
         iniOperador(){
             this.errors={};
             return {
                 dni: null,
                 nom_operador: null,
-                ape_operador:null
+                ape_operador:null,
+                //planilla_id: null
             }
         },
         verFotoCheck(id){

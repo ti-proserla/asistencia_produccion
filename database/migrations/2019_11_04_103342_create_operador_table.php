@@ -21,6 +21,8 @@ class CreateOperadorTable extends Migration
             $table->string('foto',15)->nullable();
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
             $table->timestamps();
+            $table->integer('labor_id')->unsigned()->nullable();
+            $table->integer('planilla_id')->unsigned()->nullable();
         });
     }
 

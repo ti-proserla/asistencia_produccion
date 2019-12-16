@@ -21,6 +21,8 @@ Route::resource('cuenta', 'CuentaController');
 Route::post('login','CuentaController@login')->name('cuenta.login');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
+Route::resource('planilla', 'PlanillaController');
+Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
 
 Route::get('area/labor','AreaController@labor')->name('area.labor');
 Route::resource('area', 'AreaController');
@@ -39,8 +41,9 @@ Route::resource('marcador', 'MarcadorController');
 Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
-Route::get('reporte-turno2', 'ReporteController@turno2');
+Route::get('reporte-semana', 'ReporteController@semana');
 Route::get('reporte-pendientes', 'ReporteController@pendientes');
+Route::get('reporte-pendientes-regularizar', 'ReporteController@pendientesRegularizar');
 Route::get('reporte-marcas', 'ReporteController@marcas');
 
 Route::post('conteo','ConteoController@nuevo');

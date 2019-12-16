@@ -56,8 +56,6 @@ var routes =[
     {
         path: '/',
         redirect: '/marcador'
-        // component: require('./view/index.vue').default,
-        // beforeEnter: auth
     },
     { 
         path: '/marcador', 
@@ -82,6 +80,11 @@ var routes =[
     { 
         path: '/operador', 
         component: require('./view/Operador/index.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/planilla', 
+        component: require('./view/Planilla/index.vue').default,
         beforeEnter: auth
     },
     { 
@@ -132,7 +135,7 @@ var routes =[
         beforeEnter: auth
     },
     { 
-        path: '/reporte-turno', 
+        path: '/reporte-semana', 
         component: require('./view/Reportes/turno.vue').default,
         beforeEnter: auth
     },
