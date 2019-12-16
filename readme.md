@@ -65,6 +65,14 @@ TESTEO:
 
 MODULO DE ACOPIO (Garita y Acopio)
 =======
+# Tablas Maestras
+* Registro de Proveedor
+* Registro de Fundos
 # Garita
-* Registro de Transportista
-* Registro de Vehiculos
+* Registro de Transportista.
+* Registro de Vehiculos.
+* Registrar Ingreso (Agregar Fecha y Hora de Recepción, GUIA DE REMISION) == Paralelo Lote.
+# ACOPIO
+* Registro de Lote (Asignan Lote, Fecha de Cosecha y Fecha de DESCARGA).
+* Registro de Parihuela (Cuantas Jabas y pesos respectivos).
+* Impresión de Tickets. 
