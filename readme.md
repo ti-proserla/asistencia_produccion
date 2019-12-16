@@ -60,3 +60,8 @@ TESTEO:
 * (Comprobado) Regularizacion tiene que mostrar DNI
 * (Comprobado) Reporte turno comprobar Horas acumulativas.
 * Reporte de Marcas total 0 cuando no tiene marcas
+
+
+
+MODULO DE ACOPIO (Garita y Acopio)
+=======
