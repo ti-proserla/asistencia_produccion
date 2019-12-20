@@ -26,7 +26,7 @@ class OperadorController extends Controller
             $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->get();       
             return response()->json($operadores); 
         }
-        $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->paginate(2);
+        $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->paginate(15);
         return response()->json($operadores);
     }
 
