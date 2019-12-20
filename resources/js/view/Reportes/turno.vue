@@ -127,6 +127,7 @@ export default {
     },
     methods: {
         listar(n=this.table.current_page){
+            this.selectPage=n;
             axios.get(url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&page='+n)
             .then(response => {
                 this.table = response.data;

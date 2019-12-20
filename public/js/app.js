@@ -4980,6 +4980,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.table.current_page;
+      this.selectPage = n;
       axios.get(url_base + '/reporte-semana?year=' + this.consulta.year + '&week=' + this.consulta.week + '&search=' + this.search + '&planilla_id=' + this.consulta.planilla_id + '&page=' + n).then(function (response) {
         _this.table = response.data;
       });
