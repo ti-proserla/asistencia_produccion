@@ -77,7 +77,18 @@
                     </table>
                 </div>
                 <div class="pagination">
-                    <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)">{{n}}</a>
+                    <div class="row">
+                        <div class="col-9 text-left">
+                            <h6>Pagina {{ selectPage }} de {{ table.last_page}}</h6>
+                        </div>
+                        <div class="col-3">
+                            <button v-if="selectPage!=1" @click="listar(Number(selectPage)-1)"><</button>
+                            <select v-model="selectPage"  v-on:change="listar()">
+                                <option v-for="n in table.last_page">{{n}}</option>
+                            </select>
+                            <a @click="listar(Number(selectPage)+1)" v-if="!(selectPage==table.last_page||table.last_page==1)">></a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -103,11 +114,12 @@ export default {
             table:{
                 data:[]
             },
+            selectPage:1
         }
     },
     computed: {
         url(){
-            return url_base+'/horas-semana/'+this.consulta.year+'/'+this.consulta.week;
+            return url_base+'/horas-semana/'+this.consulta.year+'/'+this.consulta.week+'/'+this.consulta.planilla_id;
         }
     },
     mounted() {

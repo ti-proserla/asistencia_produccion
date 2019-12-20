@@ -3980,6 +3980,11 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       table: {
         data: []
       },
+      selectPage: 1,
+
+      /**
+       * 
+       */
       url: null,
       myCroppa: {},
       myCroppa2: {},
@@ -4069,7 +4074,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     listar: function listar() {
       var _this3 = this;
 
-      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.table.from;
+      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.selectPage;
+      this.selectPage = n;
       axios.get(url_base + '/operador?page=' + n + '&search=' + this.search).then(function (response) {
         _this3.table = response.data;
       });
@@ -4929,6 +4935,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -4946,12 +4963,13 @@ __webpack_require__.r(__webpack_exports__);
       search: '',
       table: {
         data: []
-      }
+      },
+      selectPage: 1
     };
   },
   computed: {
     url: function url() {
-      return url_base + '/horas-semana/' + this.consulta.year + '/' + this.consulta.week;
+      return url_base + '/horas-semana/' + this.consulta.year + '/' + this.consulta.week + '/' + this.consulta.planilla_id;
     }
   },
   mounted: function mounted() {
@@ -87470,7 +87488,10 @@ var render = function() {
                 _c(
                   "Select",
                   {
-                    attrs: { title: "Area:", error: _vm.errors.planilla_id },
+                    attrs: {
+                      title: "Planilla:",
+                      error: _vm.errors.planilla_id
+                    },
                     model: {
                       value: _vm.operador.planilla_id,
                       callback: function($$v) {
@@ -87658,24 +87679,89 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "pagination" }, [
-              _c(
-                "select",
-                { attrs: { name: "", id: "" } },
-                _vm._l(_vm.table.last_page, function(n) {
-                  return _c(
-                    "option",
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-9 text-left" }, [
+                  _c("h6", [
+                    _vm._v(
+                      "Pagina " +
+                        _vm._s(_vm.selectPage) +
+                        " de " +
+                        _vm._s(_vm.table.last_page)
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-3" }, [
+                  _vm.selectPage != 1
+                    ? _c(
+                        "button",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.listar(Number(_vm.selectPage) - 1)
+                            }
+                          }
+                        },
+                        [_vm._v("<")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "select",
                     {
-                      on: {
-                        click: function($event) {
-                          return _vm.listar(n)
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectPage,
+                          expression: "selectPage"
                         }
+                      ],
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.selectPage = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.listar()
+                          }
+                        ]
                       }
                     },
-                    [_vm._v(_vm._s(n))]
+                    _vm._l(_vm.table.last_page, function(n) {
+                      return _c("option", [_vm._v(_vm._s(n))])
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  !(
+                    _vm.selectPage == _vm.table.last_page ||
+                    _vm.table.last_page == 1
                   )
-                }),
-                0
-              )
+                    ? _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.listar(Number(_vm.selectPage) + 1)
+                            }
+                          }
+                        },
+                        [_vm._v(">")]
+                      )
+                    : _vm._e()
+                ])
+              ])
             ])
           ])
         ])
@@ -87769,7 +87855,7 @@ var render = function() {
                       "Select",
                       {
                         attrs: {
-                          title: "Area:",
+                          title: "Planilla:",
                           error: _vm.errors.planilla_id
                         },
                         model: {
@@ -87858,9 +87944,7 @@ var render = function() {
                     }
                   })
                 ]
-              ),
-              _vm._v(" "),
-              _vm._m(8)
+              )
             ])
           ]
         )
@@ -87963,7 +88047,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Modal title")]),
+      _c("h5", { staticClass: "modal-title" }, [_vm._v("FotoCheck")]),
       _vm._v(" "),
       _c(
         "button",
@@ -87976,27 +88060,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "button" } },
-        [_vm._v("Save changes")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-secondary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
       )
     ])
   }
@@ -89125,25 +89188,91 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "pagination" },
-          _vm._l(_vm.table.last_page, function(n) {
-            return _c(
-              "a",
-              {
-                class: { active: _vm.table.current_page == n },
-                on: {
-                  click: function($event) {
-                    return _vm.listar(n)
+        _c("div", { staticClass: "pagination" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-9 text-left" }, [
+              _c("h6", [
+                _vm._v(
+                  "Pagina " +
+                    _vm._s(_vm.selectPage) +
+                    " de " +
+                    _vm._s(_vm.table.last_page)
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-3" }, [
+              _vm.selectPage != 1
+                ? _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.listar(Number(_vm.selectPage) - 1)
+                        }
+                      }
+                    },
+                    [_vm._v("<")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.selectPage,
+                      expression: "selectPage"
+                    }
+                  ],
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.selectPage = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                      function($event) {
+                        return _vm.listar()
+                      }
+                    ]
                   }
-                }
-              },
-              [_vm._v(_vm._s(n))]
-            )
-          }),
-          0
-        )
+                },
+                _vm._l(_vm.table.last_page, function(n) {
+                  return _c("option", [_vm._v(_vm._s(n))])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              !(
+                _vm.selectPage == _vm.table.last_page ||
+                _vm.table.last_page == 1
+              )
+                ? _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.listar(Number(_vm.selectPage) + 1)
+                        }
+                      }
+                    },
+                    [_vm._v(">")]
+                  )
+                : _vm._e()
+            ])
+          ])
+        ])
       ])
     ])
   ])

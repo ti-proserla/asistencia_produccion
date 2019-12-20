@@ -53,7 +53,7 @@ Route::get('conteoOperario','ConteoController@reporteOperario');
 
 Route::get('jne/dni/{dni}', 'OperadorController@jne');
 
-Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
+Route::get('/horas-semana/{anio}/{semana}/{planilla_id}', function ($anio,$semana) {
     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana), "horas-semana-$anio-$semana.xlsx");
 });
 Route::get('/marcas-tuno/{turno_id}', function ($turno_id) {

@@ -25,7 +25,7 @@ class ReporteController extends Controller
     }
 
     public function semana(Request $request){
-        dd($request->planilla_id);
+        
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY operador_id,turno_id) AS T'),function($join){
                 $join->on('T.operador_id', '=', 'marcador.operador_id');
@@ -38,9 +38,13 @@ class ReporteController extends Controller
             ->groupBy('dni','procesos.operador.nom_operador','procesos.operador.ape_operador',DB::raw('DATE(ingreso)'))
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')
-            ->where('planilla_id',$request->planilla_id)
-            ->paginate(15);
+            ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%');
+            if ($request->planilla_id==null||$request->planilla_id=="") {
+                $resultado=$resultado->whereNull('operador.planilla_id');
+            }else{
+                $resultado=$resultado->where('planilla_id',$request->planilla_id);
+            }
+            $resultado=$resultado->paginate(15);
         return response()->json($resultado);
     }
     public function pendientes(Request $request){
