@@ -12,7 +12,7 @@
                             <Input title="DNI:" v-model="operador.dni" :error="errors.dni" ></Input>
                             <Input title="Nombre:" v-model="operador.nom_operador" :error="errors.nom_operador"></Input>
                             <Input title="Apellido:" v-model="operador.ape_operador" :error="errors.ape_operador"></Input>
-                            <Select title="Area:" v-model="operador.planilla_id" :error="errors.planilla_id">
+                            <Select title="Planilla:" v-model="operador.planilla_id" :error="errors.planilla_id">
                                 <option value=""></option>
                                 <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                             </Select>
@@ -112,7 +112,7 @@
                                 </div>
                             </div>
                             <Input title="Apellido:" v-model="operador_editar.ape_operador" :error="errors_editar.ape_operador"></Input>
-                            <Select title="Area:" v-model="operador_editar.planilla_id" :error="errors.planilla_id">
+                            <Select title="Planilla:" v-model="operador_editar.planilla_id" :error="errors.planilla_id">
                                 <option value=""></option>
                                 <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                             </Select>
@@ -132,17 +132,13 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Modal title</h5>
+                        <h5 class="modal-title">FotoCheck</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body" style="text-align: center;">
                         <iframe :src="url" frameborder="0" width="200" height="300"></iframe>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
