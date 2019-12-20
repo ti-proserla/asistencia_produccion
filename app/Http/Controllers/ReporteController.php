@@ -25,6 +25,7 @@ class ReporteController extends Controller
     }
 
     public function semana(Request $request){
+        dd($request->planilla_id);
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY operador_id,turno_id) AS T'),function($join){
                 $join->on('T.operador_id', '=', 'marcador.operador_id');

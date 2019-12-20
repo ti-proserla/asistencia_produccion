@@ -34,6 +34,7 @@ class MarcadorController extends Controller
         }
             
         $marcador=Marcador::where('operador_id',$operador->id)
+            ->where("turno_id",$request->turno_id)
             ->orderBy('id','DESC')
             ->first();
         if ($marcador!=null) {

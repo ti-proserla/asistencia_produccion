@@ -20,6 +20,7 @@
                     </div>
                     <div class="col-7 col-lg-2">
                         <select v-model="consulta.planilla_id" class="form-control">
+                            <option value="">Fuera de Planilla</option>
                             <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                         </select>
                     </div>
@@ -95,7 +96,8 @@ export default {
             planillas:[],
             consulta:{
                 year: moment().format('YYYY'),
-                week: moment().week()
+                week: moment().week(),
+                planilla_id: ""
             },
             search: '',
             table:{

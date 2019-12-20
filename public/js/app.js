@@ -4928,6 +4928,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -4939,7 +4940,8 @@ __webpack_require__.r(__webpack_exports__);
       planillas: [],
       consulta: {
         year: moment().format('YYYY'),
-        week: moment().week()
+        week: moment().week(),
+        planilla_id: ""
       },
       search: '',
       table: {
@@ -89018,12 +89020,18 @@ var render = function() {
                   }
                 }
               },
-              _vm._l(_vm.planillas, function(planilla) {
-                return _c("option", { domProps: { value: planilla.id } }, [
-                  _vm._v(_vm._s(planilla.nom_planilla))
-                ])
-              }),
-              0
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("Fuera de Planilla")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.planillas, function(planilla) {
+                  return _c("option", { domProps: { value: planilla.id } }, [
+                    _vm._v(_vm._s(planilla.nom_planilla))
+                  ])
+                })
+              ],
+              2
             )
           ]),
           _vm._v(" "),
