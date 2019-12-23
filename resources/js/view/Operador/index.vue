@@ -101,7 +101,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Editar Operador</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="cancelarActualizar()" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -120,10 +120,13 @@
                                 <option value=""></option>
                                 <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                             </Select>
-                            <div class="croppa-center">
-                                <croppa :initial-image="url_imagen(operador_editar.foto)"  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
+                            <div class="croppa-center my-3">
+                                <croppa :initial-image="url_imagen"  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true">
+                                    
+                                </croppa>
                             </div>
                             <div class="text-center">
+                                <button @click="cancelarActualizar()" type="button" class="btn btn-danger">Cancelar</button>
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
                         </form>
@@ -185,6 +188,9 @@ export default {
         }
     },
     computed: {
+        url_imagen(foto){
+            return url_base+'/../storage/operador/'+this.operador_editar.foto;
+        },
         consulta(){
             if (this.operador.dni!=null) {
                 if (this.operador.dni.length==8) {
@@ -232,9 +238,7 @@ export default {
         this.listarPlanilla();
     },
     methods: {
-        url_imagen(foto){
-            return url_base+'/../storage/operador/'+foto;
-        },
+        
         consultaJNE(){
             if (this.operador_editar.dni!=null) {
                 if (this.operador_editar.dni.length==8) {
@@ -359,8 +363,14 @@ export default {
             axios.get(url_base+'/operador/'+id)
             .then(response => {
                 this.operador_editar = response.data;
+                this.myCroppa2.refresh();
             })
             $('#modal-editar').modal();
+        },
+        cancelarActualizar(){
+            this.operador_editar=this.iniOperador();
+            $('#modal-editar').modal('hide');
+            this.myCroppa2.refresh();
         }
     },
 }

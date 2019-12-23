@@ -72,15 +72,32 @@ class OperadorController extends Controller
         $operador->ape_operador=strtoupper(utf8_decode($request->ape_operador));
         $operador->planilla_id=$request->planilla_id;
         $operador->save();
+        
         if($request->file('foto')!=null){
-            $conteo=glob(public_path('storage/operador/'.$operador->dni.'*'));
-            $n=count($conteo);
+            $foto_anterior=$operador->foto;
+            $array_analisis=explode("_",$foto_anterior);
+            $ruta_foto_limpiar=public_path('/storage/operador/'.$operador->foto);
+            if (1<count($array_analisis)) {
+                $n=1+(int)$array_analisis[0];
+            }else{
+                $n=1;
+            }
             $foto = $request->file('foto');
-            $fileName = $operador->dni.$n.'.jpeg';
+            $fileName = $n."_".$operador->dni.'.jpeg';
             \Image::make($foto)
                 ->save(public_path('/storage/operador/'.$fileName));
             $operador->foto=$fileName;
             $operador->save();
+            if (file_exists($ruta_foto_limpiar)&&$foto_anterior!=null) {
+                unlink($ruta_foto_limpiar);
+            }
+        }else{
+            if ($request->has('foto')) {
+                $ruta_foto_limpiar=public_path('/storage/operador/'.$operador->foto);
+                if (file_exists($ruta_foto_limpiar)&&$operador->foto!=null) {
+                    unlink($ruta_foto_limpiar);
+                }
+            }
         }
         return response()->json([
             "status"=> "OK",

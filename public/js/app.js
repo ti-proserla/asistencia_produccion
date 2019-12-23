@@ -3958,6 +3958,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3996,6 +3999,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: {
+    url_imagen: function url_imagen(foto) {
+      return url_base + '/../storage/operador/' + this.operador_editar.foto;
+    },
     consulta: function consulta() {
       var _this = this;
 
@@ -4048,9 +4054,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.listarPlanilla();
   },
   methods: {
-    url_imagen: function url_imagen(foto) {
-      return url_base + '/../storage/operador/' + foto;
-    },
     consultaJNE: function consultaJNE() {
       var _this2 = this;
 
@@ -4211,8 +4214,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
       axios.get(url_base + '/operador/' + id).then(function (response) {
         _this8.operador_editar = response.data;
+
+        _this8.myCroppa2.refresh();
       });
       $('#modal-editar').modal();
+    },
+    cancelarActualizar: function cancelarActualizar() {
+      this.operador_editar = this.iniOperador();
+      $('#modal-editar').modal('hide');
+      this.myCroppa2.refresh();
     }
   }
 });
@@ -87784,7 +87794,29 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(5),
+              _c("div", { staticClass: "modal-header" }, [
+                _c("h5", { staticClass: "modal-title" }, [
+                  _vm._v("Editar Operador")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "close",
+                    attrs: { type: "button", "aria-label": "Close" },
+                    on: {
+                      click: function($event) {
+                        return _vm.cancelarActualizar()
+                      }
+                    }
+                  },
+                  [
+                    _c("span", { attrs: { "aria-hidden": "true" } }, [
+                      _vm._v("×")
+                    ])
+                  ]
+                )
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -87886,13 +87918,11 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "div",
-                      { staticClass: "croppa-center" },
+                      { staticClass: "croppa-center my-3" },
                       [
                         _c("croppa", {
                           attrs: {
-                            "initial-image": _vm.url_imagen(
-                              _vm.operador_editar.foto
-                            ),
+                            "initial-image": _vm.url_imagen,
                             width: _vm.croppaConfig.horizontal,
                             height: _vm.croppaConfig.vertical,
                             quality: _vm.croppaConfig.quality,
@@ -87910,7 +87940,30 @@ var render = function() {
                       1
                     ),
                     _vm._v(" "),
-                    _vm._m(6)
+                    _c("div", { staticClass: "text-center" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-danger",
+                          attrs: { type: "button" },
+                          on: {
+                            click: function($event) {
+                              return _vm.cancelarActualizar()
+                            }
+                          }
+                        },
+                        [_vm._v("Cancelar")]
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-success",
+                          attrs: { type: "submit" }
+                        },
+                        [_vm._v("Guardar")]
+                      )
+                    ])
                   ],
                   1
                 )
@@ -87933,7 +87986,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(7),
+              _vm._m(5),
               _vm._v(" "),
               _c(
                 "div",
@@ -88014,39 +88067,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c("h5", { staticClass: "modal-title" }, [_vm._v("Editar Operador")]),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-success", attrs: { type: "submit" } },
-        [_vm._v("Guardar")]
-      )
     ])
   },
   function() {
