@@ -37,7 +37,6 @@ class NuevoOperador extends FormRequest
                 $data[$key]=null;
             }
         }
-        // dd($data);
         return $data;
     }
     public function rules()
