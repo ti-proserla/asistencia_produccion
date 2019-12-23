@@ -67,6 +67,7 @@ class OperadorController extends Controller
         
     public function update(OperadorEditar $request, $id)
     {
+        mb_http_input('UTF-8');
         dd($_REQUEST['ape_operador']);
         dd($request->all());
         $operador=Operador::where('id',$id)->first();
