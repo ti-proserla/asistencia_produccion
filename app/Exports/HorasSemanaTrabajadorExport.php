@@ -23,11 +23,13 @@ class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting
     */
     private $week;
     private $year;
+    private $planilla_id;
  
-    public function __construct(int $year,int $week)
+    public function __construct(int $year,int $week,int $planilla_id)
     {
         $this->week = $week;
         $this->year = $year;
+        $this->planilla_id = $planilla_id;
     }
 
     public function columnFormats(): array
