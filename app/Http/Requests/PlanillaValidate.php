@@ -27,7 +27,6 @@ class PlanillaValidate extends FormRequest
     public function rules()
     {
         return [
-            'codigo' => 'required|max:10',
             'nom_planilla' => 'required|max:50',
         ];
     }
