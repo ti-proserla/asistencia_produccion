@@ -67,6 +67,7 @@ class OperadorController extends Controller
         
     public function update(OperadorEditar $request, $id)
     {
+        dd($_REQUEST['ape_operador']);
         dd($request->all());
         $operador=Operador::where('id',$id)->first();
         $operador->nom_operador=strtoupper($request->nom_operador);        
