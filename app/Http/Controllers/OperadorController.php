@@ -67,11 +67,9 @@ class OperadorController extends Controller
         
     public function update(OperadorEditar $request, $id)
     {
-        dd(utf8_decode($_REQUEST['ape_operador']));
-        dd($request->all());
         $operador=Operador::where('id',$id)->first();
-        $operador->nom_operador=strtoupper($request->nom_operador);        
-        $operador->ape_operador=strtoupper($request->ape_operador);
+        $operador->nom_operador=strtoupper(iconv('UTF-8', 'UTF-8',$request->nom_operador));        
+        $operador->ape_operador=strtoupper(iconv('UTF-8', 'UTF-8',$request->ape_operador));
         $operador->planilla_id=$request->planilla_id;
         $operador->save();
         if($request->file('foto')!=null){
