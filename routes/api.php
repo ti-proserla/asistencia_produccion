@@ -16,6 +16,7 @@ use App\Model\Operador;
 
 
 header("Access-Control-Allow-Origin: *");
+header('Content-Type: text/html; charset=utf-8');
 
 Route::resource('cuenta', 'CuentaController');
 Route::post('login','CuentaController@login')->name('cuenta.login');
