@@ -4048,6 +4048,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     this.listarPlanilla();
   },
   methods: {
+    url_imagen: function url_imagen(foto) {
+      return url_base + '/../storage/operador/' + foto;
+    },
     consultaJNE: function consultaJNE() {
       var _this2 = this;
 
@@ -87887,6 +87890,9 @@ var render = function() {
                       [
                         _c("croppa", {
                           attrs: {
+                            "initial-image": _vm.url_imagen(
+                              _vm.operador_editar.foto
+                            ),
                             width: _vm.croppaConfig.horizontal,
                             height: _vm.croppaConfig.vertical,
                             quality: _vm.croppaConfig.quality,

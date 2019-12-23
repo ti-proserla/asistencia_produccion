@@ -25,6 +25,18 @@ class OperadorEditar extends FormRequest
      *
      * @return array
      */
+    protected function validationData()
+    {
+        $data = parent::validationData();
+        foreach($data as $key=>$dat)
+        {
+            if ($dat=="null") {
+                $data[$key]=null;
+            }
+        }
+        return $data;
+    }
+    
     public function rules()
     {
         return [

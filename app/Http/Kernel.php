@@ -38,6 +38,8 @@ class Kernel extends HttpKernel
         ],
 
         'api' => [
+            \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+
             // 'throttle:60,1',
             'bindings',
         ],

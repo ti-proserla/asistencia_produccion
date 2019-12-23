@@ -20,15 +20,31 @@ class NuevoOperador extends FormRequest
         return true;
     }
 
+
+
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array
      */
+
+    protected function validationData()
+    {
+        $data = parent::validationData();
+        foreach($data as $key=>$dat)
+        {
+            if ($dat=="null") {
+                $data[$key]=null;
+            }
+        }
+        // dd($data);
+        return $data;
+    }
     public function rules()
     {
+
         return [
-            'dni' => 'required',
+            'dni' => 'required|numeric',
             'nom_operador' => 'required',
             'ape_operador' => 'required',
         ];

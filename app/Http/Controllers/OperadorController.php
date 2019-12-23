@@ -35,6 +35,7 @@ class OperadorController extends Controller
      */
     public function store(NuevoOperador $request)
     {
+        dd($request->all());
         $operador=new Operador();
         $operador->dni=$request->dni;
         $operador->nom_operador=strtoupper($request->nom_operador);

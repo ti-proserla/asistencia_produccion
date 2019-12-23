@@ -121,7 +121,7 @@
                                 <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                             </Select>
                             <div class="croppa-center">
-                                <croppa  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
+                                <croppa :initial-image="url_imagen(operador_editar.foto)"  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
                             </div>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -232,6 +232,9 @@ export default {
         this.listarPlanilla();
     },
     methods: {
+        url_imagen(foto){
+            return url_base+'/../storage/operador/'+foto;
+        },
         consultaJNE(){
             if (this.operador_editar.dni!=null) {
                 if (this.operador_editar.dni.length==8) {
