@@ -87786,7 +87786,13 @@ var render = function() {
       "div",
       {
         staticClass: "modal",
-        attrs: { id: "modal-editar", tabindex: "-1", role: "dialog" }
+        attrs: {
+          id: "modal-editar",
+          tabindex: "-1",
+          role: "dialog",
+          "data-backdrop": "static",
+          "data-keyboard": "false"
+        }
       },
       [
         _c(
