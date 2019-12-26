@@ -22,12 +22,17 @@
                         <tr>
                             <th>DNI</th>
                             <th>Nombre y Apellidos</th>
+                            <th>Ingreso</th>
+                            <th>Salida</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="item in reporte">
                             <td>{{ item.dni }}</td>
                             <td>{{ item.nom_operador }} {{ item.ape_operador }}</td>
+                            <td>{{ item.turno_id }}</td>
+                            <td>{{ item.ingreso }}</td>
+                            <td>{{ item.salida }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -46,6 +51,7 @@ export default {
     },
     mounted() {
         this.listarTurnos();
+        this.listar();
     },
     computed: {
         url(){
@@ -63,7 +69,7 @@ export default {
             });
         },
         listar(){
-            axios.get(url_base+'/reporte-pendientes?turno_id='+this.turno_id)
+            axios.get(url_base+'/reporte/pendientes-regularizar')
             .then(response => {
                 this.reporte = response.data;
             })

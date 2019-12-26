@@ -49,17 +49,6 @@ class MarcadorController extends Controller
         }
         if ($marcador==null||$marcador->salida!=null) {
             $turno=Turno::where('id',$request->turno_id)->first();
-            /**
-             * Comprobacion del turno
-             */
-            // if ($turno->fecha!=Carbon::now()->format('Y-m-d')) {
-            //     return response()->json([
-            //         "status"    =>  "ERROR",
-            //         "data"      =>  "Turno no corresponde al día actual."
-            //     ]);
-            // }
-
-
             $marcador=new Marcador();
             $marcador->operador_id=$operador->id;
             $marcador->turno_id=$request->turno_id;
@@ -75,6 +64,73 @@ class MarcadorController extends Controller
             "data"  => $operador
         ]);
         
+    }
+
+    public function store2(Request $request){
+        /**
+         * Comprobar Existencia y creación del operador
+         */
+        $operador=Operador::where('dni',$request->codigo_barras)->first();
+        if ($operador==null) {
+            $operador=new Operador();
+            $operador->dni=$request->codigo_barras;
+            $operador->nom_operador="Nuevo";
+            $operador->ape_operador="Trabajador";
+            $operador->planilla_id=null;
+            $operador->save();
+        }
+
+
+        $marcador=Marcador::where('operador_id',$operador->id)
+            ->orderBy('id','DESC')
+            ->first();
+        
+        $parametros_turno_1="6:00";
+
+        $parametros_turno_2=[
+                "ingreso"=> "16:00"
+            ];
+
+        
+        $fecha_actual=Carbon::now()->startOfDay();
+        $fecha_actual_carbon=Carbon::now();
+        
+        $fecha_limite=Carbon::parse($fecha_actual)
+        ->addHours(explode(":",$parametros_turno_1)[0])
+        ->addMinutes($parametros_turno_1[1]);
+        dd($fecha_actual,$fecha_limite);
+        
+        
+        $turno=Turno::where('fecha',$fecha_actual)->first();
+        if ($turno==null) {
+            $turno=new Turno();
+            $turno->descripcion=Carbon::parse($fecha_actual)->format('Ymd')."TURNO";
+            $turno->fecha=$fecha_actual;
+            $turno->save();
+        }
+
+        if ($marcador==null) {
+            $marcador=new Marcador();
+            $marcador->operador_id=$operador->id;
+            $marcador->turno_id=$turno->id;
+            $marcador->ingreso=Carbon::now();
+            $marcador->salida=null;
+            $marcador->save();
+        }else{
+            $fecha_limite=Carbon::now()->subMinute(100);
+            if(($marcador->salida==null&&$fecha_limite<Carbon::parse($marcador->ingreso))||($marcador->salida!=null&&$fecha_limite<Carbon::parse($marcador->salida))) {
+                return response()->json([
+                    "status"    =>  "ERROR",
+                    "data"      =>  "Usted marco recientemente"
+                ]);
+            }            
+                $marcador->salida=Carbon::now();
+                $marcador->save();
+                dd(json_encode($marcador),$turno,$fecha_actual);
+            
+        }
+        
+
     }
     
     public function update(Request $request,$id){

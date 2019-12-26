@@ -78,9 +78,18 @@ MODULO DE ACOPIO (Garita y Acopio)
 * Impresión de Tickets. 
 
 
+26/12/2019
+* Agregar Puestos Fijos
+
+
+
+
+
+
 Pendientes.
 
 * Buscar decalogo de cuidado de los equipos.
 * Verificar los permisos de boletas de salida de equipos.
 * Firmas de correos ditales.
 * Actualizar nombres de contactos de correos
+

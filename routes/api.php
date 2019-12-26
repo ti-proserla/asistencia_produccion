@@ -37,13 +37,15 @@ Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');
 
 Route::resource('turno', 'TurnoController');
 
+Route::post('marcador2','MarcadorController@store2')->name('marcador.store2');
 Route::resource('marcador', 'MarcadorController');
+
 Route::post('tareo', 'TareoController@store')->name('tareo.store');
 
 Route::get('reporte-turno', 'ReporteController@turno');
 Route::get('reporte-semana', 'ReporteController@semana');
 Route::get('reporte-pendientes', 'ReporteController@pendientes');
-Route::get('reporte-pendientes-regularizar', 'ReporteController@pendientesRegularizar');
+Route::get('reporte/pendientes-regularizar', 'ReporteController@pendientesRegularizar');
 Route::get('reporte-marcas', 'ReporteController@marcas');
 
 Route::post('conteo','ConteoController@nuevo');
