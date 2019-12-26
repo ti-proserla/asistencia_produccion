@@ -79,7 +79,7 @@
                 <div class="pagination">
                     <div class="row">
                         <div class="col-9 text-left">
-                            <h6>Pagina {{ selectPage }} de {{ table.last_page}}</h6>
+                            <h6>Pagina {{ selectPage }} de {{ table.last_page}} (TOTAL: {{table.total}})</h6>
                         </div>
                         <div class="col-3">
                             <button v-if="selectPage!=1" @click="listar(Number(selectPage)-1)"><</button>

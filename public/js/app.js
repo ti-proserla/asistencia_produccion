@@ -2778,6 +2778,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2799,6 +2810,7 @@ __webpack_require__.r(__webpack_exports__);
       table: {
         data: []
       },
+      selectPage: 1,
       url: null
     };
   },
@@ -2817,7 +2829,8 @@ __webpack_require__.r(__webpack_exports__);
     listar: function listar() {
       var _this2 = this;
 
-      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.table.from;
+      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.selectPage;
+      this.selectPage = n;
       axios.get(url_base + '/labor?page=' + n).then(function (response) {
         _this2.table = response.data;
       });
@@ -3123,8 +3136,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dragon_desing_dg_input_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../dragon-desing/dg-input.vue */ "./resources/js/dragon-desing/dg-input.vue");
-//
-//
 //
 //
 //
@@ -4721,6 +4732,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -4730,6 +4752,7 @@ __webpack_require__.r(__webpack_exports__);
       table: {
         data: []
       },
+      selectPage: 1,
       search: ''
     };
   },
@@ -4756,7 +4779,8 @@ __webpack_require__.r(__webpack_exports__);
     listar: function listar() {
       var _this2 = this;
 
-      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.table.current_page;
+      var n = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.selectPage;
+      this.selectPage = n;
       axios.get(url_base + '/reporte-marcas?turno_id=' + this.turno_id + '&search=' + this.search + '&page=' + n).then(function (response) {
         _this2.table = response.data;
       });
@@ -86071,25 +86095,94 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "pagination" },
-              _vm._l(_vm.table.last_page, function(n) {
-                return _c(
-                  "a",
-                  {
-                    class: { active: _vm.table.from == n },
-                    on: {
-                      click: function($event) {
-                        return _vm.listar(n)
+            _c("div", { staticClass: "pagination" }, [
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col-9 text-left" }, [
+                  _c("h6", [
+                    _vm._v(
+                      "Pagina " +
+                        _vm._s(_vm.selectPage) +
+                        " de " +
+                        _vm._s(_vm.table.last_page) +
+                        " (TOTAL: " +
+                        _vm._s(_vm.table.total) +
+                        ")"
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-3" }, [
+                  _vm.selectPage != 1
+                    ? _c(
+                        "button",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.listar(Number(_vm.selectPage) - 1)
+                            }
+                          }
+                        },
+                        [_vm._v("<")]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.selectPage,
+                          expression: "selectPage"
+                        }
+                      ],
+                      on: {
+                        change: [
+                          function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.selectPage = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          },
+                          function($event) {
+                            return _vm.listar()
+                          }
+                        ]
                       }
-                    }
-                  },
-                  [_vm._v(_vm._s(n))]
-                )
-              }),
-              0
-            )
+                    },
+                    _vm._l(_vm.table.last_page, function(n) {
+                      return _c("option", [_vm._v(_vm._s(n))])
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  !(
+                    _vm.selectPage == _vm.table.last_page ||
+                    _vm.table.last_page == 1
+                  )
+                    ? _c(
+                        "a",
+                        {
+                          on: {
+                            click: function($event) {
+                              _vm.listar(Number(_vm.selectPage) + 1)
+                            }
+                          }
+                        },
+                        [_vm._v(">")]
+                      )
+                    : _vm._e()
+                ])
+              ])
+            ])
           ])
         ])
       ])
@@ -86643,32 +86736,22 @@ var render = function() {
             : _vm._e(),
           _vm._v(" "),
           _vm.respuesta != null && _vm.respuesta.status == "OK"
-            ? _c(
-                "div",
-                {
-                  staticClass: "fotocheck text-center",
-                  staticStyle: { "margin-right": "auto", "margin-left": "auto" }
-                },
-                [
-                  _c("img", {
-                    attrs: { src: _vm.url(_vm.respuesta.data.foto), alt: "" }
-                  }),
-                  _vm._v(" "),
-                  _c("p", [
-                    _c("b", [
-                      _vm._v(
-                        _vm._s(_vm.respuesta.data.nom_operador.split(" ")[0]) +
-                          " " +
-                          _vm._s(_vm.respuesta.data.ape_operador.split(" ")[0])
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c("hr"),
-                  _vm._v(" "),
-                  _c("h6", [_vm._v("Jayanca Fruits")])
-                ]
-              )
+            ? _c("div", { staticClass: "text-center" }, [
+                _c("img", {
+                  staticStyle: { "max-width": "300px", height: "auto" },
+                  attrs: { src: _vm.url(_vm.respuesta.data.foto), alt: "" }
+                }),
+                _vm._v(" "),
+                _c("p", [
+                  _c("b", [
+                    _vm._v(
+                      _vm._s(_vm.respuesta.data.nom_operador.split(" ")[0]) +
+                        " " +
+                        _vm._s(_vm.respuesta.data.ape_operador.split(" ")[0])
+                    )
+                  ])
+                ])
+              ])
             : _vm._e()
         ])
       ])
@@ -87700,7 +87783,10 @@ var render = function() {
                       "Pagina " +
                         _vm._s(_vm.selectPage) +
                         " de " +
-                        _vm._s(_vm.table.last_page)
+                        _vm._s(_vm.table.last_page) +
+                        " (TOTAL: " +
+                        _vm._s(_vm.table.total) +
+                        ")"
                     )
                   ])
                 ]),
@@ -88811,25 +88897,94 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "pagination" },
-          _vm._l(_vm.table.last_page, function(n) {
-            return _c(
-              "a",
-              {
-                class: { active: _vm.table.current_page == n },
-                on: {
-                  click: function($event) {
-                    return _vm.listar(n)
+        _c("div", { staticClass: "pagination" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-9 text-left" }, [
+              _c("h6", [
+                _vm._v(
+                  "Pagina " +
+                    _vm._s(_vm.selectPage) +
+                    " de " +
+                    _vm._s(_vm.table.last_page) +
+                    " (TOTAL: " +
+                    _vm._s(_vm.table.total) +
+                    ")"
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-3" }, [
+              _vm.selectPage != 1
+                ? _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.listar(Number(_vm.selectPage) - 1)
+                        }
+                      }
+                    },
+                    [_vm._v("<")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.selectPage,
+                      expression: "selectPage"
+                    }
+                  ],
+                  on: {
+                    change: [
+                      function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.selectPage = $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      },
+                      function($event) {
+                        return _vm.listar()
+                      }
+                    ]
                   }
-                }
-              },
-              [_vm._v(_vm._s(n))]
-            )
-          }),
-          0
-        )
+                },
+                _vm._l(_vm.table.last_page, function(n) {
+                  return _c("option", [_vm._v(_vm._s(n))])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              !(
+                _vm.selectPage == _vm.table.last_page ||
+                _vm.table.last_page == 1
+              )
+                ? _c(
+                    "a",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.listar(Number(_vm.selectPage) + 1)
+                        }
+                      }
+                    },
+                    [_vm._v(">")]
+                  )
+                : _vm._e()
+            ])
+          ])
+        ])
       ])
     ])
   ])
@@ -89229,7 +89384,10 @@ var render = function() {
                   "Pagina " +
                     _vm._s(_vm.selectPage) +
                     " de " +
-                    _vm._s(_vm.table.last_page)
+                    _vm._s(_vm.table.last_page) +
+                    " (TOTAL: " +
+                    _vm._s(_vm.table.total) +
+                    ")"
                 )
               ])
             ]),

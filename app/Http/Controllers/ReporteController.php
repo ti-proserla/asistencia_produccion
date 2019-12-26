@@ -11,6 +11,14 @@ use Carbon\Carbon;
 class ReporteController extends Controller
 {
     public function turno(Request $request){
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        $texto_busqueda=explode(" ",$request->search);
+        dd($texto_busqueda);
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE WEEK(tareo.created_at,3)='.$request->week.' AND YEAR(tareo.created_at)='.$request->year.' GROUP BY operador_id) AS T'),'T.operador_id','=','operador.id')
             ->leftJoin('labor','labor.id','=','T.labor_id')
@@ -20,12 +28,24 @@ class ReporteController extends Controller
             ->groupBy('codigo','procesos.operador.nom_operador','procesos.operador.ape_operador')
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->get();
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            for ($i=1; $i < count($texto_busqueda); $i++) { 
+                $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
+            }
+            $resultado=$resultado->get();
         return response()->json($resultado);
     }
 
     public function semana(Request $request){
         
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        $texto_busqueda=explode(" ",$request->search);
+        // dd($texto_busqueda);
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY operador_id,turno_id) AS T'),function($join){
                 $join->on('T.operador_id', '=', 'marcador.operador_id');
@@ -38,7 +58,11 @@ class ReporteController extends Controller
             ->groupBy('dni','procesos.operador.nom_operador','procesos.operador.ape_operador',DB::raw('DATE(ingreso)'))
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%');
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            for ($i=1; $i < count($texto_busqueda); $i++) { 
+                $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
+            }
+
             if ($request->planilla_id==null||$request->planilla_id=="") {
                 $resultado=$resultado->whereNull('operador.planilla_id');
             }else{
@@ -58,11 +82,22 @@ class ReporteController extends Controller
     }
         
     public function marcas(Request $request){
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        $texto_busqueda=explode(" ",$request->search);
+
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->select('dni','nom_operador','ape_operador',DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,marcador.salida)/60 ),2) AS total'))
             ->where('marcador.turno_id',$request->turno_id)
-            ->where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')
-            ->groupBy('operador.dni')
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            for ($i=1; $i < count($texto_busqueda); $i++) { 
+                $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
+            }
+            $resultado=$resultado->groupBy('operador.dni')
             ->paginate(8);
         return response()->json($resultado);
     }
