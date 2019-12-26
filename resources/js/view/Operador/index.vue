@@ -278,7 +278,7 @@ export default {
                 dni: null,
                 nom_operador: null,
                 ape_operador:null,
-                //planilla_id: null
+                // planilla_id: null
             }
         },
         verFotoCheck(id){

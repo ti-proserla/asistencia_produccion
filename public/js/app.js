@@ -4111,7 +4111,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       return {
         dni: null,
         nom_operador: null,
-        ape_operador: null //planilla_id: null
+        ape_operador: null // planilla_id: null
 
       };
     },

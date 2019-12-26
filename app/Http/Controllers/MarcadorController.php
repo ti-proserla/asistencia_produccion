@@ -30,6 +30,7 @@ class MarcadorController extends Controller
             $operador->dni=$request->codigo_barras;
             $operador->nom_operador="Nuevo";
             $operador->ape_operador="Trabajador";
+            $operador->planilla_id=null;
             $operador->save();
         }
             
