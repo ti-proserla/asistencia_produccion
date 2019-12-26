@@ -28,7 +28,7 @@
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
                     <div class="col-sm-3">
-                        <button @click="listar()" class="btn btn-info">
+                        <button @click="listar(1)" class="btn btn-info">
                             Buscar
                         </button>
                         <a :href="url" class="btn btn-success">Excel</a>

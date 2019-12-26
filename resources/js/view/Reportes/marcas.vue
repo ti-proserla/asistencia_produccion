@@ -18,7 +18,7 @@
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
                     <div class="col-lg-2">
-                        <button @click="listar()" class="btn btn-info">
+                        <button @click="listar(1)" class="btn btn-info">
                             Buscar
                         </button>
                     </div>

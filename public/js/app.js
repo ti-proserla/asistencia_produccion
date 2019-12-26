@@ -88846,7 +88846,7 @@ var render = function() {
                 staticClass: "btn btn-info",
                 on: {
                   click: function($event) {
-                    return _vm.listar()
+                    return _vm.listar(1)
                   }
                 }
               },
@@ -89317,7 +89317,7 @@ var render = function() {
                 staticClass: "btn btn-info",
                 on: {
                   click: function($event) {
-                    return _vm.listar()
+                    return _vm.listar(1)
                   }
                 }
               },
