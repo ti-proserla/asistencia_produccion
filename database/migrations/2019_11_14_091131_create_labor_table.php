@@ -18,7 +18,7 @@ class CreateLaborTable extends Migration
             $table->string('codigo',10);
             $table->string('nom_labor',50);
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
-            $table->integer('area_id')->unsigned();
+            $table->integer('area_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }
