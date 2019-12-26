@@ -38,7 +38,7 @@ class MarcadorController extends Controller
             ->orderBy('id','DESC')
             ->first();
         if ($marcador!=null) {
-            $fecha_limite=Carbon::now()->subMinute(10);
+            $fecha_limite=Carbon::now()->subMinute(1);
             if(($marcador->salida==null&&$fecha_limite<Carbon::parse($marcador->ingreso))||($marcador->salida!=null&&$fecha_limite<Carbon::parse($marcador->salida))) {
                 return response()->json([
                     "status"    =>  "ERROR",
