@@ -107,15 +107,15 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <label for="">DNI</label>{{ operador_editar.dni }}
-                            <div class="row">
+                            <div class="row form-group">
                                 <div class="col-10">
-                                    <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
+                                    <label for="">DNI: </label> {{ operador_editar.dni }}
                                 </div>
                                 <div class="col-2">
                                     <a class="btn btn-sm btn-success" @click="consultaJNE()">JNE</a>
                                 </div>
                             </div>
+                            <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
                             <Input title="Apellido:" v-model="operador_editar.ape_operador" :error="errors_editar.ape_operador"></Input>
                             <Select title="Planilla:" v-model="operador_editar.planilla_id" :error="errors.planilla_id">
                                 <option value=""></option>

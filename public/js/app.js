@@ -87924,36 +87924,15 @@ var render = function() {
                     }
                   },
                   [
-                    _c("label", { attrs: { for: "" } }, [_vm._v("DNI")]),
-                    _vm._v(
-                      _vm._s(_vm.operador_editar.dni) +
-                        "\n                        "
-                    ),
-                    _c("div", { staticClass: "row" }, [
-                      _c(
-                        "div",
-                        { staticClass: "col-10" },
-                        [
-                          _c("Input", {
-                            attrs: {
-                              title: "Nombre:",
-                              error: _vm.errors_editar.nom_operador
-                            },
-                            model: {
-                              value: _vm.operador_editar.nom_operador,
-                              callback: function($$v) {
-                                _vm.$set(
-                                  _vm.operador_editar,
-                                  "nom_operador",
-                                  $$v
-                                )
-                              },
-                              expression: "operador_editar.nom_operador"
-                            }
-                          })
-                        ],
-                        1
-                      ),
+                    _c("div", { staticClass: "row form-group" }, [
+                      _c("div", { staticClass: "col-10" }, [
+                        _c("label", { attrs: { for: "" } }, [_vm._v("DNI: ")]),
+                        _vm._v(
+                          " " +
+                            _vm._s(_vm.operador_editar.dni) +
+                            "\n                            "
+                        )
+                      ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-2" }, [
                         _c(
@@ -87970,6 +87949,20 @@ var render = function() {
                         )
                       ])
                     ]),
+                    _vm._v(" "),
+                    _c("Input", {
+                      attrs: {
+                        title: "Nombre:",
+                        error: _vm.errors_editar.nom_operador
+                      },
+                      model: {
+                        value: _vm.operador_editar.nom_operador,
+                        callback: function($$v) {
+                          _vm.$set(_vm.operador_editar, "nom_operador", $$v)
+                        },
+                        expression: "operador_editar.nom_operador"
+                      }
+                    }),
                     _vm._v(" "),
                     _c("Input", {
                       attrs: {
