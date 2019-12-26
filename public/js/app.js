@@ -4197,7 +4197,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
               _this7.myCroppa2.remove();
 
-              _this7.listar();
+              _this7.listar(1);
 
               swal("", "Operador Actualizado", "success");
               $('#modal-editar').modal('hide');
@@ -87581,7 +87581,7 @@ var render = function() {
                   domProps: { value: _vm.search },
                   on: {
                     keyup: function($event) {
-                      return _vm.listar()
+                      return _vm.listar(1)
                     },
                     input: function($event) {
                       if ($event.target.composing) {

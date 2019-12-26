@@ -37,7 +37,7 @@
                                 <label for="" class="my-3">Buscar: </label>
                             </div>
                             <div class="col-8">
-                                <input @keyup="listar()" class="form-control" v-model="search"></input>
+                                <input @keyup="listar(1)" class="form-control" v-model="search"></input>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -238,7 +238,6 @@ export default {
         this.listarPlanilla();
     },
     methods: {
-        
         consultaJNE(){
             if (this.operador_editar.dni!=null) {
                 if (this.operador_editar.dni.length==8) {
@@ -348,7 +347,7 @@ export default {
                         case "OK":
                             this.operador_editar=this.iniOperador();
                             this.myCroppa2.remove();
-                            this.listar();
+                            this.listar(1);
                             swal("", "Operador Actualizado", "success");
                             $('#modal-editar').modal('hide');
                             break;

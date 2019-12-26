@@ -22,11 +22,22 @@ class OperadorController extends Controller
         if ($request->search==null||$request->search=="null") {
             $request->search="";
         }
-        if ($request->all==true) {
-            $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->get();       
-            return response()->json($operadores); 
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        $texto_busqueda=explode(" ",$request->search);
+
+        $operadores=Operador::where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+        
+        for ($i=1; $i < count($texto_busqueda); $i++) { 
+            $operadores=$operadores->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
         }
-        $operadores=Operador::where(DB::raw('CONCAT(nom_operador,ape_operador)'),'like','%'.$request->search.'%')->paginate(10);
+
+        if ($request->all==true) {
+            $operadores=$operadores->get();
+        }else{
+            $operadores=$operadores->paginate(10);
+        }
         return response()->json($operadores);
     }
 

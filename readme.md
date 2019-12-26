@@ -76,3 +76,11 @@ MODULO DE ACOPIO (Garita y Acopio)
 * Registro de Lote (Asignan Lote, Fecha de Cosecha y Fecha de DESCARGA).
 * Registro de Parihuela (Cuantas Jabas y pesos respectivos).
 * Impresión de Tickets. 
+
+
+Pendientes.
+
+* Buscar decalogo de cuidado de los equipos.
+* Verificar los permisos de boletas de salida de equipos.
+* Firmas de correos ditales.
+* Actualizar nombres de contactos de correos
