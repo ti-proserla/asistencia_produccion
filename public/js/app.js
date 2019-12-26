@@ -3972,6 +3972,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -87923,6 +87924,11 @@ var render = function() {
                     }
                   },
                   [
+                    _c("label", { attrs: { for: "" } }, [_vm._v("DNI")]),
+                    _vm._v(
+                      _vm._s(_vm.operador_editar.dni) +
+                        "\n                        "
+                    ),
                     _c("div", { staticClass: "row" }, [
                       _c(
                         "div",

@@ -107,6 +107,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
+                            <label for="">DNI</label>{{ operador_editar.dni }}
                             <div class="row">
                                 <div class="col-10">
                                     <Input title="Nombre:" v-model="operador_editar.nom_operador" :error="errors_editar.nom_operador"></Input>
