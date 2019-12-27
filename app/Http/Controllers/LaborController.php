@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Requests\LaborValidate;
+use Illuminate\Support\Facades\DB;
 
 class LaborController extends Controller
 {
@@ -16,9 +17,9 @@ class LaborController extends Controller
     public function index(Request $request)
     {
         if ($request->all==true) {
-            $Labores=Labor::all();
+            $Labores=Labor::select('DESCRIPCION as nom_labor','IDLABOR as codigo')->get();
         }else{
-            $Labores=Labor::paginate(8);
+            $Labores=Labor::select('DESCRIPCION as nom_labor','IDLABOR as codigo')->paginate(8);
         }
         return response()->json($Labores);
     }

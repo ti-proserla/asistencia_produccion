@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Http\Requests\AreaValidate;
+use Illuminate\Support\Facades\DB;
+
 
 class AreaController extends Controller
 {
@@ -15,18 +17,39 @@ class AreaController extends Controller
      */
     public function index(Request $request)
     {
+        $Areas=Area::select('nom_area','id');
         if ($request->all==true) {
-            $Areas=Area::all();
+            $Areas=$Areas->get();
         }else{
-            $Areas=Area::paginate(8);
+            $Areas=$Areas->paginate(8);
         }
+        // if ($request->all==true) {
+        //     $Areas=Area::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
+        //         ->where('IDACTIVIDAD','010')
+        //         ->orWhere('IDACTIVIDAD','011')
+        //         ->orWhere('IDACTIVIDAD','012')
+        //         ->get();
+        // }else{
+        //     $Areas=Area::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
+        //         ->where('IDACTIVIDAD','010')
+        //         ->orWhere('IDACTIVIDAD','011')
+        //         ->orWhere('IDACTIVIDAD','012')
+        //         ->paginate(8);
+        // }
         return response()->json($Areas);
     }
     /**
      * Area Labor , muestra un JSON de Areas con un sub-Json de sus Labores 
      */
     public function labor(Request $request){
-        $areas=Area::with('labores')->get();
+        $areas=Area::with('labores')
+            ->select('nom_area','id as codigo')
+            ->get();
+        // $areas=Area::with('labores')->select(DB::raw('RTRIM(DESCRIPCION) as nom_area'),'IDACTIVIDAD as codigo','IDACTIVIDAD')
+        //     ->where('IDACTIVIDAD','010')
+        //     ->orWhere('IDACTIVIDAD','011')
+        //     ->orWhere('IDACTIVIDAD','012')
+        //     ->get();
         return response()->json($areas);
     }
     /**

@@ -30,8 +30,9 @@ class TurnoController extends Controller
     public function store(TurnoValidate $request)
     {
         $turno=new Turno();
-        $turno->descripcion=Carbon::parse($request->fecha)->format('Ymd')."TURNO$request->turno";
+        $turno->descripcion=Carbon::parse($request->fecha)->format('Ymd')."TURNO$request->horario";
         $turno->fecha=$request->fecha;
+        $turno->horario=$request->horario;
         $turno->save();
         return response()->json([
             "status"=> "OK",

@@ -9,10 +9,10 @@
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
                             <Input title="Fecha:" v-model="datos.fecha" type="date"></Input>
-                            <Select title="Turno:" v-model="datos.turno">
+                            <Select title="Turno:" v-model="datos.horario">
                                 <option value="1">TURNO 1</option>
                                 <option value="2">TURNO 2</option>
-                                <option value="2">TURNO 3</option>
+                                <!-- <option value="2">TURNO 3</option> -->
                             </Select>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -115,7 +115,7 @@ export default {
             this.errors={};
             return {
                 fecha: null,
-                turno: null,
+                horario: null,
             }
         },
         grabarNuevo(){

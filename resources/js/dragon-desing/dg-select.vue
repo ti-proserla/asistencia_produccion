@@ -1,6 +1,6 @@
 <template>
     <div class="form-group">
-        <div class="form-group-dragon" :class="{'focus': focus, 'active' : withContent }">
+        <div class="form-group-dragon" :class="{'focus': focus, 'active' : true }">
             <div class="form-group-content">
                 <label for="">{{ title }}</label>
                 <select :readonly="readonly" @focus="OpenFocus" @blur="exitFocus" :type="type" ref="text" :value="value" @input="updateFormControl">

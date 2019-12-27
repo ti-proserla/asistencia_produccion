@@ -89,3 +89,5 @@ Route::get('/producto', function () {
 Route::get('/consulta/marcas', function ($id) {
     
 });
+
+Route::get('sincronizar/labor',"SincronizarController@labor");

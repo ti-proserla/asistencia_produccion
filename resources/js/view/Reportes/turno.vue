@@ -48,6 +48,7 @@
                                 <th>Cod. Actividad</th>
                                 <th>Cod.Labor</th>
                                 <th>Cod.Proceso</th>
+                                <th>Labor</th>
                                 <th>Dia 01</th>
                                 <th>Dia 02</th>
                                 <th>Dia 03</th>
@@ -65,6 +66,7 @@
                                 <td>{{ item.codActividad }} </td>
                                 <td>{{ item.codLabor }} </td>
                                 <td>{{ item.codProceso }} </td>
+                                <td>{{ item.nom_labor }} </td>
                                 <td>{{ item.Lunes }}</td>
                                 <td>{{ item.Martes }}</td>
                                 <td>{{ item.Miercoles }}</td>

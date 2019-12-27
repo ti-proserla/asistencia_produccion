@@ -47,10 +47,12 @@
                         <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.nom_proceso }}</option>
                     </Select>
                     <Select title="Area:" v-model="tareo.area_id">
-                        <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
+                        <option value="">--SELECCIONAR AREA--</option>
+                        <option v-for="area in areas" :value="area.codigo">{{ area.nom_area }}</option>
                     </Select>
                     <Select title="Labor:" v-model="tareo.labor_id">
-                        <option v-for="labor in labores" :value="labor.id">{{ labor.nom_labor }}</option>
+                        <option value="">--SELECCIONAR LABOR--</option>
+                        <option v-for="labor in labores" :value="labor.codigo">{{ labor.nom_labor }}</option>
                     </Select>
                     <form v-on:submit.prevent="guardar()">
                         <Input title="Codigo de Barras" :focusSelect='focus' type="number" v-model="tareo.codigo_barras"></Input>
@@ -103,7 +105,7 @@ export default {
             turnos:[],
             lineas:[],
             areas:[],
-            labores:[],
+            // labores:[],
             turno_id: 0,
             area_id: 0,
             /**Estado de registro */
@@ -117,42 +119,51 @@ export default {
     mounted() {
         this.listarTurnos();
         this.listarProcesos();
-        this.listarAreas();
-        this.listarLabor();
+        // this.listarAreas();
+        // this.listarLabor();
         this.listarLineas();
         this.listarAreasLabor();
+    },
+    computed: {
+        labores(){
+            for (let i = 0; i < this.areas.length; i++) {
+                const area = this.areas[i];
+                if (area.codigo==this.tareo.area_id) {
+                    this.tareo.labor_id=null;
+                    return area.labores;
+                }
+            }
+            return [];
+        }
     },
     methods: {
         url(foto){
             return url_base+'/../storage/operador/'+foto;
         },
         listarAreasLabor(){
-            axios.get(url_base+'/labor/areas')
-            .then(response => {
-                this.areasLabor = response.data;
-                // if (this.areasLabor.length>0) {
-                //     this.tareo.labor_id=this.areasLabor[0].id;
-                // }
-            });
-        },
-        listarLabor(){
-            axios.get(url_base+'/labor?all=true')
-            .then(response => {
-                this.labores = response.data;
-                if (this.labores.length>0) {
-                    this.tareo.labor_id=this.labores[0].id;
-                }
-            });
-        },
-        listarAreas(){
-            axios.get(url_base+'/area?all=true')
+            axios.get(url_base+'/area/labor')
             .then(response => {
                 this.areas = response.data;
-                if (this.areas.length>0) {
-                    this.tareo.area_id=this.areas[0].id;
-                }
             });
         },
+        // listarLabor(){
+        //     axios.get(url_base+'/labor?all=true')
+        //     .then(response => {
+        //         this.labores = response.data;
+        //         if (this.labores.length>0) {
+        //             this.tareo.labor_id=this.labores[0].id;
+        //         }
+        //     });
+        // },
+        // listarAreas(){
+        //     axios.get(url_base+'/area?all=true')
+        //     .then(response => {
+        //         this.areas = response.data;
+        //         if (this.areas.length>0) {
+        //             this.tareo.area_id=this.areas[0].id;
+        //         }
+        //     });
+        // },
         listarTurnos(){
             axios.get(url_base+'/turno?all=true')
             .then(response => {

@@ -3680,6 +3680,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3702,7 +3704,7 @@ __webpack_require__.r(__webpack_exports__);
       turnos: [],
       lineas: [],
       areas: [],
-      labores: [],
+      // labores:[],
       turno_id: 0,
       area_id: 0,
 
@@ -3717,11 +3719,25 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     this.listarTurnos();
-    this.listarProcesos();
-    this.listarAreas();
-    this.listarLabor();
+    this.listarProcesos(); // this.listarAreas();
+    // this.listarLabor();
+
     this.listarLineas();
     this.listarAreasLabor();
+  },
+  computed: {
+    labores: function labores() {
+      for (var i = 0; i < this.areas.length; i++) {
+        var area = this.areas[i];
+
+        if (area.codigo == this.tareo.area_id) {
+          this.tareo.labor_id = null;
+          return area.labores;
+        }
+      }
+
+      return [];
+    }
   },
   methods: {
     url: function url(foto) {
@@ -3730,89 +3746,83 @@ __webpack_require__.r(__webpack_exports__);
     listarAreasLabor: function listarAreasLabor() {
       var _this = this;
 
-      axios.get(url_base + '/labor/areas').then(function (response) {
-        _this.areasLabor = response.data; // if (this.areasLabor.length>0) {
-        //     this.tareo.labor_id=this.areasLabor[0].id;
-        // }
+      axios.get(url_base + '/area/labor').then(function (response) {
+        _this.areas = response.data;
       });
     },
-    listarLabor: function listarLabor() {
+    // listarLabor(){
+    //     axios.get(url_base+'/labor?all=true')
+    //     .then(response => {
+    //         this.labores = response.data;
+    //         if (this.labores.length>0) {
+    //             this.tareo.labor_id=this.labores[0].id;
+    //         }
+    //     });
+    // },
+    // listarAreas(){
+    //     axios.get(url_base+'/area?all=true')
+    //     .then(response => {
+    //         this.areas = response.data;
+    //         if (this.areas.length>0) {
+    //             this.tareo.area_id=this.areas[0].id;
+    //         }
+    //     });
+    // },
+    listarTurnos: function listarTurnos() {
       var _this2 = this;
 
-      axios.get(url_base + '/labor?all=true').then(function (response) {
-        _this2.labores = response.data;
-
-        if (_this2.labores.length > 0) {
-          _this2.tareo.labor_id = _this2.labores[0].id;
-        }
-      });
-    },
-    listarAreas: function listarAreas() {
-      var _this3 = this;
-
-      axios.get(url_base + '/area?all=true').then(function (response) {
-        _this3.areas = response.data;
-
-        if (_this3.areas.length > 0) {
-          _this3.tareo.area_id = _this3.areas[0].id;
-        }
-      });
-    },
-    listarTurnos: function listarTurnos() {
-      var _this4 = this;
-
       axios.get(url_base + '/turno?all=true').then(function (response) {
-        _this4.turnos = response.data;
+        _this2.turnos = response.data;
 
-        if (_this4.turnos.length > 0) {
-          _this4.tareo.turno_id = _this4.turnos[0].id;
+        if (_this2.turnos.length > 0) {
+          _this2.tareo.turno_id = _this2.turnos[0].id;
         }
       });
     },
     listarLineas: function listarLineas() {
-      var _this5 = this;
+      var _this3 = this;
 
       axios.get(url_base + '/linea?all=true').then(function (response) {
-        _this5.lineas = response.data;
+        _this3.lineas = response.data;
 
-        if (_this5.lineas.length > 0) {
-          _this5.tareo.linea_id = _this5.lineas[0].id;
+        if (_this3.lineas.length > 0) {
+          _this3.tareo.linea_id = _this3.lineas[0].id;
         }
       });
     },
     listarProcesos: function listarProcesos() {
-      var _this6 = this;
+      var _this4 = this;
 
       axios.get(url_base + '/proceso?all=true').then(function (response) {
-        _this6.procesos = response.data;
+        _this4.procesos = response.data;
 
-        if (_this6.procesos.length > 0) {
-          _this6.tareo.proceso_id = _this6.procesos[0].id;
+        if (_this4.procesos.length > 0) {
+          _this4.tareo.proceso_id = _this4.procesos[0].id;
         }
       });
     },
     clearAlert: function clearAlert() {
-      var _this7 = this;
+      var _this5 = this;
 
       setTimeout(function () {
-        _this7.alert = null;
+        _this5.alert = null;
       }, 1000);
     },
     guardar: function guardar() {
-      var _this8 = this;
+      var _this6 = this;
 
       this.$nextTick(function () {
-        if ((null == _this8.tareo.codigo_barras ? '' : _this8.tareo.codigo_barras).length == 8) {
-          axios.post(url_base + '/tareo', _this8.tareo).then(function (response) {
+        if ((null == _this6.tareo.codigo_barras ? '' : _this6.tareo.codigo_barras).length == 8) {
+          axios.post(url_base + '/tareo', _this6.tareo).then(function (response) {
             var respuesta = response.data;
             console.log(respuesta);
 
             switch (respuesta.status) {
               case "ERROR":
-                _this8.alert = respuesta;
-                _this8.respuesta = null;
+                _this6.alert = respuesta;
+                _this6.respuesta = null;
 
-                _this8.clearAlert();
+                _this6.clearAlert();
 
                 break;
 
@@ -3821,8 +3831,8 @@ __webpack_require__.r(__webpack_exports__);
                   swal("", respuesta.data, 'warning');
                 }
 
-                _this8.tareo.codigo_barras = null;
-                _this8.alert = {
+                _this6.tareo.codigo_barras = null;
+                _this6.alert = {
                   status: 'warning',
                   data: respuesta.data
                 };
@@ -3830,12 +3840,12 @@ __webpack_require__.r(__webpack_exports__);
 
               case "OK":
                 // swal("", respuesta.data.nom_operador+" "+ respuesta.data.ape_operador, 'warning');
-                _this8.alert = {
+                _this6.alert = {
                   status: 'primary',
                   data: "TAREO: " + respuesta.data.nom_operador + " " + respuesta.data.ape_operador
                 }; // this.respuesta=response.data;
 
-                _this8.tareo.codigo_barras = null;
+                _this6.tareo.codigo_barras = null;
                 break;
 
               default:
@@ -3843,21 +3853,21 @@ __webpack_require__.r(__webpack_exports__);
             }
           });
         } else {
-          _this8.tareo.codigo_barras = null;
-          _this8.respuesta = {
+          _this6.tareo.codigo_barras = null;
+          _this6.respuesta = {
             status: 'ERROR',
             data: 'Código no Valido'
           };
 
-          _this8.clearAlert();
+          _this6.clearAlert();
         }
       });
     },
     openPendientes: function openPendientes() {
-      var _this9 = this;
+      var _this7 = this;
 
       axios.get(url_base + '/reporte-pendientes?turno_id=' + this.tareo.turno_id).then(function (response) {
-        _this9.reporte = response.data;
+        _this7.reporte = response.data;
       });
       $('#modal-pendientes').modal();
     }
@@ -5125,6 +5135,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -5307,7 +5319,7 @@ __webpack_require__.r(__webpack_exports__);
       this.errors = {};
       return {
         fecha: null,
-        turno: null
+        horario: null
       };
     },
     grabarNuevo: function grabarNuevo() {
@@ -85093,7 +85105,7 @@ var render = function() {
       "div",
       {
         staticClass: "form-group-dragon",
-        class: { focus: _vm.focus, active: _vm.withContent }
+        class: { focus: _vm.focus, active: true }
       },
       [
         _c("div", { staticClass: "form-group-content" }, [
@@ -87542,12 +87554,18 @@ var render = function() {
                   expression: "tareo.area_id"
                 }
               },
-              _vm._l(_vm.areas, function(area) {
-                return _c("option", { domProps: { value: area.id } }, [
-                  _vm._v(_vm._s(area.nom_area))
-                ])
-              }),
-              0
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("--SELECCIONAR AREA--")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.areas, function(area) {
+                  return _c("option", { domProps: { value: area.codigo } }, [
+                    _vm._v(_vm._s(area.nom_area))
+                  ])
+                })
+              ],
+              2
             ),
             _vm._v(" "),
             _c(
@@ -87562,12 +87580,18 @@ var render = function() {
                   expression: "tareo.labor_id"
                 }
               },
-              _vm._l(_vm.labores, function(labor) {
-                return _c("option", { domProps: { value: labor.id } }, [
-                  _vm._v(_vm._s(labor.nom_labor))
-                ])
-              }),
-              0
+              [
+                _c("option", { attrs: { value: "" } }, [
+                  _vm._v("--SELECCIONAR LABOR--")
+                ]),
+                _vm._v(" "),
+                _vm._l(_vm.labores, function(labor) {
+                  return _c("option", { domProps: { value: labor.codigo } }, [
+                    _vm._v(_vm._s(labor.nom_labor))
+                  ])
+                })
+              ],
+              2
             ),
             _vm._v(" "),
             _c(
@@ -89634,6 +89658,8 @@ var render = function() {
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.codProceso) + " ")]),
                   _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(item.nom_labor) + " ")]),
+                  _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.Lunes))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(item.Martes))]),
@@ -89795,6 +89821,8 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Cod.Proceso")]),
         _vm._v(" "),
+        _c("th", [_vm._v("Labor")]),
+        _vm._v(" "),
         _c("th", [_vm._v("Dia 01")]),
         _vm._v(" "),
         _c("th", [_vm._v("Dia 02")]),
@@ -89868,11 +89896,11 @@ var render = function() {
                   {
                     attrs: { title: "Turno:" },
                     model: {
-                      value: _vm.datos.turno,
+                      value: _vm.datos.horario,
                       callback: function($$v) {
-                        _vm.$set(_vm.datos, "turno", $$v)
+                        _vm.$set(_vm.datos, "horario", $$v)
                       },
-                      expression: "datos.turno"
+                      expression: "datos.horario"
                     }
                   },
                   [
@@ -89880,11 +89908,7 @@ var render = function() {
                       _vm._v("TURNO 1")
                     ]),
                     _vm._v(" "),
-                    _c("option", { attrs: { value: "2" } }, [
-                      _vm._v("TURNO 2")
-                    ]),
-                    _vm._v(" "),
-                    _c("option", { attrs: { value: "2" } }, [_vm._v("TURNO 3")])
+                    _c("option", { attrs: { value: "2" } }, [_vm._v("TURNO 2")])
                   ]
                 ),
                 _vm._v(" "),

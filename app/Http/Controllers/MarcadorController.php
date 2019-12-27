@@ -87,17 +87,31 @@ class MarcadorController extends Controller
         
         $parametros_turno_1="6:00";
 
-        $parametros_turno_2=[
-                "ingreso"=> "16:00"
-            ];
+        $parametros_turno_2="16:00";
 
         
+        $hora_fecha_actual=Carbon::now();
+
+        $turno=null;
+
+        $limite_1=Carbon::now()->startOfDay()
+            ->addHours(explode(":",$parametros_turno_1)[0])
+            ->addMinutes((int)$parametros_turno_1[1]);
+        $limite_2=Carbon::now()->startOfDay()
+            ->addHours(explode(":",$parametros_turno_2)[0])
+            ->addMinutes((int)$parametros_turno_2[1]);
+            
+
+        if ($hora_fecha_actual<$limite_1) {
+            dd("antes de las 6");
+        }else if ($limite_1<=$hora_fecha_actual&&$hora_fecha_actual<$limite_2) {
+            dd("turno 1");
+            
+        }else{
+            dd("despues de las 4pm");
+        }
         $fecha_actual=Carbon::now()->startOfDay();
-        $fecha_actual_carbon=Carbon::now();
         
-        $fecha_limite=Carbon::parse($fecha_actual)
-        ->addHours(explode(":",$parametros_turno_1)[0])
-        ->addMinutes($parametros_turno_1[1]);
         dd($fecha_actual,$fecha_limite);
         
         
