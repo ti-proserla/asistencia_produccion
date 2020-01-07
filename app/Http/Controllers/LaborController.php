@@ -17,9 +17,9 @@ class LaborController extends Controller
     public function index(Request $request)
     {
         if ($request->all==true) {
-            $Labores=Labor::select('DESCRIPCION as nom_labor','IDLABOR as codigo')->get();
+            $Labores=Labor::all();
         }else{
-            $Labores=Labor::select('DESCRIPCION as nom_labor','IDLABOR as codigo')->paginate(8);
+            $Labores=Labor::paginate(8);
         }
         return response()->json($Labores);
     }

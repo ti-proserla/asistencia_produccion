@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Area extends Model
 {
     protected $table="area";
-    // protected $connection= "sqlsrv";
-    // protected $primaryKey = 'IDACTIVIDAD';
+    public $timestamps = false;
+    protected $casts = [ 'id' => 'string' ];
 
     public function labores()
     {
-        return $this->hasMany('App\Model\Labor',"id","area_id")
-            ->selectRaw('nom_labor,id as codigo');
+        return $this->hasMany('App\Model\Labor','area_id','id')
+            ->selectRaw('*');
     }
 }

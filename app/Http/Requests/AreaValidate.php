@@ -27,7 +27,7 @@ class AreaValidate extends FormRequest
     public function rules()
     {
         return [
-            'codigo' => 'required|max:10',
+            'id' => 'required',
             'nom_area' => 'required|max:50',
         ];
     }

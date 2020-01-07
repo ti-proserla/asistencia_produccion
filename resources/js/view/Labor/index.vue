@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm-4">
+            <!-- <div class="col-sm-4">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Nueva Labor</h4>
@@ -20,8 +20,8 @@
                         </form>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-8">
+            </div> -->
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Lista de labores</h4>
@@ -32,19 +32,19 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Descripcion</th>
-                                    <th>Editar</th>
+                                    <!-- <th>Editar</th> -->
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="labor in table.data">
-                                    <td>{{labor.codigo}}</td>
+                                    <td>{{labor.id}}</td>
                                     <td>{{labor.nom_labor}}</td>
-                                    <td>
+                                    <!-- <td>
                                         <button @click="abrirEditar(labor.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <button v-if="labor.estado=='0'" @click="actualizarEstado(labor.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>

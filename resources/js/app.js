@@ -179,6 +179,11 @@ var routes =[
         component: require('./view/refreshOperario.vue').default,
         beforeEnter: auth
     },
+    {
+        path: '/pendientes',
+        component:require('./view/Reportes/pendientes.vue').default,
+        beforeEnter: auth
+    }
 ];
 var router=new VueRouter({
     mode: 'history',

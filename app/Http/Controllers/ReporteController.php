@@ -106,7 +106,7 @@ class ReporteController extends Controller
         $resultado=Operador::join('marcador','marcador.operador_id','=','operador.id')
             ->join('turno','turno.id','=','marcador.turno_id')
             ->whereNull('marcador.salida')
-            ->select('operador.dni as dni','operador.nom_operador','operador.ape_operador','marcador.id as marcador_id','ingreso','salida')
+            ->select('operador.id as operador_id','operador.dni as dni','operador.nom_operador','operador.ape_operador','turno.id as turno_id','ingreso','salida','turno.descripcion')
             ->get();
         return response()->json($resultado);
     }

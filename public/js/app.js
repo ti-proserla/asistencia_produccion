@@ -2297,7 +2297,7 @@ __webpack_require__.r(__webpack_exports__);
     iniarea: function iniarea() {
       this.errors = {};
       return {
-        codigo: null,
+        id: null,
         nom_area: null
       };
     },
@@ -3730,8 +3730,9 @@ __webpack_require__.r(__webpack_exports__);
       for (var i = 0; i < this.areas.length; i++) {
         var area = this.areas[i];
 
-        if (area.codigo == this.tareo.area_id) {
+        if (area.id == this.tareo.area_id) {
           this.tareo.labor_id = null;
+          console.log(area.labores);
           return area.labores;
         }
       }
@@ -4973,54 +4974,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       reporte: [],
-      turno_id: 0,
-      turnos: []
+      marcas: []
     };
   },
   mounted: function mounted() {
-    this.listarTurnos();
     this.listar();
   },
-  computed: {
-    url: function url() {
-      return url_base + '/' + this.consulta.year + '/' + this.consulta.week;
-    }
-  },
   methods: {
-    listarTurnos: function listarTurnos() {
+    listar: function listar() {
       var _this = this;
 
-      axios.get(url_base + '/turno?all=true').then(function (response) {
-        _this.turnos = response.data;
-
-        if (_this.turnos.length > 0) {
-          _this.turno_id = _this.turnos[0].id;
-        }
+      axios.get(url_base + '/reporte/pendientes-regularizar').then(function (response) {
+        _this.reporte = response.data;
       });
     },
-    listar: function listar() {
+    consultarMarcas: function consultarMarcas(operador_id, turno_id) {
       var _this2 = this;
 
-      axios.get(url_base + '/reporte/pendientes-regularizar').then(function (response) {
-        _this2.reporte = response.data;
+      axios.get(url_base + '/marcador?operador_id=' + operador_id + '&turno_id=' + turno_id).then(function (response) {
+        _this2.marcas = response.data;
       });
     }
   }
@@ -85420,13 +85396,13 @@ var render = function() {
               },
               [
                 _c("Input", {
-                  attrs: { title: "Codigo:", error: _vm.errors.codigo },
+                  attrs: { title: "Codigo:", error: _vm.errors.id },
                   model: {
-                    value: _vm.area.codigo,
+                    value: _vm.area.id,
                     callback: function($$v) {
-                      _vm.$set(_vm.area, "codigo", $$v)
+                      _vm.$set(_vm.area, "id", $$v)
                     },
-                    expression: "area.codigo"
+                    expression: "area.id"
                   }
                 }),
                 _vm._v(" "),
@@ -85461,28 +85437,9 @@ var render = function() {
                 "tbody",
                 _vm._l(_vm.table.data, function(area) {
                   return _c("tr", [
-                    _c("td", [_vm._v(_vm._s(area.codigo))]),
+                    _c("td", [_vm._v(_vm._s(area.id))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(area.nom_area))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn-link-info",
-                          on: {
-                            click: function($event) {
-                              return _vm.abrirEditar(area.id)
-                            }
-                          }
-                        },
-                        [
-                          _c("i", { staticClass: "material-icons" }, [
-                            _vm._v("create")
-                          ])
-                        ]
-                      )
-                    ]),
                     _vm._v(" "),
                     _c("td", [
                       area.estado == "0"
@@ -85577,16 +85534,13 @@ var render = function() {
                   },
                   [
                     _c("Input", {
-                      attrs: {
-                        title: "Codigo:",
-                        error: _vm.errors_editar.codigo
-                      },
+                      attrs: { title: "Codigo:", error: _vm.errors_editar.id },
                       model: {
-                        value: _vm.area_editar.codigo,
+                        value: _vm.area_editar.id,
                         callback: function($$v) {
-                          _vm.$set(_vm.area_editar, "codigo", $$v)
+                          _vm.$set(_vm.area_editar, "id", $$v)
                         },
-                        expression: "area_editar.codigo"
+                        expression: "area_editar.id"
                       }
                     }),
                     _vm._v(" "),
@@ -85651,11 +85605,9 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("thead", [
       _c("tr", [
-        _c("th", [_vm._v("Código")]),
+        _c("th", [_vm._v("COD")]),
         _vm._v(" "),
         _c("th", [_vm._v("Descripcion")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Editar")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
@@ -86102,111 +86054,21 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", [
     _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-4" }, [
+      _c("div", { staticClass: "col-sm-12" }, [
         _c("div", { staticClass: "card" }, [
           _vm._m(0),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
-            _c(
-              "form",
-              {
-                attrs: { action: "" },
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.grabarNuevo()
-                  }
-                }
-              },
-              [
-                _c("Input", {
-                  attrs: { title: "Codigo:", error: _vm.errors.codigo },
-                  model: {
-                    value: _vm.labor.codigo,
-                    callback: function($$v) {
-                      _vm.$set(_vm.labor, "codigo", $$v)
-                    },
-                    expression: "labor.codigo"
-                  }
-                }),
-                _vm._v(" "),
-                _c("Input", {
-                  attrs: { title: "Nombre:", error: _vm.errors.nom_labor },
-                  model: {
-                    value: _vm.labor.nom_labor,
-                    callback: function($$v) {
-                      _vm.$set(_vm.labor, "nom_labor", $$v)
-                    },
-                    expression: "labor.nom_labor"
-                  }
-                }),
-                _vm._v(" "),
-                _c(
-                  "Select",
-                  {
-                    attrs: { title: "Area:", error: _vm.errors.area_id },
-                    model: {
-                      value: _vm.labor.area_id,
-                      callback: function($$v) {
-                        _vm.$set(_vm.labor, "area_id", $$v)
-                      },
-                      expression: "labor.area_id"
-                    }
-                  },
-                  [
-                    _c("option", { attrs: { value: "" } }),
-                    _vm._v(" "),
-                    _vm._l(_vm.areas, function(area) {
-                      return _c("option", { domProps: { value: area.id } }, [
-                        _vm._v(_vm._s(area.nom_area))
-                      ])
-                    })
-                  ],
-                  2
-                ),
-                _vm._v(" "),
-                _vm._m(1)
-              ],
-              1
-            )
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-8" }, [
-        _c("div", { staticClass: "card" }, [
-          _vm._m(2),
-          _vm._v(" "),
-          _c("div", { staticClass: "card-body" }, [
             _c("table", { staticClass: "table table-striped" }, [
-              _vm._m(3),
+              _vm._m(1),
               _vm._v(" "),
               _c(
                 "tbody",
                 _vm._l(_vm.table.data, function(labor) {
                   return _c("tr", [
-                    _c("td", [_vm._v(_vm._s(labor.codigo))]),
+                    _c("td", [_vm._v(_vm._s(labor.id))]),
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(labor.nom_labor))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "button",
-                        {
-                          staticClass: "btn-link-info",
-                          on: {
-                            click: function($event) {
-                              return _vm.abrirEditar(labor.id)
-                            }
-                          }
-                        },
-                        [
-                          _c("i", { staticClass: "material-icons" }, [
-                            _vm._v("create")
-                          ])
-                        ]
-                      )
-                    ]),
                     _vm._v(" "),
                     _c("td", [
                       labor.estado == "0"
@@ -86354,7 +86216,7 @@ var render = function() {
           { staticClass: "modal-dialog", attrs: { role: "document" } },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(4),
+              _vm._m(2),
               _vm._v(" "),
               _c("div", { staticClass: "modal-body" }, [
                 _c(
@@ -86420,7 +86282,7 @@ var render = function() {
                       0
                     ),
                     _vm._v(" "),
-                    _vm._m(5)
+                    _vm._m(3)
                   ],
                   1
                 )
@@ -86438,26 +86300,6 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
-      _c("h4", { staticClass: "card-title" }, [_vm._v("Nueva Labor")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center" }, [
-      _c(
-        "button",
-        { staticClass: "btn btn-success", attrs: { type: "submit" } },
-        [_vm._v("Guardar")]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
       _c("h4", { staticClass: "card-title" }, [_vm._v("Lista de labores")])
     ])
   },
@@ -86470,8 +86312,6 @@ var staticRenderFns = [
         _c("th", [_vm._v("Código")]),
         _vm._v(" "),
         _c("th", [_vm._v("Descripcion")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Editar")]),
         _vm._v(" "),
         _c("th", [_vm._v("Estado")])
       ])
@@ -87560,7 +87400,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _vm._l(_vm.areas, function(area) {
-                  return _c("option", { domProps: { value: area.codigo } }, [
+                  return _c("option", { domProps: { value: area.id } }, [
                     _vm._v(_vm._s(area.nom_area))
                   ])
                 })
@@ -87586,7 +87426,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _vm._l(_vm.labores, function(labor) {
-                  return _c("option", { domProps: { value: labor.codigo } }, [
+                  return _c("option", { domProps: { value: labor.id } }, [
                     _vm._v(_vm._s(labor.nom_labor))
                   ])
                 })
@@ -89353,61 +89193,6 @@ var render = function() {
       _vm._m(0),
       _vm._v(" "),
       _c("div", { staticClass: "card-body" }, [
-        _c("div", { staticClass: "row form-group" }, [
-          _c("div", { staticClass: "col-sm-3" }, [
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.turno_id,
-                    expression: "turno_id"
-                  }
-                ],
-                staticClass: "form-control",
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.turno_id = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              _vm._l(_vm.turnos, function(turno) {
-                return _c("option", { domProps: { value: turno.id } }, [
-                  _vm._v(_vm._s(turno.descripcion))
-                ])
-              }),
-              0
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-sm-2" }, [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-info",
-                on: {
-                  click: function($event) {
-                    return _vm.listar()
-                  }
-                }
-              },
-              [_vm._v("\n                        Buscar\n                    ")]
-            )
-          ])
-        ]),
-        _vm._v(" "),
         _c("table", { staticClass: "table table-striped" }, [
           _vm._m(1),
           _vm._v(" "),
@@ -89423,11 +89208,24 @@ var render = function() {
                   )
                 ]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.turno_id))]),
+                _c("td", [_vm._v(_vm._s(item.descripcion))]),
                 _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.ingreso))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(item.salida))])
+                _c("td", [
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          return _vm.consultarMarcas(
+                            item.operador_id,
+                            item.turno_id
+                          )
+                        }
+                      }
+                    },
+                    [_vm._v("Ver Marcas")]
+                  )
+                ])
               ])
             }),
             0
@@ -89456,9 +89254,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Nombre y Apellidos")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Ingreso")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Salida")])
+        _c("th", [_vm._v("Ver Marcas")])
       ])
     ])
   }
@@ -110310,6 +110106,10 @@ var routes = [{
 }, {
   path: '/refreshOperario',
   component: __webpack_require__(/*! ./view/refreshOperario.vue */ "./resources/js/view/refreshOperario.vue")["default"],
+  beforeEnter: auth
+}, {
+  path: '/pendientes',
+  component: __webpack_require__(/*! ./view/Reportes/pendientes.vue */ "./resources/js/view/Reportes/pendientes.vue")["default"],
   beforeEnter: auth
 }];
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({

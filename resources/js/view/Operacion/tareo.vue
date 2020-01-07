@@ -48,11 +48,11 @@
                     </Select>
                     <Select title="Area:" v-model="tareo.area_id">
                         <option value="">--SELECCIONAR AREA--</option>
-                        <option v-for="area in areas" :value="area.codigo">{{ area.nom_area }}</option>
+                        <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
                     </Select>
                     <Select title="Labor:" v-model="tareo.labor_id">
                         <option value="">--SELECCIONAR LABOR--</option>
-                        <option v-for="labor in labores" :value="labor.codigo">{{ labor.nom_labor }}</option>
+                        <option v-for="labor in labores" :value="labor.id">{{ labor.nom_labor }}</option>
                     </Select>
                     <form v-on:submit.prevent="guardar()">
                         <Input title="Codigo de Barras" :focusSelect='focus' type="number" v-model="tareo.codigo_barras"></Input>
@@ -128,8 +128,10 @@ export default {
         labores(){
             for (let i = 0; i < this.areas.length; i++) {
                 const area = this.areas[i];
-                if (area.codigo==this.tareo.area_id) {
+                
+                if (area.id==this.tareo.area_id) {
                     this.tareo.labor_id=null;
+                    console.log(area.labores);
                     return area.labores;
                 }
             }

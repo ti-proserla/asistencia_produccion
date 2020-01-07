@@ -14,11 +14,9 @@ class CreateAreaTable extends Migration
     public function up()
     {
         Schema::create('area', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('codigo',10);
+            $table->string('id',3)->primary();
             $table->string('nom_area',50);
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
-            $table->timestamps();
         });
     }
 

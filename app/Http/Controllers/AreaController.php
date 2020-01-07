@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Area;
+use App\Model\Labor2;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,20 +18,21 @@ class AreaController extends Controller
      */
     public function index(Request $request)
     {
-        $Areas=Area::select('nom_area','id');
+        $Areas=Area::select('nom_area','id','estado');
         if ($request->all==true) {
             $Areas=$Areas->get();
         }else{
             $Areas=$Areas->paginate(8);
         }
+        // dd(Labor2::first());
         // if ($request->all==true) {
-        //     $Areas=Area::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
-        //         ->where('IDACTIVIDAD','010')
-        //         ->orWhere('IDACTIVIDAD','011')
-        //         ->orWhere('IDACTIVIDAD','012')
-        //         ->get();
+        //     $Areas=Area2::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
+        //     ->where('IDACTIVIDAD','010')
+        //     ->orWhere('IDACTIVIDAD','011')
+        //     ->orWhere('IDACTIVIDAD','012')
+        //     ->get();
         // }else{
-        //     $Areas=Area::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
+        //     $Areas=Area2::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
         //         ->where('IDACTIVIDAD','010')
         //         ->orWhere('IDACTIVIDAD','011')
         //         ->orWhere('IDACTIVIDAD','012')
@@ -43,13 +45,9 @@ class AreaController extends Controller
      */
     public function labor(Request $request){
         $areas=Area::with('labores')
-            ->select('nom_area','id as codigo')
+            ->select('nom_area','id')
             ->get();
-        // $areas=Area::with('labores')->select(DB::raw('RTRIM(DESCRIPCION) as nom_area'),'IDACTIVIDAD as codigo','IDACTIVIDAD')
-        //     ->where('IDACTIVIDAD','010')
-        //     ->orWhere('IDACTIVIDAD','011')
-        //     ->orWhere('IDACTIVIDAD','012')
-        //     ->get();
+        
         return response()->json($areas);
     }
     /**
@@ -58,7 +56,7 @@ class AreaController extends Controller
     public function store(AreaValidate $request)
     {
         $Area=new Area();
-        $Area->codigo=$request->codigo;
+        $Area->id=$request->id;
         $Area->nom_area=$request->nom_area;
         $Area->save();
         return response()->json([
@@ -79,7 +77,6 @@ class AreaController extends Controller
     public function update(AreaValidate $request, $id)
     {
         $Area=Area::where('id',$id)->first();
-        $Area->codigo=$request->codigo;
         $Area->nom_area=$request->nom_area;      
         $Area->save();
         return response()->json([

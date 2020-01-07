@@ -91,3 +91,4 @@ Route::get('/consulta/marcas', function ($id) {
 });
 
 Route::get('sincronizar/labor',"SincronizarController@labor");
+Route::get('sincronizar/area',"SincronizarController@area");

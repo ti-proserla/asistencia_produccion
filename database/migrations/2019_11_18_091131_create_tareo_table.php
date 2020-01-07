@@ -18,8 +18,8 @@ class CreateTareoTable extends Migration
             $table->integer('turno_id')->unsigned();
             $table->integer('operador_id')->unsigned();
             $table->integer('proceso_id')->unsigned();
-            $table->integer('labor_id')->unsigned();
-            $table->integer('area_id')->unsigned();
+            $table->string('labor_id',6);
+            $table->string('area_id',3);
             $table->integer('linea_id')->unsigned()->nullable();
             $table->timestamps();
         });

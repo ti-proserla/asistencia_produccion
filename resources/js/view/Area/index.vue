@@ -8,7 +8,7 @@
                     </div>
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="Codigo:" v-model="area.codigo" :error="errors.codigo"></Input>
+                            <Input title="Codigo:" v-model="area.id" :error="errors.id"></Input>
                             <Input title="Nombre:" v-model="area.nom_area" :error="errors.nom_area"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -26,21 +26,21 @@
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Código</th>
+                                    <th>COD</th>
                                     <th>Descripcion</th>
-                                    <th>Editar</th>
+                                    <!-- <th>Editar</th> -->
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="area in table.data">
-                                    <td>{{area.codigo}}</td>
+                                    <td>{{area.id}}</td>
                                     <td>{{area.nom_area}}</td>
-                                    <td>
+                                    <!-- <td>
                                         <button @click="abrirEditar(area.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <button v-if="area.estado=='0'" @click="actualizarEstado(area.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>
@@ -71,7 +71,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
-                            <Input title="Codigo:" v-model="area_editar.codigo" :error="errors_editar.codigo"></Input>
+                            <Input title="Codigo:" v-model="area_editar.id" :error="errors_editar.id"></Input>
                             <Input title="Nombre:" v-model="area_editar.nom_area" :error="errors_editar.nom_area"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -116,7 +116,7 @@ export default {
         iniarea(){
             this.errors={};
             return {
-                codigo: null,
+                id: null,
                 nom_area: null,
             }
         },
