@@ -21,11 +21,29 @@ Vue.component('v-select', vSelect)
 import Vuex from 'vuex'
 Vue.use(Vuex)
 
-window.store=new Vuex.Store({
-    state: {
-      cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null
+const moduleSidebar={
+    namespaced: true,
+    state:{
+        statusSidebar: false
     },
     mutations: {
+        open(state){
+            state.statusSidebar=true;
+        },
+        close(state){
+            state.statusSidebar=false;
+        }
+    }
+}
+
+window.store=new Vuex.Store({
+    state: {
+        cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null,
+    },
+    modules:{
+        'sidebar': moduleSidebar
+    },
+    mutations: {        
       auth_success(state,cuenta){
         state.cuenta=cuenta;
         localStorage.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
@@ -46,6 +64,7 @@ if (store.state.cuenta!=null) {
  */
 var auth=(to, from,next)=>{
     $('.modal-backdrop').remove();
+    store.state.sidebar.statusSidebar=false;
     if(store.state.cuenta===null){
         next('/login');
     }else{

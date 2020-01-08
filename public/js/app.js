@@ -2026,6 +2026,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(source, true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(source).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 //
 //
 //
@@ -2139,28 +2146,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-  data: function data() {
-    return {
-      statusSidebar: false
-    };
-  },
-  methods: {
-    url: function url() {// return 
-    },
-    closeSidebar: function closeSidebar() {
-      this.statusSidebar = false;
-    },
-    openSidebar: function openSidebar() {
-      this.statusSidebar = true;
-    },
+  computed: Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapState"])('sidebar', ['statusSidebar']),
+  methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapMutations"])('sidebar', ['open', 'close']), {
+    url: function url() {},
     cerrar: function cerrar() {
       this.$store.commit('auth_close');
       this.$router.push({
         path: "/login"
       });
     }
-  }
+  })
 });
 
 /***/ }),
@@ -85317,7 +85314,7 @@ var render = function() {
         staticClass: "background-sidebar",
         on: {
           click: function($event) {
-            return _vm.closeSidebar()
+            return _vm.close()
           }
         }
       }),
@@ -85329,7 +85326,7 @@ var render = function() {
             staticClass: "btn-link-success",
             on: {
               click: function($event) {
-                return _vm.openSidebar()
+                return _vm.open()
               }
             }
           },
@@ -90187,7 +90184,7 @@ var render = function() {
   return _c("div", { staticClass: "container" }, [
     _c("div", { staticClass: "login" }, [
       _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-lg-4" }, [
+        _c("div", { staticClass: "col-lg-4 col-sm-6" }, [
           _c("img", { attrs: { src: _vm.url("portada.png"), alt: "" } })
         ]),
         _vm._v(" "),
@@ -109969,9 +109966,26 @@ Vue.component('v-select', vue_select__WEBPACK_IMPORTED_MODULE_4___default.a); //
 
 
 Vue.use(vuex__WEBPACK_IMPORTED_MODULE_5__["default"]);
+var moduleSidebar = {
+  namespaced: true,
+  state: {
+    statusSidebar: false
+  },
+  mutations: {
+    open: function open(state) {
+      state.statusSidebar = true;
+    },
+    close: function close(state) {
+      state.statusSidebar = false;
+    }
+  }
+};
 window.store = new vuex__WEBPACK_IMPORTED_MODULE_5__["default"].Store({
   state: {
     cuenta: JSON.parse(localStorage.getItem('cuenta_sistema')) || null
+  },
+  modules: {
+    'sidebar': moduleSidebar
   },
   mutations: {
     auth_success: function auth_success(state, cuenta) {
@@ -109997,6 +110011,7 @@ if (store.state.cuenta != null) {
 
 var auth = function auth(to, from, next) {
   $('.modal-backdrop').remove();
+  store.state.sidebar.statusSidebar = false;
 
   if (store.state.cuenta === null) {
     next('/login');

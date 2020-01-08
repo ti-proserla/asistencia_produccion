@@ -2,7 +2,7 @@
     <div class="container">
         <div class="login">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-4 col-sm-6">
                     <img :src="url('portada.png')" alt="">
                 </div>
                 <div class="col-lg-4 col-sm-6">

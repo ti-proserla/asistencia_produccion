@@ -76,9 +76,9 @@
                 </li>
             </ul>            
         </div>
-        <div class="background-sidebar" @click="closeSidebar()"></div>
+        <div class="background-sidebar" @click="close()"></div>
         <nav class="navbar">
-            <button @click="openSidebar()" class="btn-link-success"><i class="material-icons">menu</i></button>
+            <button @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
             
             <!-- <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
@@ -112,22 +112,13 @@
     </div>
 </template>
 <script>
+import { mapState,mapMutations } from 'vuex'
+
 export default {
-    data() {
-        return {
-            statusSidebar: false
-        }
-    },
+    computed: mapState('sidebar',['statusSidebar']),
     methods: {
-        url(){
-            // return 
-        },
-        closeSidebar(){
-            this.statusSidebar=false;
-        },
-        openSidebar(){
-            this.statusSidebar=true;
-        },
+        ...mapMutations('sidebar',['open','close']),
+        url(){},
         cerrar(){
             this.$store.commit('auth_close');
             this.$router.push({path: "/login"} );
