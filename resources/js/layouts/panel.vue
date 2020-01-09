@@ -33,6 +33,12 @@
                     </router-link>
                 </li>
                 <li>
+                    <router-link to="configuracion">
+                        <i class="material-icons">work</i>
+                        <p>Configuracion</p>
+                    </router-link>
+                </li>
+                <li>
                     <router-link to="linea">
                         <i class="material-icons">work</i>
                         <p>Linea</p>

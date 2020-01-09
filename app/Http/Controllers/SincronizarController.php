@@ -7,6 +7,9 @@ use App\Model\Labor2;
 use App\Model\Area;
 use App\Model\Area2;
 use App\Model\Labor;
+use App\Model\Configuracion;
+use App\Model\Consumidor;
+use App\Model\Proceso;
 
 class SincronizarController extends Controller
 {
@@ -37,10 +40,10 @@ class SincronizarController extends Controller
     public function area(){
         
         $areasSqlServer=Area2::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
-            ->where('IDACTIVIDAD','010')
-            ->orWhere('IDACTIVIDAD','011')
-            ->orWhere('IDACTIVIDAD','012')
-            ->orWhere('IDACTIVIDAD','009')
+            // ->where('IDACTIVIDAD','010')
+            // ->orWhere('IDACTIVIDAD','011')
+            // ->orWhere('IDACTIVIDAD','012')
+            // ->orWhere('IDACTIVIDAD','009')
             ->get();
         
         foreach ($areasSqlServer as $key => $value) {
@@ -50,6 +53,25 @@ class SincronizarController extends Controller
                 // $area->id=$value->codigo;
                 $area->nom_area=$value->nom_area;
                 $area->save();        
+                echo "Guardado<br>";
+            } catch (\Exception $ex) {
+                echo "Existente<br>";
+            }
+        }
+        return "FINALIZADO";
+    }
+    public function proceso(){
+        $configuracion=Configuracion::where('nombre','ccosto')->first();
+        $parametros=explode(',',$configuracion->parametro);
+        $consumidores=Consumidor::select('IDCONSUMIDOR as idconsumidor','DESCRIPCION as nom_proceso','IDPADRE')
+            ->whereIn('IDPADRE',$parametros)
+            ->get();
+        foreach ($consumidores as $key => $value) {
+            try {
+                $proceso=new proceso();
+                $proceso->id=$value->idconsumidor;
+                $proceso->nom_proceso=$value->nom_proceso;
+                $proceso->save();        
                 echo "Guardado<br>";
             } catch (\Exception $ex) {
                 echo "Existente<br>";

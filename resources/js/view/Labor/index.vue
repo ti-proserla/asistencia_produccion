@@ -24,7 +24,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de labores</h4>
+                        <h4 class="card-title">Lista de labores</h4><button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -32,7 +32,6 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Descripcion</th>
-                                    <!-- <th>Editar</th> -->
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -208,7 +207,14 @@ export default {
                 this.labor_editar = response.data;
             })
             $('#modal-editar').modal();
-        }
+        },
+        sincronizar(){
+            axios.get(url_base+'/sincronizar/labor')
+            .then(response => {
+                this.listar();
+                // this.table = response.data;
+            })
+        },
     },
 }
 </script>

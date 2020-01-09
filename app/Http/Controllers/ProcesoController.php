@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Model\Proceso;
+use App\Model\Consumidor;
+use App\Model\Configuracion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -15,6 +17,12 @@ class ProcesoController extends Controller
      */
     public function index(Request $request)
     {
+        // $configuracion=Configuracion::where('nombre','ccosto')->first();
+        // $parametros=explode(',',$configuracion->parametro);
+        // $consumidores=Consumidor::select('IDCONSUMIDOR','DESCRIPCION','IDPADRE')
+        //     ->whereIn('IDPADRE',$parametros)
+        //     ->get();
+        // return response()->json($consumidores);
         if ($request->all==true) {
             $Procesos=Proceso::all();
         }else{

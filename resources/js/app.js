@@ -202,6 +202,11 @@ var routes =[
         path: '/pendientes',
         component:require('./view/Reportes/pendientes.vue').default,
         beforeEnter: auth
+    },
+    {
+        path: '/configuracion',
+        component:require('./view/configuracion.vue').default,
+        beforeEnter: auth
     }
 ];
 var router=new VueRouter({

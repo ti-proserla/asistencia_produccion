@@ -21,6 +21,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Lista de procesos</h4>
+                        <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button>
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -34,7 +35,7 @@
                             </thead>
                             <tbody>
                                 <tr v-for="proceso in table.data">
-                                    <td>{{proceso.codigo}}</td>
+                                    <td>{{proceso.id}}</td>
                                     <td>{{proceso.nom_proceso}}</td>
                                     <td>
                                         <button @click="abrirEditar(proceso.id)" class="btn-link-info">
@@ -177,7 +178,13 @@ export default {
                 this.proceso_editar = response.data;
             })
             $('#modal-editar').modal();
-        }
+        },
+        sincronizar(){
+            axios.get(url_base+'/sincronizar/proceso')
+            .then(response => {
+                this.listar();
+            })
+        },
     },
 }
 </script>
