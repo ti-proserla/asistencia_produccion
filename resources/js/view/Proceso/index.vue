@@ -21,7 +21,7 @@
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Lista de procesos</h4>
-                        <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button>
+                        <!-- <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button> -->
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -179,12 +179,12 @@ export default {
             })
             $('#modal-editar').modal();
         },
-        sincronizar(){
-            axios.get(url_base+'/sincronizar/proceso')
-            .then(response => {
-                this.listar();
-            })
-        },
+        // sincronizar(){
+        //     axios.get(url_base+'/sincronizar/proceso')
+        //     .then(response => {
+        //         this.listar();
+        //     });
+        // },
     },
 }
 </script>

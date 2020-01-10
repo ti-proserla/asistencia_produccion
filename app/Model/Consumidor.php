@@ -8,4 +8,5 @@ class Consumidor extends Model
 {
     protected $table="NV_NIVELES_CONSUMIDOR";
     protected $connection= "sqlsrv";
+    protected $primaryKey = 'IDCONSUMIDOR';
 }

@@ -1,26 +1,11 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Nuevo Area</h4>
-                    </div>
-                    <div class="card-body">
-                        <form action="" v-on:submit.prevent="grabarNuevo()">
-                            <Input title="Codigo:" v-model="area.id" :error="errors.id"></Input>
-                            <Input title="Nombre:" v-model="area.nom_area" :error="errors.nom_area"></Input>
-                            <div class="text-center">
-                                <button type="submit" class="btn btn-success">Guardar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-8">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title">Lista de Areas</h4>
+                        <h4 class="card-title">Lista de Actividades</h4>
+                        <!-- <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button> -->
                     </div>
                     <div class="card-body">
                         <table class="table table-striped">
@@ -28,7 +13,6 @@
                                 <tr>
                                     <th>COD</th>
                                     <th>Descripcion</th>
-                                    <!-- <th>Editar</th> -->
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -36,11 +20,6 @@
                                 <tr v-for="area in table.data">
                                     <td>{{area.id}}</td>
                                     <td>{{area.nom_area}}</td>
-                                    <!-- <td>
-                                        <button @click="abrirEditar(area.id)" class="btn-link-info">
-                                            <i class="material-icons">create</i>
-                                        </button>
-                                    </td> -->
                                     <td>
                                         <button v-if="area.estado=='0'" @click="actualizarEstado(area.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>
@@ -177,7 +156,14 @@ export default {
                 this.area_editar = response.data;
             })
             $('#modal-editar').modal();
-        }
+        },
+        // sincronizar(){
+        //     axios.get(url_base+'/sincronizar/area')
+        //     .then(response => {
+        //         this.listar();
+        //         // this.table = response.data;
+        //     })
+        // },
     },
 }
 </script>

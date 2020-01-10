@@ -6,6 +6,11 @@
                     <h4 class="card-title">Configuraciones</h4>
                 </div>
                 <div class="card-body">
+                    <hr>
+                    <h6>Sincronizaciones</h6>
+                    <button @click="sincronizarTodo()" class="btn btn-danger">Sincronizar Dependencias</button>
+                    <hr>
+                    <h6>Parametros Globales</h6>
                     <table class="table">
                         <thead>
                             <tr>
@@ -56,6 +61,20 @@ export default {
                         break;
                 }
             });
+        },
+        sincronizarTodo(){
+            axios.get(url_base+'/sincronizar/proceso')
+            .then(response => {
+                
+            });
+            axios.get(url_base+'/sincronizar/area')
+            .then(response => {
+                axios.get(url_base+'/sincronizar/labor')
+                .then(response => {
+                    // this.listar();
+                    // // this.table = response.data;
+                });
+            })
         }
     },
 }
