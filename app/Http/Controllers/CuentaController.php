@@ -38,6 +38,7 @@ class CuentaController extends Controller
         $cuenta->api_token='moment';
         $cuenta->estado='0';
         $cuenta->rol=strtoupper($request->rol);
+        $cuenta->fundo_id=strtoupper($request->fundo_id);
         $cuenta->save();
         $cuenta->api_token=$cuenta->id.'_'.Carbon::now()->format('YmdHisu');
         $cuenta->save();
@@ -62,6 +63,7 @@ class CuentaController extends Controller
         $cuenta=Cuenta::where('id',$id)->first();
         $cuenta->nombre=strtoupper($request->nombre);
         $cuenta->apellido=strtoupper($request->apellido);
+        $cuenta->fundo_id=strtoupper($request->fundo_id);
         $cuenta->save();
         return response()->json([
             "status"=> "OK",
@@ -86,7 +88,7 @@ class CuentaController extends Controller
     public function login(Request $request){
         $cuenta=Cuenta::where('usuario',$request->usuario)
             ->where('password',$request->password)
-            ->select('api_token','id','nombre','apellido')
+            ->select('api_token','id','nombre','apellido','fundo_id')
             ->first();
         if ($cuenta==null) {
             return response()->json([

@@ -20,8 +20,9 @@ class CreateCuentaTable extends Migration
             $table->string('usuario',10);
             $table->string('password',20);
             $table->string('api_token',22);
-            $table->enum('estado',["0","1","2"]);//0:activo , 1:inactivo, 2:Cuenta Principal             
-            $table->string('rol',20);
+            $table->enum('estado',["0","1","2"]);//0:activo , 1:inactivo, 2:Cuenta Principal
+            $table->string('rol',20); //ADMINISTRADOR tiene que cambiar empresa
+            $table->string('fundo_id',8)->nullable();
         });
 
         DB::table('cuenta')->insert([

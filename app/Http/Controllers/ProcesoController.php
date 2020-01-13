@@ -17,16 +17,11 @@ class ProcesoController extends Controller
      */
     public function index(Request $request)
     {
-        // $configuracion=Configuracion::where('nombre','ccosto')->first();
-        // $parametros=explode(',',$configuracion->parametro);
-        // $consumidores=Consumidor::select('IDCONSUMIDOR','DESCRIPCION','IDPADRE')
-        //     ->whereIn('IDPADRE',$parametros)
-        //     ->get();
-        // return response()->json($consumidores);
+        // dd($request->all());
         if ($request->all==true) {
-            $Procesos=Proceso::all();
+            $Procesos=Proceso::where('fundo_id',$request->fundo_id)->all();
         }else{
-            $Procesos=Proceso::paginate(8);
+            $Procesos=Proceso::where('fundo_id',$request->fundo_id)->paginate(8);
         }
         return response()->json($Procesos);
     }

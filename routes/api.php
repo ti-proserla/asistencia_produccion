@@ -25,14 +25,16 @@ Route::resource('planilla', 'PlanillaController');
 Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
 
 Route::get('fundo/proceso','FundoController@proceso')->name('fundo.proceso');
-Route::resource('fundo', 'FundoController');
+Route::resource('fundo', 'FundoController')->middleware('auth.token');
 Route::get('area/labor','AreaController@labor')->name('area.labor');
 Route::resource('area', 'AreaController');
 Route::post('area/{id}/estado','AreaController@estado')->name('area.estado');
 
 Route::resource('labor', 'LaborController');
 Route::post('labor/{id}/estado','LaborController@estado')->name('labor.estado');
-Route::resource('proceso', 'ProcesoController');
+
+Route::resource('proceso', 'ProcesoController')->middleware('auth.token');
+
 Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.estado');
 Route::resource('linea', 'LineaController');
 Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');

@@ -13,6 +13,10 @@
                             <Input title="Apellido:" v-model="cuenta.apellido" :error="errors.apellido"></Input>
                             <Input title="usuario:" v-model="cuenta.usuario" :error="errors.usuario"></Input>
                             <Input title="password:" v-model="cuenta.password" :error="errors.password"></Input>
+                            <Select title="Fundo:" v-model="cuenta.fundo_id">
+                                <option value="">--SELECCIONAR FUNDO--</option>
+                                <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
+                            </Select>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success mt-3">Guardar</button>
                             </div>
@@ -84,6 +88,10 @@
                         <form action="" v-on:submit.prevent="grabarEditar()">
                             <Input title="Nombre:" v-model="cuenta_editar.nombre" :error="errors_editar.nombre"></Input>
                             <Input title="Apellido:" v-model="cuenta_editar.apellido" :error="errors_editar.apellido"></Input>
+                            <Select title="Fundo:" v-model="cuenta_editar.fundo_id">
+                                <option value="">--SELECCIONAR FUNDO--</option>
+                                <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
+                            </Select>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -96,15 +104,19 @@
 </template>
 <script>
 import Input from '../../dragon-desing/dg-input.vue'
+import Select from '../../dragon-desing/dg-select.vue'
+
 export default {
     components:{
-        Input
+        Input,
+        Select
     },
     data() {
         return {
+            fundos:[],
             search: null,
-            cuenta: this.inicuenta(), //datos de logeo
-            cuenta_editar: this.inicuenta(),
+            cuenta: this.iniCuenta(), //datos de logeo
+            cuenta_editar: this.iniCuenta(),
             errors: {}, //datos de errores
             errors_editar: {}, //datos de errores
             //Datos de Tabla:
@@ -143,7 +155,7 @@ export default {
 
                                     };
                                 });
-                                this.cuenta=this.inicuenta();
+                                this.cuenta=this.iniCuenta();
                                 break;
                             case "OK":
                                 this.cuenta.nom_cuenta=respuesta.data.nombres;
@@ -166,27 +178,31 @@ export default {
     },
     mounted() {
         this.listar();
+        this.listarFundo();
     },
     methods: {
-        listar(n=this.table.from){
-            axios.get(url_base+'/cuenta?page='+n+'&search='+this.search)
-            .then(response => {
-                this.table = response.data;
-            })
-        },
-        inicuenta(){
+        iniCuenta(){
             this.errors={};
             return {
                 nombre: null,
                 apellido:null,
                 usuario:null,
                 password: null,
-                rol: null
+                rol: null,
+                fundo_id: null
             }
         },
-        verFotoCheck(id){
-            this.url=url_base+'/../fotocheck/'+id;
-            $('#modal-fotocheck').modal();
+        listarFundo(){
+            axios.get(url_base+'/fundo?all=true')
+            .then(response => {
+                this.fundos = response.data;
+            });
+        },
+        listar(n=this.table.from){
+            axios.get(url_base+'/cuenta?page='+n+'&search='+this.search)
+            .then(response => {
+                this.table = response.data;
+            })
         },
         grabarNuevo(){
             axios.post(url_base+'/cuenta',this.cuenta)
@@ -198,7 +214,7 @@ export default {
                         break;
                     case "OK":
                         this.listar();
-                        this.cuenta=this.inicuenta();
+                        this.cuenta=this.iniCuenta();
                         swal("", "cuenta Registrado", "success");
                         break;
                     default:
@@ -230,7 +246,7 @@ export default {
                         this.errors_editar=respuesta.data;
                         break;
                     case "OK":
-                        this.cuenta_editar=this.inicuenta();
+                        this.cuenta_editar=this.iniCuenta();
                         this.listar();
                         swal("", "cuenta Actualizado", "success");
                         $('#modal-editar').modal('hide');

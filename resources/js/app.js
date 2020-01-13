@@ -57,7 +57,7 @@ window.store=new Vuex.Store({
     actions: {}
 });
 if (store.state.cuenta!=null) {
-    axios.defaults.headers.common['Authorization'] = store.state.cuenta.token;
+    axios.defaults.headers.common['Authorization'] = store.state.cuenta.api_token;
 }
 /**
  * ROUTER VUE
