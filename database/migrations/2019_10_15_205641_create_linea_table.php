@@ -17,13 +17,6 @@ class CreateLineaTable extends Migration
             $table->increments('id');
             $table->string('nombre',12);// varchar
         });
-
-
-
-        DB::table('linea')->insert([
-            ["nombre"=>"LINEA 01"],
-            ["nombre"=>"LINEA 02"],
-        ]);
     }
 
     /**

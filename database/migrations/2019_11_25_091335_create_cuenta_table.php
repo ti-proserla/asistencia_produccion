@@ -23,6 +23,10 @@ class CreateCuentaTable extends Migration
             $table->enum('estado',["0","1","2"]);//0:activo , 1:inactivo, 2:Cuenta Principal             
             $table->string('rol',20);
         });
+
+        DB::table('cuenta')->insert([
+            ['nombre' => 'Diego', 'apellido' => 'Mendoza','usuario'=>'admin','password'=>'12345678','api_token'=>'dmf','estado'=>'2']
+        ]);
     }
 
     /**
