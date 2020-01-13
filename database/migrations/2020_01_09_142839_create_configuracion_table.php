@@ -20,6 +20,7 @@ class CreateConfiguracionTable extends Migration
             $table->timestamps();
         });
         DB::table('configuracion')->insert([
+            // ['nombre' => 'actividad', 'parametro' => ''],
             ['nombre' => 'actividad', 'parametro' => ''],
             ['nombre' => 'ccosto', 'parametro' => '']
         ]);
