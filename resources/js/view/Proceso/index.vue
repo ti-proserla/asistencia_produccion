@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-sm-4">
+            <!-- <div class="col-sm-4">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="card-title">Nuevo Proceso</h4>
@@ -16,11 +16,11 @@
                         </form>
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-8">
+            </div> -->
+            <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de procesos</h4>
+                        <h4 class="card-title">Centros de Costos</h4>
                         <!-- <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button> -->
                     </div>
                     <div class="card-body">
@@ -29,7 +29,7 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Descripcion</th>
-                                    <th>Editar</th>
+                                    <!-- <th>Editar</th> -->
                                     <th>Estado</th>
                                 </tr>
                             </thead>
@@ -37,11 +37,11 @@
                                 <tr v-for="proceso in table.data">
                                     <td>{{proceso.id}}</td>
                                     <td>{{proceso.nom_proceso}}</td>
-                                    <td>
+                                    <!-- <td>
                                         <button @click="abrirEditar(proceso.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
                                         </button>
-                                    </td>
+                                    </td> -->
                                     <td>
                                         <button v-if="proceso.estado=='0'" @click="actualizarEstado(proceso.id)" class="btn-link-info">
                                             <i class="material-icons">radio_button_checked</i>
@@ -61,7 +61,7 @@
             </div>
         </div>
         <!--Modal Editar-->
-        <div id="modal-editar" class="modal" tabindex="-1" role="dialog">
+        <!-- <div id="modal-editar" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!--Fin Modal Editar-->
     </div>
 </template>

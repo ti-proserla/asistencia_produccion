@@ -47,13 +47,13 @@
                 <li>
                     <router-link to="proceso">
                         <i class="material-icons">work</i>
-                        <p>proceso</p>
+                        <p>Centro Costo</p>
                     </router-link>
                 </li>
                 <li>
                     <router-link to="area">
                         <i class="material-icons">work</i>
-                        <p>Area</p>
+                        <p>Actividad</p>
                     </router-link>
                 </li>
                 <li>

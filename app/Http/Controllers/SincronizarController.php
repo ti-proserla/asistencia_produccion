@@ -61,8 +61,9 @@ class SincronizarController extends Controller
     public function proceso(){
         $configuracion=Configuracion::where('nombre','ccosto')->first();
         $parametros=explode(',',$configuracion->parametro);
-        $consumidores=Consumidor::selectRaw('RTRIM(IDCONSUMIDOR) as idconsumidor,RTRIM(DESCRIPCION) as nom_proceso')
-            ->whereIn('IDCONSUMIDOR',$parametros)
+        $consumidores=Consumidor::selectRaw('CONSUMIDOR.IDCONSUMIDOR as idconsumidor, LTRIM(CONSUMIDOR.DESCRIPCION) as nom_proceso,C2.IDCONSUMIDOR as IDPADRE')
+            ->join('CONSUMIDOR as C2','C2.JERARQUIA','=',DB::raw('LEFT(CONSUMIDOR.JERARQUIA,(LEN(CONSUMIDOR.JERARQUIA)-CASE WHEN LEN(CONSUMIDOR.JERARQUIA)=3 THEN 3 ELSE 4 END))'))
+            ->whereIn('C2.IDCONSUMIDOR',$parametros)
             ->get();
         foreach ($consumidores as $key => $value) {
             try {

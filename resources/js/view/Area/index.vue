@@ -4,7 +4,7 @@
             <div class="col-sm-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de Actividades</h4>
+                        <h4 class="card-title">Actividades</h4>
                         <!-- <button class="btn btn-sm btn-danger" @click="sincronizar()">Sincronizar</button> -->
                     </div>
                     <div class="card-body">

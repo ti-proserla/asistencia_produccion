@@ -43,11 +43,11 @@
                         <option value="">Sin Linea</option>
                         <option v-for="linea in lineas" :value="linea.id">{{ linea.nombre }}</option>
                     </Select>
-                    <Select title="proceso:" v-model="tareo.proceso_id">
-                        <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.nom_proceso }}</option>
+                    <Select title="Centro de Costo:" v-model="tareo.proceso_id">
+                        <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.id+" - "+ proceso.nom_proceso }}</option>
                     </Select>
-                    <Select title="Area:" v-model="tareo.area_id">
-                        <option value="">--SELECCIONAR AREA--</option>
+                    <Select title="Actividad:" v-model="tareo.area_id">
+                        <option value="">--SELECCIONAR ACTIVIDAD--</option>
                         <option v-for="area in areas" :value="area.id">{{ area.nom_area }}</option>
                     </Select>
                     <Select title="Labor:" v-model="tareo.labor_id">
