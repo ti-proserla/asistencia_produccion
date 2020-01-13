@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Consumidor extends Model
 {
-    protected $table="NV_NIVELES_CONSUMIDOR";
+    protected $table="CONSUMIDOR";
     protected $connection= "sqlsrv";
     protected $primaryKey = 'IDCONSUMIDOR';
 }

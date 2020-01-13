@@ -61,14 +61,12 @@ class SincronizarController extends Controller
     public function proceso(){
         $configuracion=Configuracion::where('nombre','ccosto')->first();
         $parametros=explode(',',$configuracion->parametro);
-        $hola=DB::connection('sqlsrv')->select('select IDCONSUMIDOR from dbo.[NV_NIVELES_CONSUMIDOR]');
-        dd($hola);
-        $consumidores=Consumidor::selectRaw('RTRIM(IDCONSUMIDOR) as idconsumidor,RTRIM(DESCRIPCION) as nom_proceso,IDPADRE')
-            ->whereIn('IDPADRE',$parametros)
+        $consumidores=Consumidor::selectRaw('RTRIM(IDCONSUMIDOR) as idconsumidor,RTRIM(DESCRIPCION) as nom_proceso')
+            ->whereIn('IDCONSUMIDOR',$parametros)
             ->get();
         foreach ($consumidores as $key => $value) {
             try {
-                $proceso=new proceso();
+                $proceso=new Proceso();
                 $proceso->id=$value->idconsumidor;
                 $proceso->nom_proceso=$value->nom_proceso;
                 $proceso->save();        
