@@ -39,11 +39,12 @@
                     <Select title="Turno:" v-model="tareo.turno_id">
                         <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
                     </Select>
-                    <Select title="Linea:" v-model="tareo.linea_id">
-                        <option value="">Sin Linea</option>
-                        <option v-for="linea in lineas" :value="linea.id">{{ linea.nombre }}</option>
+                    <Select title="Fundo:" v-model="tareo.fundo_id">
+                        <option value="">--SELECCIONAR FUNDO--</option>
+                        <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                     </Select>
                     <Select title="Centro de Costo:" v-model="tareo.proceso_id">
+                        <option value="">--SELECCIONAR C.COSTO--</option>
                         <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.id+" - "+ proceso.nom_proceso }}</option>
                     </Select>
                     <Select title="Actividad:" v-model="tareo.area_id">
@@ -92,6 +93,7 @@ export default {
     },
     data() {
         return {
+            fundos:[],
             focus: true,
             isMovil:((navigator.userAgent).search('Android')>-1),
             tareo:{
@@ -101,7 +103,7 @@ export default {
                 linea_id:null,
                 codigo_barras:null
             },
-            procesos:[],
+            // procesos:[],
             turnos:[],
             lineas:[],
             areas:[],
@@ -118,11 +120,12 @@ export default {
     },
     mounted() {
         this.listarTurnos();
-        this.listarProcesos();
+        // this.listarProcesos();
         // this.listarAreas();
         // this.listarLabor();
-        this.listarLineas();
+        // this.listarLineas();
         this.listarAreasLabor();
+        this.listarFundoProceso();
     },
     computed: {
         labores(){
@@ -136,6 +139,17 @@ export default {
                 }
             }
             return [];
+        },
+        procesos(){
+            for (let i = 0; i < this.fundos.length; i++) {
+                const fundo = this.fundos[i];
+                
+                if (fundo.id==this.tareo.fundo_id) {
+                    this.tareo.labor_id=null;
+                    return fundo.procesos;
+                }
+            }
+            return [];
         }
     },
     methods: {
@@ -146,6 +160,12 @@ export default {
             axios.get(url_base+'/area/labor')
             .then(response => {
                 this.areas = response.data;
+            });
+        },
+        listarFundoProceso(){
+            axios.get(url_base+'/fundo/proceso')
+            .then(response => {
+                this.fundos = response.data;
             });
         },
         // listarLabor(){
@@ -184,15 +204,15 @@ export default {
                 }
             });
         },
-        listarProcesos(){
-            axios.get(url_base+'/proceso?all=true')
-            .then(response => {
-                this.procesos = response.data;
-                if (this.procesos.length>0) {
-                    this.tareo.proceso_id=this.procesos[0].id;
-                }
-            });
-        },
+        // listarProcesos(){
+        //     axios.get(url_base+'/proceso?all=true')
+        //     .then(response => {
+        //         this.procesos = response.data;
+        //         if (this.procesos.length>0) {
+        //             this.tareo.proceso_id=this.procesos[0].id;
+        //         }
+        //     });
+        // },
         clearAlert(){
             setTimeout(() => {
                 this.alert=null;

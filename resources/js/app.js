@@ -139,6 +139,11 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/fundo', 
+        component: require('./view/Fundo/index.vue').default,
+        beforeEnter: auth
+    },
+    { 
         path: '/area', 
         component: require('./view/Area/index.vue').default,
         beforeEnter: auth

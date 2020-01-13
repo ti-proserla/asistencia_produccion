@@ -7,6 +7,7 @@ use App\Model\Labor2;
 use App\Model\Area;
 use App\Model\Area2;
 use App\Model\Labor;
+use App\Model\Fundo;
 use App\Model\Configuracion;
 use App\Model\Consumidor;
 use App\Model\Proceso;
@@ -61,7 +62,23 @@ class SincronizarController extends Controller
     public function proceso(){
         $configuracion=Configuracion::where('nombre','ccosto')->first();
         $parametros=explode(',',$configuracion->parametro);
-        $consumidores=Consumidor::selectRaw('CONSUMIDOR.IDCONSUMIDOR as idconsumidor, LTRIM(CONSUMIDOR.DESCRIPCION) as nom_proceso,C2.IDCONSUMIDOR as IDPADRE')
+        $consumidores_fundos=Consumidor::whereIn('IDCONSUMIDOR',$parametros)
+                                ->selectRaw('RTRIM(IDCONSUMIDOR) idconsumidor,RTRIM(DESCRIPCION) nom_fundo')
+                                ->get();
+        // dd($parametros,$consumidores_fundos);
+        foreach ($consumidores_fundos as $key => $value) {
+            try {
+                $fundo=new Fundo();
+                $fundo->id=$value->idconsumidor;
+                $fundo->nom_fundo=$value->nom_fundo;
+                $fundo->save();        
+                echo "Guardado<br>";
+            } catch (\Exception $ex) {
+                echo "Existente<br>";
+            }
+        }
+
+        $consumidores=Consumidor::selectRaw('RTRIM(CONSUMIDOR.IDCONSUMIDOR) as idconsumidor, LTRIM(CONSUMIDOR.DESCRIPCION) as nom_proceso,RTRIM(C2.IDCONSUMIDOR) as fundo_id')
             ->join('CONSUMIDOR as C2','C2.JERARQUIA','=',DB::raw('LEFT(CONSUMIDOR.JERARQUIA,(LEN(CONSUMIDOR.JERARQUIA)-CASE WHEN LEN(CONSUMIDOR.JERARQUIA)=3 THEN 3 ELSE 4 END))'))
             ->whereIn('C2.IDCONSUMIDOR',$parametros)
             ->get();
@@ -70,6 +87,7 @@ class SincronizarController extends Controller
                 $proceso=new Proceso();
                 $proceso->id=$value->idconsumidor;
                 $proceso->nom_proceso=$value->nom_proceso;
+                $proceso->fundo_id=$value->fundo_id;
                 $proceso->save();        
                 echo "Guardado<br>";
             } catch (\Exception $ex) {

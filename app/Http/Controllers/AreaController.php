@@ -24,20 +24,6 @@ class AreaController extends Controller
         }else{
             $Areas=$Areas->paginate(8);
         }
-        // dd(Labor2::first());
-        // if ($request->all==true) {
-        //     $Areas=Area2::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
-        //     ->where('IDACTIVIDAD','010')
-        //     ->orWhere('IDACTIVIDAD','011')
-        //     ->orWhere('IDACTIVIDAD','012')
-        //     ->get();
-        // }else{
-        //     $Areas=Area2::select('DESCRIPCION as nom_area','IDACTIVIDAD as codigo')
-        //         ->where('IDACTIVIDAD','010')
-        //         ->orWhere('IDACTIVIDAD','011')
-        //         ->orWhere('IDACTIVIDAD','012')
-        //         ->paginate(8);
-        // }
         return response()->json($Areas);
     }
     /**

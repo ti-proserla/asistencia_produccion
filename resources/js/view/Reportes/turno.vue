@@ -47,7 +47,7 @@
                                 <th>Periodo</th>
                                 <th>Cod. Actividad</th>
                                 <th>Cod.Labor</th>
-                                <th>Cod.Proceso</th>
+                                <th>C.Costo</th>
                                 <th>Labor</th>
                                 <th>Dia 01</th>
                                 <th>Dia 02</th>

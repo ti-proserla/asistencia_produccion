@@ -8,5 +8,6 @@ class Proceso extends Model
 {
     protected $table="proceso";
     protected $casts = [ 'id' => 'string' ];
+    // public $timestamps = false;
 
 }

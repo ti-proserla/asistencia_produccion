@@ -38,16 +38,22 @@
                         <p>Configuracion</p>
                     </router-link>
                 </li>
-                <li>
+                <!-- <li>
                     <router-link to="linea">
                         <i class="material-icons">work</i>
                         <p>Linea</p>
                     </router-link>
-                </li>
+                </li> -->
                 <li>
                     <router-link to="proceso">
                         <i class="material-icons">work</i>
                         <p>Centro Costo</p>
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="fundo">
+                        <i class="material-icons">work</i>
+                        <p>Fundo</p>
                     </router-link>
                 </li>
                 <li>
