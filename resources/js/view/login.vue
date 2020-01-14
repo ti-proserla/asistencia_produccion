@@ -53,6 +53,8 @@ export default {
                         break;
                     case "OK":
                         swal("", "Cuenta Iniciada.", "success");
+                        // axios.defaults.headers.common['Authorization'] = respuesta.data.api_token;
+                        // console.log(respuesta.data.api_token);
                         this.$store.commit('auth_success', respuesta.data);
                         this.$router.push({path: "/"} );
                         break;

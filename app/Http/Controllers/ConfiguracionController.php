@@ -15,7 +15,7 @@ class ConfiguracionController extends Controller
      */
     public function index()
     {
-        return response()->json(Configuracion::all());
+        return response()->json(Configuracion::first());
     }
 
     /**
@@ -70,12 +70,16 @@ class ConfiguracionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $configuracion=Configuracion::where('id',$id)->first();
-        $configuracion->parametro=$request->parametro;
+        // dd($request->has('ccosto') ? $request->ccosto : $configuracion->ccosto);
+        $configuracion=Configuracion::first();
+        $configuracion->tiempo_entre_marcas=$request->has('tiempo_entre_marcas') ? $request->tiempo_entre_marcas : $configuracion->tiempo_entre_marcas;
+        $configuracion->hora_cierre_turno=$request->has('hora_cierre_turno') ? $request->hora_cierre_turno : $configuracion->hora_cierre_turno;
+        $configuracion->actividad=$request->has('actividad') ? $request->actividad : $configuracion->actividad;
+        $configuracion->ccosto=$request->has('ccosto') ? $request->ccosto : $configuracion->ccosto;
         $configuracion->save();
         return response()->json([
             "status"=> "OK",
-            "data"  => "Parametro Actualizado"
+            "data"  => "Parametros Actualizados"
         ]);
     }
 

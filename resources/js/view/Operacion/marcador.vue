@@ -7,12 +7,12 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-12 form-group">
+                        <!-- <div class="col-12 form-group">
                             <label for="">Seleccionar Turno:</label>
                             <select class="form-control" v-model="turno_id">
                                 <option v-for="turno in turnos" :value="turno.id">{{turno.descripcion}}</option>
                             </select>
-                        </div>
+                        </div> -->
                         <div class="col-12">
                             <form v-on:submit.prevent="guardar()">
                                 <Input title="Codigo de Barras" type="number" :focusSelect="true" v-model="codigo_barras"></Input>
@@ -52,7 +52,7 @@ export default {
             turnos:[],
             codigo_barras: null,
             respuesta: null,
-            turno_id: 0,
+            // turno_id: 0,
             alert: null
         }
     },

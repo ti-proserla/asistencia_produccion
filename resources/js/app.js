@@ -47,7 +47,7 @@ window.store=new Vuex.Store({
       auth_success(state,cuenta){
         state.cuenta=cuenta;
         localStorage.setItem('cuenta_sistema',JSON.stringify(state.cuenta));
-        axios.defaults.headers.common['Authorization'] = state.cuenta.token;
+        axios.defaults.headers.common['Authorization'] = state.cuenta.api_token;
       },
       auth_close(state){
         state.cuenta=null;

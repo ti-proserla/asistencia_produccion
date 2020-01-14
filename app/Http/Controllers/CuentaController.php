@@ -88,7 +88,7 @@ class CuentaController extends Controller
     public function login(Request $request){
         $cuenta=Cuenta::where('usuario',$request->usuario)
             ->where('password',$request->password)
-            ->select('api_token','id','nombre','apellido','fundo_id')
+            ->select('api_token','id','nombre','apellido','fundo_id','rol')
             ->first();
         if ($cuenta==null) {
             return response()->json([

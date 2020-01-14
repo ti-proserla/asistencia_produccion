@@ -15,8 +15,8 @@ class CreateMarcadorTable extends Migration
     {
         Schema::create('marcador', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('operador_id');
-            $table->integer('turno_id');
+            $table->string('codigo_operador',8);
+            $table->integer('turno_id')->nullable();
             $table->dateTime('ingreso')->nullable();	
             $table->dateTime('salida')->nullable();	
             $table->timestamps();

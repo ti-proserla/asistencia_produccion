@@ -36,13 +36,9 @@
                     <h4 class="card-title text-center" v-else>TAREO <button class="btn btn-danger btn-sm btn-float-right" @click="openPendientes()">P</button></h4>
                 </div>
                 <div class="card-body">
-                    <Select title="Turno:" v-model="tareo.turno_id">
+                    <!-- <Select title="Turno:" v-model="tareo.turno_id">
                         <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
-                    </Select>
-                    <Select title="Fundo:" v-model="tareo.fundo_id">
-                        <option value="">--SELECCIONAR FUNDO--</option>
-                        <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
-                    </Select>
+                    </Select> -->
                     <Select title="Centro de Costo:" v-model="tareo.proceso_id">
                         <option value="">--SELECCIONAR C.COSTO--</option>
                         <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.id+" - "+ proceso.nom_proceso }}</option>
@@ -93,7 +89,6 @@ export default {
     },
     data() {
         return {
-            fundos:[],
             focus: true,
             isMovil:((navigator.userAgent).search('Android')>-1),
             tareo:{
@@ -103,13 +98,10 @@ export default {
                 linea_id:null,
                 codigo_barras:null
             },
-            // procesos:[],
             turnos:[],
             lineas:[],
             areas:[],
-            // labores:[],
-            turno_id: 0,
-            area_id: 0,
+            procesos:[],
             /**Estado de registro */
             respuesta: null,
             alert: null,
@@ -120,33 +112,18 @@ export default {
     },
     mounted() {
         this.listarTurnos();
-        // this.listarProcesos();
-        // this.listarAreas();
-        // this.listarLabor();
-        // this.listarLineas();
+        this.listarProcesos();
         this.listarAreasLabor();
-        this.listarFundoProceso();
+        // this.listarFundoProceso();
     },
     computed: {
         labores(){
             for (let i = 0; i < this.areas.length; i++) {
                 const area = this.areas[i];
-                
                 if (area.id==this.tareo.area_id) {
                     this.tareo.labor_id=null;
                     console.log(area.labores);
                     return area.labores;
-                }
-            }
-            return [];
-        },
-        procesos(){
-            for (let i = 0; i < this.fundos.length; i++) {
-                const fundo = this.fundos[i];
-                
-                if (fundo.id==this.tareo.fundo_id) {
-                    this.tareo.labor_id=null;
-                    return fundo.procesos;
                 }
             }
             return [];
@@ -162,30 +139,6 @@ export default {
                 this.areas = response.data;
             });
         },
-        listarFundoProceso(){
-            axios.get(url_base+'/fundo/proceso')
-            .then(response => {
-                this.fundos = response.data;
-            });
-        },
-        // listarLabor(){
-        //     axios.get(url_base+'/labor?all=true')
-        //     .then(response => {
-        //         this.labores = response.data;
-        //         if (this.labores.length>0) {
-        //             this.tareo.labor_id=this.labores[0].id;
-        //         }
-        //     });
-        // },
-        // listarAreas(){
-        //     axios.get(url_base+'/area?all=true')
-        //     .then(response => {
-        //         this.areas = response.data;
-        //         if (this.areas.length>0) {
-        //             this.tareo.area_id=this.areas[0].id;
-        //         }
-        //     });
-        // },
         listarTurnos(){
             axios.get(url_base+'/turno?all=true')
             .then(response => {
@@ -204,15 +157,12 @@ export default {
                 }
             });
         },
-        // listarProcesos(){
-        //     axios.get(url_base+'/proceso?all=true')
-        //     .then(response => {
-        //         this.procesos = response.data;
-        //         if (this.procesos.length>0) {
-        //             this.tareo.proceso_id=this.procesos[0].id;
-        //         }
-        //     });
-        // },
+        listarProcesos(){
+            axios.get(url_base+'/proceso?all=true')
+            .then(response => {
+                this.procesos = response.data;
+            });
+        },
         clearAlert(){
             setTimeout(() => {
                 this.alert=null;

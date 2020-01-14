@@ -15,14 +15,14 @@ class CreateConfiguracionTable extends Migration
     {
         Schema::create('configuracion', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nombre',50);
-            $table->string('parametro',200)->nullable();
-            $table->timestamps();
+            $table->integer('tiempo_entre_marcas')->default(5);
+            $table->integer('hora_cierre_turno')->default(7);
+            $table->string('actividad',100)->nullable();
+            $table->string('ccosto',100)->nullable();
+            // $table->timestamps();
         });
         DB::table('configuracion')->insert([
-            // ['nombre' => 'actividad', 'parametro' => ''],
-            ['nombre' => 'actividad', 'parametro' => ''],
-            ['nombre' => 'ccosto', 'parametro' => '']
+            ['tiempo_entre_marcas'=> 45,'hora_cierre_turno'=> 7,'actividad'=> '','ccosto'=> '']
         ]);
     }
 

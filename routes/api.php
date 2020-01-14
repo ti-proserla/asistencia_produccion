@@ -33,9 +33,9 @@ Route::post('area/{id}/estado','AreaController@estado')->name('area.estado');
 Route::resource('labor', 'LaborController');
 Route::post('labor/{id}/estado','LaborController@estado')->name('labor.estado');
 
+Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.estado');
 Route::resource('proceso', 'ProcesoController')->middleware('auth.token');
 
-Route::post('proceso/{id}/estado','ProcesoController@estado')->name('proceso.estado');
 Route::resource('linea', 'LineaController');
 Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');
 

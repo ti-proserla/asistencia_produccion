@@ -7,9 +7,7 @@
             <div class="card-body">
                 <div class="row form-group">
                     <div class="col-lg-3">
-                        <select v-model="turno_id" class="form-control">
-                            <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
-                        </select>
+                        <input type="date" v-model="fecha" class="form-control">
                     </div>
                     <div class="col-lg-1">
                         <label for="" class="my-2"><b>Nombre:</b></label>
@@ -76,6 +74,7 @@
 export default {
     data() {
         return {
+            fecha: null,
             reporte:[],
             turno_id: 0,
             turnos:[],
@@ -107,7 +106,7 @@ export default {
         },
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/reporte-marcas?turno_id='+this.turno_id+'&search='+this.search+'&page='+n)
+            axios.get(url_base+'/reporte-marcas?fecha='+this.fecha+'&search='+this.search+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })

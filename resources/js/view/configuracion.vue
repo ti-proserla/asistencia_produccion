@@ -11,21 +11,55 @@
                     <button @click="sincronizarTodo()" class="btn btn-danger">Sincronizar Dependencias</button>
                     <hr>
                     <h6>Parametros Globales</h6>
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Nombre Configuración</th>
-                                <th>Parametro</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="conf in configuraciones">
-                                <td>{{ conf.nombre }}</td>
-                                <td><input type="text" v-model="conf.parametro"></td>
-                                <td><button @click="actualizar(conf.id,conf.parametro)">Actualizar</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="">Tiempo entre Marcas:</label>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group mb-2">
+                                <input type="number" class="form-control" v-model="configuraciones.tiempo_entre_marcas">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">Min</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label for="">Hora de Cierre de Turno:</label>
+                        </div>
+                        <div class="col-6">
+                            <div class="input-group mb-2">
+                                <input type="number" class="form-control" v-model="configuraciones.hora_cierre_turno">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">24H</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label for="">Codigo de Fundos:</label>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <!-- <div class="input-group mb-2"> -->
+                            <input type="text" class="form-control" v-model="configuraciones.ccosto">
+                                <!-- <div class="input-group-prepend">
+                                    <div class="input-group-text">24H</div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="col-6 mb-2">
+                            <label for="">Codigo de Actividades:</label>
+                        </div>
+                        <div class="col-6 mb-2">
+                            <!-- <div class="input-group mb-2"> -->
+                            <input type="text" class="form-control" v-model="configuraciones.actividad">
+                                <!-- <div class="input-group-prepend">
+                                    <div class="input-group-text">24H</div>
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="col-12 text-right">
+                            <button class="btn btn-primary" @click="actualizar()">Guardar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>        
@@ -48,8 +82,8 @@ export default {
                 this.configuraciones = response.data;
             })
         },
-        actualizar(id,parametro){
-            axios.post(url_base+'/configuracion/'+id+'?_method=PUT',{ parametro: parametro })
+        actualizar(){
+            axios.post(url_base+'/configuracion/a?_method=PUT',this.configuraciones)
             .then(response => {
                 var respuesta=response.data;
                 switch (respuesta.status) {

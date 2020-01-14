@@ -26,7 +26,7 @@ class CreateCuentaTable extends Migration
         });
 
         DB::table('cuenta')->insert([
-            ['nombre' => 'Diego', 'apellido' => 'Mendoza','usuario'=>'admin','password'=>'12345678','api_token'=>'dmf','estado'=>'2']
+            ['nombre' => 'Diego', 'apellido' => 'Mendoza','usuario'=>'admin','password'=>'12345678','api_token'=>'dmf','estado'=>'2','rol'=>'ADMINISTRADOR']
         ]);
     }
 

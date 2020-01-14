@@ -41,8 +41,8 @@ class SincronizarController extends Controller
     }
 
     public function area(){
-        $configuracion=Configuracion::where('nombre','actividad')->first();
-        $parametros=explode(',',$configuracion->parametro);
+        $configuracion=Configuracion::select('actividad')->first();
+        $parametros=explode(',',$configuracion->actividad);
         $areasSqlServer=Area2::selectRaw('RTRIM(DESCRIPCION) as nom_area,RTRIM(IDACTIVIDAD) as codigo')
             ->whereIn('IDACTIVIDAD',$parametros)
             ->get();
@@ -60,8 +60,8 @@ class SincronizarController extends Controller
         return "FINALIZADO";
     }
     public function proceso(){
-        $configuracion=Configuracion::where('nombre','ccosto')->first();
-        $parametros=explode(',',$configuracion->parametro);
+        $configuracion=Configuracion::select('ccosto')->first();
+        $parametros=explode(',',$configuracion->ccosto);
         $consumidores_fundos=Consumidor::whereIn('IDCONSUMIDOR',$parametros)
                                 ->selectRaw('RTRIM(IDCONSUMIDOR) idconsumidor,RTRIM(DESCRIPCION) nom_fundo')
                                 ->get();
