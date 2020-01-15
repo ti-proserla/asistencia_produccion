@@ -76,6 +76,7 @@ class MarcadorController extends Controller
             $marcador->codigo_operador=$operador->dni;
             $marcador->ingreso=Carbon::now();
             $marcador->salida=null;
+            $marcador->fundo_id=$request->fundo_id;
             $marcador->save();
         }else{
             /**

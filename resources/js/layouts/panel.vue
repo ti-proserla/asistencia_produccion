@@ -7,6 +7,7 @@
         <div class="background-sidebar" @click="close()"></div>
         <nav class="navbar">
             <button @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
+            {{ cuenta.fundo_id }}
             <button @click="cerrar()" class="btn btn-danger btn-sm btn-float-right">Salir</button>
         </nav>
         <div class="content">

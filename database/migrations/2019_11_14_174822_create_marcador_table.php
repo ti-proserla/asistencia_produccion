@@ -18,8 +18,8 @@ class CreateMarcadorTable extends Migration
             $table->string('codigo_operador',8);
             $table->integer('turno_id')->nullable();
             $table->dateTime('ingreso')->nullable();	
-            $table->dateTime('salida')->nullable();	
-            $table->timestamps();
+            $table->dateTime('salida')->nullable();
+            $table->string('fundo_id',8)->nullable();
         });
     }
 

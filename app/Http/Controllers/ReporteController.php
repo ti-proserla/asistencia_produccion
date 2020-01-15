@@ -54,6 +54,7 @@ class ReporteController extends Controller
             ->leftJoin('labor','labor.id','=','T.labor_id')
             ->selectRaw(
                 "operador.dni,".
+                "marcador.fundo_id,".
                 "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
                 "CONCAT(DATE_FORMAT(ingreso, '%Y%m'),'-',WEEK(ingreso,3)) periodo,".
                 "T.area_id codActividad,".
@@ -66,17 +67,17 @@ class ReporteController extends Controller
             ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%")
+            ->where('marcador.fundo_id',$request->fundo_id);
             for ($i=1; $i < count($texto_busqueda); $i++) { 
                 $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
             }
-
             if ($request->planilla_id==null||$request->planilla_id=="") {
                 $resultado=$resultado->whereNull('operador.planilla_id');
             }else{
                 $resultado=$resultado->where('planilla_id',$request->planilla_id);
             }
-            dd($resultado->toSql());
+            // dd($resultado->toSql());
             $resultado=$resultado->paginate(15);
         return response()->json($resultado);
     }

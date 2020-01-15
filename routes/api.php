@@ -42,13 +42,13 @@ Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');
 Route::resource('turno', 'TurnoController');
 
 Route::post('marcador2','MarcadorController@store2')->name('marcador.store2');
-Route::resource('marcador', 'MarcadorController');
+Route::resource('marcador', 'MarcadorController')->middleware('auth.token');
 
-Route::post('tareo', 'TareoController@store')->name('tareo.store');
+Route::post('tareo', 'TareoController@store')->name('tareo.store')->middleware('auth.token');
 
 Route::get('reporte-turno', 'ReporteController@turno');
 Route::get('reporte-semana', 'ReporteController@semana');
-Route::get('reporte-pendientes', 'ReporteController@pendientes');
+Route::get('reporte-pendientes', 'ReporteController@pendientes')->middleware('auth.token');
 Route::get('reporte/pendientes-regularizar', 'ReporteController@pendientesRegularizar');
 Route::get('reporte-marcas', 'ReporteController@marcas');
 
@@ -59,13 +59,19 @@ Route::get('conteoOperario','ConteoController@reporteOperario');
 
 Route::get('jne/dni/{dni}', 'OperadorController@jne');
 
-Route::get('/horas-semana/{anio}/{semana}', function ($anio,$semana) {
-    return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,0), "horas-semana-$anio-$semana.xlsx");
+Route::get('/horas-semana/{datos}', function ($datos) {
+    $datoArray=explode("-",$datos);
+    $anio=$datoArray[0];
+    $semana=$datoArray[1];
+    $planilla_id=($datoArray[2]=="") ? 0 : $datoArray[2];
+    $fundo_id=($datoArray[3]=="") ? 0 : $datoArray[3];
+    return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
 });
 
-Route::get('/horas-semana/{anio}/{semana}/{planilla_id}', function ($anio,$semana,$planilla_id) {
-    return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id), "horas-semana-$anio-$semana.xlsx");
-});
+// Route::get('/horas-semana/{anio}/{semana}/{planilla_id}/{fundo_id}', 
+// function ($anio,$semana,$planilla_id,$fundo_id) {
+//     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
+// });
 Route::get('/marcas-tuno/{turno_id}', function ($turno_id) {
     return Excel::download(new MarcasTurnoTrabajadorExport($turno_id), "marcas-turno-$turno_id.xlsx");
 });

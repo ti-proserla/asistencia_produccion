@@ -24,6 +24,12 @@
                             <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                         </select>
                     </div>
+                    <div class="col-7 col-lg-3">
+                        <select v-model="consulta.fundo_id" class="form-control">
+                            <option value="">Seleccionar Fundo</option>
+                            <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
+                        </select>
+                    </div>
                     <div class="form-group col-12 col-lg-3">
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
@@ -107,10 +113,12 @@ export default {
         return {
             reporte:[],
             planillas:[],
+            fundos:[],
             consulta:{
                 year: moment().format('YYYY'),
                 week: moment().week(),
-                planilla_id: ""
+                planilla_id: "",
+                fundo_id: ""
             },
             search: '',
             table:{
@@ -121,16 +129,17 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/horas-semana/'+this.consulta.year+'/'+this.consulta.week+'/'+this.consulta.planilla_id;
+            return url_base+'/horas-semana/'+this.consulta.year+'-'+this.consulta.week+'-'+this.consulta.planilla_id+'-'+this.consulta.fundo_id;
         }
     },
     mounted() {
         this.listarPlanilla();
+        this.listarFundo();
     },
     methods: {
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&page='+n)
+            axios.get(url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })
@@ -139,6 +148,12 @@ export default {
             axios.get(url_base+'/planilla?all=true')
             .then(response => {
                 this.planillas = response.data;
+            })
+        },
+        listarFundo(){
+            axios.get(url_base+'/fundo?all=true')
+            .then(response => {
+                this.fundos = response.data;
             })
         },
     },
