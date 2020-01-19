@@ -17,6 +17,10 @@
                                 <option value="">--SELECCIONAR FUNDO--</option>
                                 <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                             </Select>
+                            <Select title="Rol:" v-model="cuenta.rol">
+                                <option value="COMUN">COMUN</option>
+                                <option value="ADMINISTRADOR">ADMINISTRADOR</option>
+                            </Select>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success mt-3">Guardar</button>
                             </div>
@@ -188,7 +192,7 @@ export default {
                 apellido:null,
                 usuario:null,
                 password: null,
-                rol: null,
+                rol: 'COMUN',
                 fundo_id: null
             }
         },

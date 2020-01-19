@@ -52,8 +52,6 @@ class ReporteController extends Controller
                 $join->on(DB::raw("DATE(T.created_at)"), '=',DB::raw("DATE(marcador.ingreso)"));
             })
             ->leftJoin('labor','labor.id','=','T.labor_id')
-            // ->leftJoin('area','area.id','=','labor.area_id')
-            // ->leftJoin('proceso','proceso.id','=','T.proceso_id')
             ->selectRaw(
                 "operador.dni,".
                 "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
@@ -78,7 +76,7 @@ class ReporteController extends Controller
             }else{
                 $resultado=$resultado->where('planilla_id',$request->planilla_id);
             }
-            
+            dd($resultado->toSql());
             $resultado=$resultado->paginate(15);
         return response()->json($resultado);
     }
