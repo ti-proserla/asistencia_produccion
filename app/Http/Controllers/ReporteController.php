@@ -18,7 +18,6 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
-        dd($texto_busqueda);
         $resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
             ->leftJoin(DB::raw('(SELECT * FROM tareo WHERE WEEK(tareo.created_at,3)='.$request->week.' AND YEAR(tareo.created_at)='.$request->year.' GROUP BY operador_id) AS T'),'T.operador_id','=','operador.id')
             ->leftJoin('labor','labor.id','=','T.labor_id')
@@ -47,9 +46,9 @@ class ReporteController extends Controller
         $texto_busqueda=explode(" ",$request->search);
         // dd($texto_busqueda);
         $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
-            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.created_at)) AS T'),function($join){
+            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
                 $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
-                $join->on(DB::raw("DATE(T.created_at)"), '=',DB::raw("DATE(marcador.ingreso)"));
+                $join->on(DB::raw("DATE(T.fecha)"), '=',DB::raw("DATE(marcador.ingreso)"));
             })
             ->leftJoin('labor','labor.id','=','T.labor_id')
             ->selectRaw(

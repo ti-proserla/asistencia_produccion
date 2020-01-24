@@ -45,9 +45,9 @@ class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting
     {
         // dd($this->fundo_id,$this->planilla_id);
         $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
-            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.created_at)) AS T'),function($join){
+            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
                 $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
-                $join->on(DB::raw("DATE(T.created_at)"), '=',DB::raw("DATE(marcador.ingreso)"));
+                $join->on(DB::raw("DATE(T.fecha)"), '=',DB::raw("DATE(marcador.ingreso)"));
             })
             ->leftJoin('labor','labor.id','=','T.labor_id')
             ->selectRaw(

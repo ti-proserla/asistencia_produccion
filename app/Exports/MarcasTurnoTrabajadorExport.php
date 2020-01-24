@@ -21,11 +21,11 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
     /**
     * @return \Illuminate\Support\Collection
     */
-    private $turno_id;
+    private $fecha;
  
-    public function __construct(int $turno_id)
+    public function __construct(String $fecha)
     {
-        $this->turno_id = $turno_id;
+        $this->fecha = $fecha;
     }
 
     public function columnFormats(): array
@@ -37,11 +37,14 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
 
     public function view(): View
     {
-        $resultado=$resultado=Operador::join('marcador','operador.id','=','marcador.operador_id')
-            ->select('dni','nom_operador','ape_operador',DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total'))
-            ->where('marcador.turno_id',$this->turno_id)
-            ->groupBy('operador.dni')
-            ->get();
+        $resultado=Operador::select(
+            'dni',
+            'nom_operador',
+            'ape_operador',
+            DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),
+            DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total')
+        )->join('marcador','operador.dni','=','marcador.codigo_operador')
+        ->where(DB::raw("DATE_FORMAT(marcador.ingreso, '%Y-%m-%d')"),$this->fecha)->groupBy('operador.dni')->get();
         return view('excel.marcastrabajador', [
             'operadores' => $resultado
         ]);

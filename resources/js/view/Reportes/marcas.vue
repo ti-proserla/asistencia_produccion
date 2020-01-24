@@ -24,34 +24,36 @@
                         <a :href="url" class="btn btn-success">Excel</a>
                     </div>
                 </div>
-                 <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>DNI</th>
-                            <th>Nombre y Apellidos</th>
-                            <th>Marca 1</th>
-                            <th>Marca 2</th>
-                            <th>Marca 3</th>
-                            <th>Marca 4</th>
-                            <th>Marca 5</th>
-                            <th>Marca 6</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in table.data">
-                            <td>{{ item.dni }}</td>
-                            <td>{{ item.nom_operador }} {{ item.ape_operador }}</td>
-                            <td>{{ item.marcas.split('@')[0]}}</td>
-                            <td>{{ item.marcas.split('@')[1]}}</td>
-                            <td>{{ item.marcas.split('@')[2]}}</td>
-                            <td>{{ item.marcas.split('@')[3]}}</td>
-                            <td>{{ item.marcas.split('@')[4]}}</td>
-                            <td>{{ item.marcas.split('@')[5]}}</td>
-                            <td>{{ item.total}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>DNI</th>
+                                <th>Nombre y Apellidos</th>
+                                <th>Marca 1</th>
+                                <th>Marca 2</th>
+                                <th>Marca 3</th>
+                                <th>Marca 4</th>
+                                <th>Marca 5</th>
+                                <th>Marca 6</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="item in table.data">
+                                <td>{{ item.dni }}</td>
+                                <td>{{ item.nom_operador }} {{ item.ape_operador }}</td>
+                                <td>{{ item.marcas.split('@')[0]}}</td>
+                                <td>{{ item.marcas.split('@')[1]}}</td>
+                                <td>{{ item.marcas.split('@')[2]}}</td>
+                                <td>{{ item.marcas.split('@')[3]}}</td>
+                                <td>{{ item.marcas.split('@')[4]}}</td>
+                                <td>{{ item.marcas.split('@')[5]}}</td>
+                                <td>{{ item.total}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="pagination">
                     <div class="row">
                         <div class="col-9 text-left">
@@ -90,7 +92,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/marcas-tuno/'+this.turno_id;
+            return url_base+'/marcas-tuno/'+this.fecha;
         }
     
     },

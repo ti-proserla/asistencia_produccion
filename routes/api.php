@@ -14,7 +14,7 @@ use App\Exports\MarcasTurnoTrabajadorExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Operador;
 
-
+header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
 
 Route::resource('cuenta', 'CuentaController');
@@ -72,8 +72,8 @@ Route::get('/horas-semana/{datos}', function ($datos) {
 // function ($anio,$semana,$planilla_id,$fundo_id) {
 //     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
 // });
-Route::get('/marcas-tuno/{turno_id}', function ($turno_id) {
-    return Excel::download(new MarcasTurnoTrabajadorExport($turno_id), "marcas-turno-$turno_id.xlsx");
+Route::get('/marcas-tuno/{fecha}', function ($fecha) {
+    return Excel::download(new MarcasTurnoTrabajadorExport($fecha), "marcas-turno-$fecha.xlsx");
 });
 
 Route::get('/producto', function () {
@@ -104,3 +104,8 @@ Route::get('sincronizar/proceso',"SincronizarController@proceso");
 Route::get('sincronizar/labor',"SincronizarController@labor");
 Route::get('sincronizar/area',"SincronizarController@area");
 Route::resource('configuracion',"ConfiguracionController");
+/**
+ * Ingreso
+ */
+Route::post('sincronizar/tareo',"SincronizarController@tareo");
+Route::post('sincronizar/marcador',"SincronizarController@marcador");

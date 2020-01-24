@@ -8,10 +8,10 @@
             <div class="row">
 
                 <div class="col-sm-8 col-lg-6 form-group">
-                    <v-select :options="opt" @search="getOperadores" :filterable="false" v-model="hola">
-                        <template slot="no-options">
+                    <v-select label="dni" :options="opt" @search="getOperadores" :value="hola" @input="setSelected" :filterable="false" >
+                        <!-- <template slot="no-options">
                             Buscar Operadores..
-                        </template>
+                        </template> -->
                         <template slot="option" slot-scope="option">
                             <div class="v-select-options d-center">
                                 <!-- <img :src='url(option.foto)'/>  -->
@@ -23,6 +23,9 @@
                                 <!-- <img :src='url(option.foto)'/>  -->
                                 {{ option.dni+' | '+option.nom_operador+" "+option.ape_operador }}
                             </div>
+                        </template>
+                        <template slot="no-options">
+                        type to search GitHub repositories..
                         </template>
                     </v-select>
                 </div>
@@ -76,11 +79,14 @@
 </div>
 </template>
 <script>
-import Select from '../../dragon-desing/dg-select.vue'
+    import 'vue-search-select/dist/VueSearchSelect.css';
+import Select from '../../dragon-desing/dg-select.vue';
+import { ModelListSelect } from 'vue-search-select';
 
 export default {
     components:{
-        Select
+        Select,
+        ModelListSelect
     },
     data() {
         return {
@@ -102,6 +108,10 @@ export default {
         
     },
     methods: {
+        setSelected(value){
+            console.log(value);
+            this.hola=value  
+        },
         url(data){
             return url_base+'/../storage/operador/'+data; 
         },
@@ -110,8 +120,8 @@ export default {
             this.search(loading, search, this);
         },
         search: _.debounce((loading, search, vm) => {
-            
-                if (search.length>0) {
+                vm.opt=[]
+                if (search!="") {
                     axios.get(url_base+'/operador?all=true&search='+search)
                     .then(response => {
                         var respuesta=response.data;
@@ -119,7 +129,6 @@ export default {
                         loading(false);
                     })
                 }else{
-                    // vm.opt=[];
                     loading(false);
                 }
             }, 350)
