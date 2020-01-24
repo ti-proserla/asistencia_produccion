@@ -30,6 +30,8 @@ class CuentaNuevo extends FormRequest
         return [
             'nombre' => 'required',
             'apellido' => 'required',
+            'usuario' => 'required',
+            'password' => 'required',
         ];
     }
 
