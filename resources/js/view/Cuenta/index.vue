@@ -13,10 +13,6 @@
                             <Input title="Apellido:" v-model="cuenta.apellido" :error="errors.apellido"></Input>
                             <Input title="usuario:" v-model="cuenta.usuario" :error="errors.usuario"></Input>
                             <Input title="password:" v-model="cuenta.password" :error="errors.password"></Input>
-                            <Select title="Fundo:" v-model="cuenta.fundo_id">
-                                <option value="">--SELECCIONAR FUNDO--</option>
-                                <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
-                            </Select>
                             <Select title="Rol:" v-model="cuenta.rol">
                                 <option value="COMUN">COMUN</option>
                                 <option value="ADMINISTRADOR">ADMINISTRADOR</option>
@@ -31,7 +27,7 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Lista de cuentaes</h4>
+                        <h4 class="card-title">Lista de cuentas</h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
@@ -48,6 +44,7 @@
                                     <tr>
                                         <th>Nombres y Apellidos</th>
                                         <th>Editar</th>
+                                        <th>Privilegios</th>
                                         <th>Estado</th>
                                     </tr>
                                 </thead>
@@ -57,6 +54,11 @@
                                         <td>
                                             <button @click="abrirEditar(cuenta.id)" class="btn-link-info">
                                                 <i class="material-icons">create</i>
+                                            </button>
+                                        </td>
+                                        <td>
+                                            <button @click="abrirPrivilegios(cuenta.id)" class="btn-link-info">
+                                                <i class="material-icons">assignment_ind</i>
                                             </button>
                                         </td>
                                         <td>
@@ -78,6 +80,32 @@
                 </div>
             </div>
         </div>
+        <div id="modal-privilegios" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Privilegios</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- <div id='example-3'> -->
+                            <div v-for="fundo in fundos">
+                                <input  type="checkbox" :value="fundo.id" v-model="cuenta_privilegios.privilegios">
+                                <label>{{fundo.nom_fundo}}</label>
+                            </div>
+                            <br>
+                            <div class="text-right">
+                                <button @click="guardarPrivilegios()" class="btn-primary btn"> 
+                                    Guardar
+                                </button>
+                            </div>
+                        <!-- </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
         <!--Modal Editar-->
         <div id="modal-editar" class="modal" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
@@ -92,10 +120,6 @@
                         <form action="" v-on:submit.prevent="grabarEditar()">
                             <Input title="Nombre:" v-model="cuenta_editar.nombre" :error="errors_editar.nombre"></Input>
                             <Input title="Apellido:" v-model="cuenta_editar.apellido" :error="errors_editar.apellido"></Input>
-                            <Select title="Fundo:" v-model="cuenta_editar.fundo_id">
-                                <option value="">--SELECCIONAR FUNDO--</option>
-                                <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
-                            </Select>
                             <Select title="Rol:" v-model="cuenta_editar.rol">
                                 <option value="COMUN">COMUN</option>
                                 <option value="ADMINISTRADOR">ADMINISTRADOR</option>
@@ -137,6 +161,10 @@ export default {
                 horizontal:  225,
                 vertical:  300 ,
                 quality: 2
+            },
+            cuenta_privilegios:{
+                cuenta_id: null,
+                privilegios: []
             }
         }
     },
@@ -270,6 +298,25 @@ export default {
                 this.cuenta_editar = response.data;
             })
             $('#modal-editar').modal();
+        },
+        abrirPrivilegios(id){
+            axios.get(url_base+'/privilegios?cuenta_id='+id)
+            .then(response => {
+                this.cuenta_privilegios.privilegios = response.data;
+            })
+            this.cuenta_privilegios.cuenta_id=id;
+            $('#modal-privilegios').modal();
+        },
+        guardarPrivilegios(){
+            axios.post(url_base+'/privilegios',this.cuenta_privilegios)
+            .then(response => {
+                var respuesta=response.data;
+                if (respuesta.status=="OK") {
+                    swal("", respuesta.data, "success");
+                }else{
+                    swal("", respuesta.data, "warning");
+                }
+            });
         }
     },
 }

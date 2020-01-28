@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Cuenta;
+use App\Model\Privilegios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -96,10 +97,55 @@ class CuentaController extends Controller
                 "data"  => "Usuario o Contraseña incorrecta."
             ]);
         }else{
+            $privilegios=Privilegios::where('cuenta_id',$cuenta->id)
+                ->where('fundo_id',$request->fundo_id)
+                ->first();
+
+            if ($privilegios==null&&$cuenta->rol=="COMUN") {
+                return response()->json([
+                    "status"=> "ERROR",
+                    "data"  => "No tiene Permiso en este fundo."
+                ]);
+            }
+
             return response()->json([
                 "status"=> "OK",
                 "data"  => $cuenta
             ]);
+        }
+    }
+
+    public function verPrivilegios(Request $request){
+        $privilegios=Privilegios::where('cuenta_id',$request->cuenta_id)->get();
+        $privilegios_enviar=[];
+        foreach($privilegios as $privilegio){
+            array_push($privilegios_enviar,$privilegio->fundo_id);
+        }
+        return response()->json($privilegios_enviar);
+    }
+
+    public function privilegios(Request $request){
+        try {
+            DB::select(DB::raw('DELETE FROM privilegios where cuenta_id=:cuenta_id'),[
+                'cuenta_id' => $request->cuenta_id
+            ]);
+            for ($i=0; $i < count($request->privilegios) ; $i++) { 
+                $fundo_id=$request->privilegios[$i];
+                $privilegios = new Privilegios();
+                $privilegios->cuenta_id=$request->cuenta_id;
+                $privilegios->fundo_id=$fundo_id;
+                $privilegios->save();
+            }
+            return response()->json([
+                "status"=> "OK",
+                "data"  => "Privilegios Guardados"
+            ]);
+        } catch (\Exception $th) {
+            return response()->json([
+                "status"=> "ERROR",
+                "data"  => $th->getMessage()
+            ]);
+
         }
     }
 }

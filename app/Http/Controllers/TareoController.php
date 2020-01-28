@@ -44,12 +44,13 @@ class TareoController extends Controller
         // dd($marcador); 
         
         $tareo=new Tareo();
-        // $tareo->turno_id=$request->turno_id;
         $tareo->codigo_operador=$operador->dni;
         $tareo->proceso_id=$request->proceso_id;
         $tareo->labor_id=$request->labor_id;
         $tareo->area_id=$request->area_id;
         $tareo->fundo_id=$request->fundo_id;
+        $tareo->cuenta_id=$request->user_id;
+        $tareo->fecha=Carbon::now();
         $tareo->save();
         return response()->json([
             "status"=> "OK",

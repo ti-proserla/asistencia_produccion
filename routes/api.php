@@ -17,7 +17,11 @@ use App\Model\Operador;
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
 
+Route::get('privilegios','CuentaController@verPrivilegios');
+Route::post('privilegios','CuentaController@privilegios')
+->name('cuenta.privilegios');
 Route::resource('cuenta', 'CuentaController');
+
 Route::post('login','CuentaController@login')->name('cuenta.login');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
@@ -25,7 +29,7 @@ Route::resource('planilla', 'PlanillaController');
 Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
 
 Route::get('fundo/proceso','FundoController@proceso')->name('fundo.proceso');
-Route::resource('fundo', 'FundoController')->middleware('auth.token');
+Route::resource('fundo', 'FundoController');
 Route::get('area/labor','AreaController@labor')->name('area.labor');
 Route::resource('area', 'AreaController');
 Route::post('area/{id}/estado','AreaController@estado')->name('area.estado');

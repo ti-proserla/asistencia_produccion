@@ -93,3 +93,10 @@ Pendientes.
 * Firmas de correos ditales.
 * Actualizar nombres de contactos de correos
 
+PASOS
+
+* COPIAR PROYECTO
+* CREAR BD VACIA
+* .env registro
+* PHP ARTISAN MIGRATE
+* ACTUALIZAR LOS PARAMETROS

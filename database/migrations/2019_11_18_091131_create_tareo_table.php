@@ -22,6 +22,7 @@ class CreateTareoTable extends Migration
             $table->string('area_id',3);
             $table->integer('linea_id')->unsigned()->nullable();
             $table->string('fundo_id',8)->nullable();
+            $table->integer('cuenta_id')->nullable();
             $table->date('fecha');
         });
     }
