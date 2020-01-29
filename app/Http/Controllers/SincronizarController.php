@@ -112,6 +112,7 @@ class SincronizarController extends Controller
             $tareo->labor_id=$row['labor_id'];
             $tareo->area_id=$row['area_id'];
             $tareo->fundo_id=$row['fundo_id'];
+            $tareo->cuenta_id=$row['cuenta_id'];
             $tareo->fecha=$row['fecha'];
             $tareo->save();
             array_push($rowids,$row['rowid']);
@@ -142,6 +143,7 @@ class SincronizarController extends Controller
             $marcador->ingreso=$row['ingreso'];
             $marcador->salida=$row['salida'];
             $marcador->fundo_id=$row['fundo_id'];
+            $marcador->cuenta_id=$row['cuenta_id'];
             $marcador->save();
             array_push($rowids,$row['rowid']);
         }
