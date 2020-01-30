@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Cuenta;
 use App\Model\Privilegios;
+use App\Model\Fundo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -97,16 +98,16 @@ class CuentaController extends Controller
                 "data"  => "Usuario o Contraseña incorrecta."
             ]);
         }else{
-            $privilegios=Privilegios::where('cuenta_id',$cuenta->id)
-                ->where('fundo_id',$request->fundo_id)
-                ->first();
-
-            if ($privilegios==null&&$cuenta->rol=="COMUN") {
-                return response()->json([
-                    "status"=> "ERROR",
-                    "data"  => "No tiene Permiso en este fundo."
-                ]);
-            }
+            // $privilegios=Privilegios::where('cuenta_id',$cuenta->id)
+            //     ->where('fundo_id',$request->fundo_id)
+            //     ->first();
+            // // dd($cuenta,$request->fundo_id);
+            // if ($privilegios==null&&$cuenta->rol=="COMUN") {
+            //     return response()->json([
+            //         "status"=> "ERROR",
+            //         "data"  => "No tiene Permiso en este fundo."
+            //     ]);
+            // }
 
             return response()->json([
                 "status"=> "OK",

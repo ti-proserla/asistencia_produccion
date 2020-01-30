@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Model\Fundo;
+use App\Model\Cuenta;
 
 class FundoController extends Controller
 {
@@ -14,6 +15,22 @@ class FundoController extends Controller
      */
     public function index(Request $request)
     {
+        if ($request->has('usuario')) {
+            $cuenta=Cuenta::where('usuario',$request->usuario)->first();
+            if ($cuenta!=null) {
+                if ($cuenta->rol=="COMUN") {
+                    $fundos=Fundo::select('fundo.id','fundo.nom_fundo')->join('privilegios','privilegios.fundo_id','=','fundo.id')
+                    ->where('cuenta_id',$cuenta->id)
+                    ->get();
+                }
+                if('ADMINISTRADOR'==$cuenta->rol) {
+                    $fundos=Fundo::all();
+                }
+                return response()->json($fundos);
+            }else {
+                return response()->json([]);
+            }
+        }
         $fundos=Fundo::select('nom_fundo','id');
         if ($request->all==true) {
             $fundos=$fundos->get();
