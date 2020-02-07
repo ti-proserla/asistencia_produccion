@@ -54,7 +54,7 @@ class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting
                 "operador.dni,".
                 "marcador.fundo_id,".
                 "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
-                "CONCAT(DATE_FORMAT(ingreso, '%Y%m'),'-',WEEK(ingreso,3)) periodo,".
+                "DATE_FORMAT(ingreso, '%Y%m-%v') periodo,".
                 "T.area_id codActividad,".
                 "T.labor_id codLabor,".
                 "T.proceso_id codProceso,".
