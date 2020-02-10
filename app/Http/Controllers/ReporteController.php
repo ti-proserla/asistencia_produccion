@@ -66,8 +66,8 @@ class ReporteController extends Controller
             ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
             ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
             ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%")
-            ->where('marcador.fundo_id',$request->fundo_id);
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            // ->where('marcador.fundo_id',$request->fundo_id);
             for ($i=1; $i < count($texto_busqueda); $i++) { 
                 $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
             }
@@ -83,7 +83,7 @@ class ReporteController extends Controller
     public function pendientes(Request $request){
         $hoy=Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
-            ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.created_at)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
+            ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
             ->where(DB::raw('DATE(marcador.ingreso)'),$hoy)
             ->whereNull('T.id')
             ->groupBy('operador.dni')
@@ -125,5 +125,22 @@ class ReporteController extends Controller
             ->select('operador.id as operador_id','operador.dni as dni','operador.nom_operador','operador.ape_operador','turno.id as turno_id','ingreso','salida','turno.descripcion')
             ->get();
         return response()->json($resultado);
+    }
+
+    public function rotaciones(Request $request){
+        $datos  =   DB::select(
+                        DB::raw("SELECT  labor.id as labor_id, nom_labor, 
+                                    COUNT( CASE WHEN turno=1 THEN  codigo_operador ELSE null END) as turno_1,
+                                    COUNT( CASE WHEN turno=2 THEN  codigo_operador ELSE null END) as turno_2
+                                FROM labor 
+                                INNER JOIN (
+                                SELECT marcador.codigo_operador, marcador.ingreso, tareo.labor_id,turno 
+                                FROM marcador INNER JOIN tareo on tareo.codigo_operador=marcador.codigo_operador
+                                where DATE(ingreso) = ? 
+                                GROUP BY marcador.codigo_operador
+                                ) M on labor.id=M.labor_id
+                                GROUP BY labor.id")
+                    , [$request->fecha]);
+        return response()->json($datos);
     }
 }

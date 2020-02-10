@@ -1,6 +1,6 @@
 <template>
     <ul>
-        <!-- <li>
+        <li>
             <router-link to="marcador">
                 <i class="material-icons">airplay</i>
                 <p>marcador</p>
@@ -11,7 +11,7 @@
                 <i class="material-icons">airplay</i>
                 <p>tareo</p>
             </router-link>
-        </li> -->
+        </li>
         <li>
             <router-link to="regularizar">
                 <i class="material-icons">airplay</i>
@@ -36,13 +36,12 @@
                 <p>planilla</p>
             </router-link>
         </li>
-        
-        <!-- <li>
+        <li>
             <router-link to="linea">
                 <i class="material-icons">work</i>
                 <p>Linea</p>
             </router-link>
-        </li> -->
+        </li>
         <li>
             <router-link to="proceso">
                 <i class="material-icons">work</i>
@@ -67,12 +66,12 @@
                 <p>labor</p>
             </router-link>
         </li>
-        <!-- <li>
-            <router-link to="turno">
-                <i class="material-icons">schedule</i>
-                <p>Turno</p>
+        <li>
+            <router-link to="reporte-rotaciones">
+                <i class="material-icons">book</i>
+                <p>Reporte de Rotaciones</p>
             </router-link>
-        </li> -->
+        </li>
         <li>
             <router-link to="reporte-semana">
                 <i class="material-icons">book</i>

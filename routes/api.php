@@ -50,6 +50,7 @@ Route::resource('marcador', 'MarcadorController')->middleware('auth.token');
 
 Route::post('tareo', 'TareoController@store')->name('tareo.store')->middleware('auth.token');
 
+Route::get('reporte-rotaciones', 'ReporteController@rotaciones');
 Route::get('reporte-turno', 'ReporteController@turno');
 Route::get('reporte-semana', 'ReporteController@semana');
 Route::get('reporte-pendientes', 'ReporteController@pendientes')->middleware('auth.token');

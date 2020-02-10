@@ -24,10 +24,6 @@ class CreateCuentaTable extends Migration
             $table->string('rol',20); //ADMINISTRADOR tiene que cambiar empresa
             $table->string('fundo_id',8)->nullable();
         });
-
-        DB::table('cuenta')->insert([
-            ['nombre' => 'Diego', 'apellido' => 'Mendoza','usuario'=>'admin','password'=>'12345678','api_token'=>'dmf','estado'=>'2','rol'=>'ADMINISTRADOR']
-        ]);
     }
 
     /**

@@ -36,9 +36,9 @@
                     <h4 class="card-title text-center" v-else>TAREO <button class="btn btn-danger btn-sm btn-float-right" @click="openPendientes()">P</button></h4>
                 </div>
                 <div class="card-body">
-                    <!-- <Select title="Turno:" v-model="tareo.turno_id">
-                        <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
-                    </Select> -->
+                    <Select title="linea:" v-model="tareo.linea_id">
+                        <option v-for="linea in lineas" :value="linea.id">{{ linea.nombre }}</option>
+                    </Select>
                     <Select title="Centro de Costo:" v-model="tareo.proceso_id">
                         <option value="">--SELECCIONAR C.COSTO--</option>
                         <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.id+" - "+ proceso.nom_proceso }}</option>
@@ -114,7 +114,7 @@ export default {
         this.listarTurnos();
         this.listarProcesos();
         this.listarAreasLabor();
-        // this.listarFundoProceso();
+        this.listarLineas();
     },
     computed: {
         labores(){

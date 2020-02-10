@@ -15,7 +15,8 @@ class CreatePlanillaTable extends Migration
     {
         Schema::create('planilla', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('nom_planilla');
+            $table->string('nom_planilla',50);
+            $table->integer('salida')->default(7);
         });
     }
 

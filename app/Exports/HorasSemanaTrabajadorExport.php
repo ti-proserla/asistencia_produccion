@@ -64,8 +64,8 @@ class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting
             )
             ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
             ->where(DB::raw('WEEK(ingreso,3)'),$this->week)
-            ->where(DB::raw('YEAR(ingreso)'),$this->year)
-            ->where('marcador.fundo_id',$this->fundo_id);
+            ->where(DB::raw('YEAR(ingreso)'),$this->year);
+            // ->where('marcador.fundo_id',$this->fundo_id);
             if ($this->planilla_id==null||$this->planilla_id==""||$this->planilla_id==0) {
                 $resultado=$resultado->whereNull('operador.planilla_id');
             }else{

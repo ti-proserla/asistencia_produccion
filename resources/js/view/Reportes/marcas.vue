@@ -76,7 +76,7 @@
 export default {
     data() {
         return {
-            fecha: null,
+            fecha: moment().format('YYYY-MM-DD'),
             reporte:[],
             turno_id: 0,
             turnos:[],

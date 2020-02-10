@@ -39,6 +39,7 @@ const moduleSidebar={
 window.store=new Vuex.Store({
     state: {
         cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null,
+        turno: localStorage.getItem('turno') || null
     },
     modules:{
         'sidebar': moduleSidebar
@@ -52,10 +53,15 @@ window.store=new Vuex.Store({
       auth_close(state){
         state.cuenta=null;
         localStorage.removeItem('cuenta_sistema');
+      },
+      update_turno(state,data){
+        state.turno=data;
+        localStorage.setItem('turno',data);
       }
     },
     actions: {}
 });
+store.state.turno=localStorage.getItem('turno') || null;
 if (store.state.cuenta!=null) {
     axios.defaults.headers.common['Authorization'] = store.state.cuenta.api_token;
 }
@@ -161,6 +167,11 @@ var routes =[
     { 
         path: '/linea', 
         component: require('./view/Linea/index.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/reporte-rotaciones', 
+        component: require('./view/Reportes/rotaciones.vue').default,
         beforeEnter: auth
     },
     { 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Marcador;
 use App\Model\Operador;
+use App\Model\Planilla;
 use App\Model\Turno;
 use App\Model\Configuracion;
 
@@ -24,12 +25,11 @@ class MarcadorController extends Controller
      * Evalua el DNI y Registra una marcacion
      */
     public function store(Request $request) 
-    {
-        // dd($request->all());
-
+    {    
         $configuracion=Configuracion::first();
+
         /**
-         * Creación de Operador
+         * Creación de Operador y Asignacion a la planilla General
          */
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
@@ -37,40 +37,64 @@ class MarcadorController extends Controller
             $operador->dni=$request->codigo_barras;
             $operador->nom_operador="Nuevo";
             $operador->ape_operador="Trabajador";
-            $operador->planilla_id=null;
+            $operador->planilla_id=1;
             $operador->save();
         }
-            
+        
+        $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 24 HOUR)'))
+            ->where('turno',$request->turno)
             ->orderBy('id','DESC')
             ->first();
+        // dd($marcador);
+
+        /**
+         * Marca Anterior Encontrada ?
+         */
         if ($marcador!=null) {
+
+            /**
+             * Filtro por Marcado reciente
+             */
             $fecha_limite=Carbon::now()->subMinute($configuracion->tiempo_entre_marcas);
-            if(($marcador->salida==null&&$fecha_limite<Carbon::parse($marcador->ingreso))||($marcador->salida!=null&&$fecha_limite<Carbon::parse($marcador->salida))) {
+
+            if(
+                ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
+                ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
+            ) {
                 return response()->json([
                         "status"    =>  "ERROR",
                         "data"      =>  "Usted marco recientemente"
                     ]);
             }
-        }
 
-        
-        /**
-         * Parametros para Evaluacion y operacion
-         */
-        $hora_fecha_actual=Carbon::now();
-        $hora_fecha_limite=Carbon::now()->startOfDay()->addHours($configuracion->hora_cierre_turno);
-        $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
-        if (
-            $marcador==null||
-            $marcador->salida!=null||
-            (
-                $marcador->salida==null&&
-                $fecha_ayer==Carbon::parse($marcador->ingreso)->format('Y-m-d')&&
-                $hora_fecha_actual>$hora_fecha_limite
-            )
-        ) 
-        {
+            $hora_fecha_actual=Carbon::now();
+            $hora_fecha_limite=Carbon::now()->startOfDay()->addHours($salida);
+            $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
+
+            if ( 
+                $marcador->salida!=null||
+                (
+                    $marcador->salida==null&&
+                    $fecha_ayer==Carbon::parse($marcador->ingreso)->format('Y-m-d')&&
+                    $hora_fecha_actual>$hora_fecha_limite
+                )
+            ) {
+                $marcador=new Marcador();
+                $marcador->codigo_operador=$operador->dni;
+                $marcador->ingreso=Carbon::now();
+                $marcador->salida=null;
+                $marcador->fundo_id=$request->fundo_id;
+                $marcador->cuenta_id=$request->user_id;
+                $marcador->turno=$request->turno;
+                $marcador->save();
+            }else{
+                $marcador->salida=Carbon::now();
+                $marcador->save();
+            }
+            
+        }else{
             /**
              * Agregar Marca
              */
@@ -80,12 +104,7 @@ class MarcadorController extends Controller
             $marcador->salida=null;
             $marcador->fundo_id=$request->fundo_id;
             $marcador->cuenta_id=$request->user_id;
-            $marcador->save();
-        }else{
-            /**
-             * Actualizar Marca
-             */
-            $marcador->salida=Carbon::now();
+            $marcador->turno=$request->turno;
             $marcador->save();
         }
         return response()->json([

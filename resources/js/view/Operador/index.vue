@@ -270,6 +270,7 @@ export default {
             axios.get(url_base+'/planilla?all=true')
             .then(response => {
                 this.planillas = response.data;
+                this.operador.planilla_id=this.planillas[0].id;
             })
         },
         iniOperador(){

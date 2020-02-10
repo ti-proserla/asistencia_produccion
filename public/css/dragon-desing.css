@@ -1,5 +1,5 @@
 :root{
-    --sidebar-color: #010118;
+    --sidebar-color: #FFF;
     --primary-color: #0e52b0;
     --success-color: #37ba98;
     --danger-color: #ED4956;
@@ -7,7 +7,7 @@
     --blue-color: #0e52b0;
     --info-color: #09AEE3;
     --gray-color: #6b6b6b;
-    --width-sidebar: 110px;
+    --width-sidebar: 200px;
 }
 
 *{
@@ -301,12 +301,19 @@ img{
     margin-left: 0;
     padding: 0;
 }
-.sidebar ul li a{text-align: center;display: block;align-items: center;padding: 10px;color: #8d98ac!important}
+.sidebar ul li a{
+    /* text-align: center; */
+    display: flex;
+    /* align-items: center; */
+    padding: 10px 15px;
+    color: #8d98ac!important
+}
 .sidebar ul li p{
-    font-size: 10px;
+    font-size: 12px;
     text-transform: uppercase;
     font-weight: 500;
     margin: 0;
+    line-height: 1.5;
 }
 .sidebar ul li a.active{
     background-color: var(--success-color);
@@ -314,6 +321,10 @@ img{
 }
 .sidebar ul li i{
     font-size: 20px;
+    width: 30px;
+}
+.sidebar .sidebar-content{
+    padding: 15px;
 }
 .navbar{margin-left: 100px; background-color: #fff;padding: 15px 20px;}
 
@@ -417,4 +428,8 @@ body >div{
 
 .table-striped tbody tr:nth-of-type(odd) {
     background-color: rgba(0,0,0,0.1);
+}
+
+html{
+    height: 100%;
 }

@@ -15,15 +15,12 @@ class CreateConfiguracionTable extends Migration
     {
         Schema::create('configuracion', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('tiempo_entre_marcas')->default(5);
-            $table->integer('hora_cierre_turno')->default(7);
+            $table->integer('tiempo_entre_marcas')->default(15);
             $table->string('actividad',100)->nullable();
             $table->string('ccosto',100)->nullable();
             // $table->timestamps();
         });
-        DB::table('configuracion')->insert([
-            ['tiempo_entre_marcas'=> 45,'hora_cierre_turno'=> 7,'actividad'=> '','ccosto'=> '']
-        ]);
+        
     }
 
     /**

@@ -6,6 +6,7 @@
                     <h4 class="card-title">Registro de Marcación</h4>
                 </div>
                 <div class="card-body">
+                    <h4 class="text-center">TURNO {{ turno }}</h4>
                     <div class="row">
                         <!-- <div class="col-12 form-group">
                             <label for="">Seleccionar Turno:</label>
@@ -42,6 +43,8 @@
     </div>
 </template>
 <script>
+import { mapState,mapMutations } from 'vuex'
+
 import Input from '../../dragon-desing/dg-input.vue'
 export default {
     components:{
@@ -52,9 +55,13 @@ export default {
             turnos:[],
             codigo_barras: null,
             respuesta: null,
-            // turno_id: 0,
-            alert: null
+            // turno: localStorage.getItem('turno') || null,
+            alert: null,
+
         }
+    },
+    computed: {
+        ...mapState(['turno']),
     },
     mounted() {
         this.listarTurnos();
@@ -73,11 +80,12 @@ export default {
             });
         },
         guardar(){
+            // this.clearAlert();
             this.$nextTick(() =>{
                 if (this.codigo_barras.length==8) {
                     var cod_barras_paso=this.codigo_barras;
                     this.codigo_barras=null;
-                    axios.post(url_base+'/marcador',{ codigo_barras: cod_barras_paso,turno_id: this.turno_id})
+                    axios.post(url_base+'/marcador',{ codigo_barras: cod_barras_paso,turno: this.turno})
                     .then(response => {
                         this.respuesta=response.data;
                         var resp=response.data;
@@ -100,12 +108,25 @@ export default {
                         }
                     })
                 }else{
-                    this.codigo_barras=null;
-                    this.alert={
-                        status: 'danger',
-                        data: 'Código no Valido'
+                    if (this.codigo_barras=="1001") {
+                        this.$store.commit( 'update_turno' , 1 );
+                        this.alert={
+                            status: 'success',
+                            data: 'Turno 01 Actualizado'
+                        }
+                    }else if(this.codigo_barras=="1002"){
+                        this.$store.commit( 'update_turno' , 2 );
+                        this.alert={
+                            status: 'success',
+                            data: 'Turno 02 Actualizado'
+                        }
+                    }else{
+                        this.alert={
+                            status: 'danger',
+                            data: 'Código no Valido'
+                        }
                     }
-                    this.clearAlert();
+                    this.codigo_barras=null;
                 }
             })
         },
