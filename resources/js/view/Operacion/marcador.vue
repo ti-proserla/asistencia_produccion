@@ -8,6 +8,9 @@
                 <div class="card-body">
                     <h4 class="text-center">TURNO {{ turno }}</h4>
                     <div class="row">
+                        <div class="col-sm-12 text-center">
+                            <digital-clock :blink="true"/>
+                        </div>
                         <!-- <div class="col-12 form-group">
                             <label for="">Seleccionar Turno:</label>
                             <select class="form-control" v-model="turno_id">
@@ -45,10 +48,12 @@
 <script>
 import { mapState,mapMutations } from 'vuex'
 
+import DigitalClock from "vue-digital-clock";
 import Input from '../../dragon-desing/dg-input.vue'
 export default {
     components:{
-        Input
+        Input,
+        DigitalClock
     },
     data() {
         return {
