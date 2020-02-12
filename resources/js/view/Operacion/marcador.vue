@@ -36,9 +36,9 @@
                     <div v-if="alert!=null" :class="'alert alert-'+alert.status" role="alert">
                         {{ alert.data }}
                     </div>
-                    <div v-if="respuesta!=null && respuesta.status=='OK'"  class="text-center">
-                        <img style="max-width: 40%;height: auto;" :src="url(respuesta.data.foto)" alt="">
-                        <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
+                    <div class="text-center">
+                        <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
+                        <!-- <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p> -->
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@ export default {
             respuesta: null,
             // turno: localStorage.getItem('turno') || null,
             alert: null,
-
+            foto: null,
         }
     },
     computed: {
@@ -87,12 +87,12 @@ export default {
         guardar(){
             // this.clearAlert();
             this.$nextTick(() =>{
+                this.foto=null;
                 if (this.codigo_barras.length==8) {
                     var cod_barras_paso=this.codigo_barras;
                     this.codigo_barras=null;
                     axios.post(url_base+'/marcador',{ codigo_barras: cod_barras_paso,turno: this.turno})
                     .then(response => {
-                        this.respuesta=response.data;
                         var resp=response.data;
                         switch (resp.status) {
                             case "VALIDATION":
@@ -101,8 +101,9 @@ export default {
                             case "OK":
                                 this.alert={
                                     status: 'primary',
-                                    data: 'Marca Correcta.'
+                                    data: resp.data
                                 }
+                                this.foto=resp.foto;
                                 break;
                             case "ERROR":
                                 this.alert={

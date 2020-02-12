@@ -109,7 +109,8 @@ class MarcadorController extends Controller
         }
         return response()->json([
             "status"=> "OK",
-            "data"  => $operador
+            "data"  => $operador->nom_operador." ".$operador->ape_operador,
+            "foto"  => $operador->foto
         ]);
         
     }
