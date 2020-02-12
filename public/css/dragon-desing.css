@@ -326,8 +326,8 @@ img{
 .sidebar .sidebar-content{
     padding: 15px;
 }
-.navbar{margin-left: 100px; background-color: #fff;padding: 15px 20px;}
-
+.navbar{margin-left: var(--width-sidebar); background-color: #fff;padding: 15px 20px;}
+.footer{color: #555;text-align: right;padding: 10px 15px;}
 @media (max-width: 992px){ 
     .navbar{margin-left: 0}
     .show-sidebar{
@@ -345,7 +345,7 @@ img{
     display: block;
 }
 
-.content{ position: relative; right: 0; margin-left: var(--width-sidebar); padding: 15px; margin-top: 15px}
+.content{min-height: calc(100% - 115px);position: relative; right: 0; margin-left: var(--width-sidebar); padding: 15px; margin-top: 15px}
 @media (max-width: 992px){
     .content{
         margin-left: 0

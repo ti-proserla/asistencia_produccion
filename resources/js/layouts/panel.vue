@@ -6,12 +6,17 @@
         </div>
         <div class="background-sidebar" @click="close()"></div>
         <nav class="navbar">
-            <button @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
-            {{ cuenta.fundo_id }}
+            <button v-if="cuenta.rol!='COMUN'" @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
+            <div>
+                <h5>Sist. Asistencia y Tareo</h5>
+            </div>
             <button @click="cerrar()" class="btn btn-danger btn-sm btn-float-right">Salir</button>
         </nav>
         <div class="content">
             <slot/>
+        </div>
+        <div class="footer">
+            Jayanca Fruits & Proserla @ Area de TI
         </div>
     </div>
 </template>
@@ -31,7 +36,6 @@ export default {
     },
     mounted() {
         console.log(this.cuenta);
-        
     },
     methods: {
         ...mapMutations('sidebar',['open','close']),
