@@ -37,7 +37,7 @@
                         {{ alert.data }}
                     </div>
                     <div v-if="respuesta!=null && respuesta.status=='OK'"  class="text-center">
-                        <img style="max-width: 300px;height: auto;" :src="url(respuesta.data.foto)" alt="">
+                        <img style="max-width: 40%;height: auto;" :src="url(respuesta.data.foto)" alt="">
                         <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
                     </div>
                 </div>
