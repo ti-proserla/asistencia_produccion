@@ -38,7 +38,6 @@
                     </div>
                     <div class="text-center">
                         <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
-                        <!-- <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p> -->
                     </div>
                 </div>
             </div>

@@ -8,6 +8,7 @@
             <div class="row">
 
                 <div class="col-sm-8 col-lg-6 form-group">
+                    <label for="">Seleccionar Trabajador:</label>
                     <v-select label="dni" :options="opt" @search="getOperadores" :value="hola" @input="setSelected" :filterable="false" >
                         <!-- <template slot="no-options">
                             Buscar Operadores..
@@ -25,14 +26,13 @@
                             </div>
                         </template>
                         <template slot="no-options">
-                        type to search GitHub repositories..
+                            Filtrar datos
                         </template>
                     </v-select>
                 </div>
                 <div class="col-sm-4 col-lg-3">
-                    <Select title="Turno:" v-model="turno_id">
-                        <option v-for="turno in turnos" :value="turno.id">{{ turno.descripcion }}</option>
-                    </Select>
+                    <label for="">Fecha de Asitencia:</label>
+                    <input type="date" class="form-control" v-model="fecha">
                 </div>
                 <div class="col-sm-4 col-lg-2">
                     <button class="btn btn-danger" @click="buscar">Buscar</button>
@@ -44,7 +44,7 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-sm-8 offset-sm-2">
+                <div class="col-lg-8 offset-lg-2">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -95,6 +95,7 @@ export default {
             hola:null,
             turnos:[],
             turno_id: null,
+            fecha: moment().format('YYYY-MM-DD'),
             marcas:[],
             marca_edit: null,
             marca_edit_index:-1
@@ -109,7 +110,6 @@ export default {
     },
     methods: {
         setSelected(value){
-            console.log(value);
             this.hola=value  
         },
         url(data){
@@ -140,19 +140,30 @@ export default {
             this.marca_edit.salida=(this.marca_edit.salida!=null) ? moment(this.marca_edit.salida,'YYYY-MM-DD HH:mm:ss').format('YYYY-MM-DDTHH:mm:ss'): null;
         },
         editar(){
-            axios.post(url_base+'/marcador/'+this.marca_edit.id+'?_method=PUT',this.marca_edit)
-            .then(response => {
-                var respuesta=response.data;
-                    switch (respuesta.status) {
-                        case "VALIDATION":
-                            this.errors_editar=respuesta.data;
-                            break;
-                        case "OK":
-                            swal("", "Marca Actualizada", "success");
-                            this.cancelar();
-                            this.buscar();
-                            break;
-                    }
+            swal({
+                title: "", 
+                text: "¿Desea Actualizar Par de Marcas?", 
+                icon: "info",
+                buttons: true,
+            }).then((value) => {
+                if(value){
+                    axios.post(url_base+'/marcador/'+this.marca_edit.id+'?_method=PUT',this.marca_edit)
+                    .then(response => {
+                        var respuesta=response.data;
+                            switch (respuesta.status) {
+                                case "VALIDATION":
+                                    this.errors_editar=respuesta.data;
+                                    break;
+                                case "OK":
+                                    swal("","Marca Actualizada","success")
+                                    this.cancelar();
+                                    this.buscar();
+                                    break;
+                            }
+                    });
+                }else{
+                    this.buscar();
+                }
             });
         },
         listarTurnos(){
@@ -165,7 +176,7 @@ export default {
             });
         },
         buscar(){
-            axios.get(url_base+'/marcador?operador_id='+this.hola.id+'&turno_id='+this.turno_id)
+            axios.get(url_base+'/marcador?codigo_operador='+this.hola.dni+'&fecha='+this.fecha)
             .then(response => {
                 this.cancelar();
                 this.marcas=response.data;

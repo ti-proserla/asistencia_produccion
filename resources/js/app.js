@@ -88,11 +88,6 @@ var routes =[
         beforeEnter: auth
     },
     { 
-        path: '/marcador2', 
-        component: require('./view/Operacion/marcador2.vue').default,
-        beforeEnter: auth
-    },
-    { 
         path: '/tareo', 
         component: require('./view/Operacion/tareo.vue').default,
         beforeEnter: auth

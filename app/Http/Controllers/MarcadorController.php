@@ -16,8 +16,8 @@ use Illuminate\Support\Facades\DB;
 class MarcadorController extends Controller
 {
     public function index(Request $request){
-        $marcas=Marcador::where('operador_id',$request->operador_id)
-            ->where('turno_id',$request->turno_id)
+        $marcas=Marcador::where('codigo_operador',$request->codigo_operador)
+            ->where(DB::raw('DATE(ingreso)'),$request->fecha)
             ->get();
         return response()->json($marcas);
     }
