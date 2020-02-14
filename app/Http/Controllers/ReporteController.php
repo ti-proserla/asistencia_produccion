@@ -118,6 +118,14 @@ class ReporteController extends Controller
         return response()->json($resultado);
     }
 
+    public function marcasPorCodigo(Request $request,$codigo){
+        DB::select(DB::raw('select * from users where active = ?'
+        
+        
+        
+        ), [1]);
+    }
+
     public function pendientesRegularizar(){
         $resultado=Operador::join('marcador','marcador.operador_id','=','operador.id')
             ->join('turno','turno.id','=','marcador.turno_id')

@@ -113,6 +113,13 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/boleta', 
+        component: require('./view/Reportes/boleta.vue').default,
+        meta:{
+            layout: "empty",
+        },
+    },
+    { 
         path: '/login', 
         component: require('./view/login.vue').default,
         meta:{
