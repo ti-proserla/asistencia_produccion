@@ -67,9 +67,9 @@ class MarcadorController extends Controller
             ) {
                 $min=0;
                 if ($marcador->salida == null) {
-                    $min=Carbon::parse($marcador->ingreso)->addMinutes(45)->format('H:i');
+                    $min=Carbon::parse($marcador->ingreso)->addMinutes($configuracion->tiempo_entre_marcas)->format('H:i');
                 }else {
-                    $min=Carbon::parse($marcador->salida)->addMinutes(45)->format('H:i');
+                    $min=Carbon::parse($marcador->salida)->addMinutes($configuracion->tiempo_entre_marcas)->format('H:i');
                 }
                 return response()->json([
                         "status"    =>  "ERROR",
