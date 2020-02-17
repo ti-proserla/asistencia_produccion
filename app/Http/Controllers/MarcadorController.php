@@ -67,13 +67,13 @@ class MarcadorController extends Controller
             ) {
                 $min=0;
                 if ($marcador->salida == null) {
-                    $min=Carbon::now()->diffInMinutes(Carbon::parse($marcador->ingreso));
+                    $min=Carbon::parse($marcador->ingreso)->addMinutes(45)->format('H:i');
                 }else {
-                    $min=Carbon::now()->diffInMinutes(Carbon::parse($marcador->salida));
+                    $min=Carbon::parse($marcador->salida)->addMinutes(45)->format('H:i');
                 }
                 return response()->json([
                         "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente. (Disponible en $min min)"
+                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
                     ]);
             }
 
