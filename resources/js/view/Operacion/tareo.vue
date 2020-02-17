@@ -1,6 +1,23 @@
 <template>
     <div class="row">
         <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Respuesta</h4>
+                </div>
+                <div class="card-body">
+                    <div v-if="alert!=null" :class="'alert alert-'+alert.status" role="alert">
+                        {{ alert.data }}
+                    </div>
+                    <div v-if="respuesta!=null && respuesta.status=='OK'"  class="fotocheck text-center" style="margin-right: auto;margin-left: auto">
+                        <img :src="url(respuesta.data.foto)" alt="">
+                        <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
             <!--Modal de pendientes-->
             <div id="modal-pendientes" class="modal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -57,24 +74,6 @@
                     </form>
                 </div>
              </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="card">
-                <div class="card-header">
-                    <h4 class="card-title">Respuesta</h4>
-                </div>
-                <div class="card-body">
-                    <div v-if="alert!=null" :class="'alert alert-'+alert.status" role="alert">
-                        {{ alert.data }}
-                    </div>
-                    <div v-if="respuesta!=null && respuesta.status=='OK'"  class="fotocheck text-center" style="margin-right: auto;margin-left: auto">
-                        <img :src="url(respuesta.data.foto)" alt="">
-                        <p><b>{{ respuesta.data.nom_operador.split(' ')[0] }} {{ respuesta.data.ape_operador.split(' ')[0] }}</b></p>
-                        <hr>
-                        <h6>Jayanca Fruits</h6>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 </template>

@@ -82,9 +82,9 @@ Route::get('/marcas-tuno/{fecha}', function ($fecha) {
     return Excel::download(new MarcasTurnoTrabajadorExport($fecha), "marcas-turno-$fecha.xlsx");
 });
 
-use Carbon\Carbon;
+// use Carbon\Carbon;
 Route::get('/producto', function () {
-    dd(Carbon::now()->addMinutes(1)->format('H:i'));
+    // dd(Carbon::now()->addMinutes(45)->format('H:i'));
 });
 
 /**
