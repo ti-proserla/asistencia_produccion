@@ -26,6 +26,8 @@ class MarcadorController extends Controller
      */
     public function store(Request $request) 
     {    
+
+
         $configuracion=Configuracion::first();
 
         /**
@@ -63,9 +65,15 @@ class MarcadorController extends Controller
                 ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
                 ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
             ) {
+                $min=0;
+                if ($marcador->salida == null) {
+                    $min=Carbon::now()->diffInMinutes(Carbon::parse($marcador->ingreso));
+                }else {
+                    $min=Carbon::now()->diffInMinutes(Carbon::parse($marcador->salida));
+                }
                 return response()->json([
                         "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente"
+                        "data"      =>  "Usted marco recientemente. (Disponible en $min min)"
                     ]);
             }
 

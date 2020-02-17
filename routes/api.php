@@ -82,21 +82,9 @@ Route::get('/marcas-tuno/{fecha}', function ($fecha) {
     return Excel::download(new MarcasTurnoTrabajadorExport($fecha), "marcas-turno-$fecha.xlsx");
 });
 
+// use Carbon\Carbon;
 Route::get('/producto', function () {
-    return response()->json([
-        [
-            "id"    =>  1,
-            "nombre"=>  "UVA"
-        ],
-        [
-            "id"    =>  2,
-            "nombre"=>  "MANGO"
-        ],
-        [
-            "id"    =>  3,
-            "nombre"=>  "LIMON"
-        ]
-    ]);
+    dd(Carbon::now()->diffInMinutes(Carbon::parse('2020-02-17 15:11')));
 });
 
 /**
