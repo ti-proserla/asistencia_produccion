@@ -108,7 +108,8 @@ export default {
                 proceso_id:null,
                 labor_id:null,
                 linea_id:null,
-                codigo_barras:null
+                codigo_barras:null,
+                turno: 1
             },
             turnos:[],
             lineas:[],
