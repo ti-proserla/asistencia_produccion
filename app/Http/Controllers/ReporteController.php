@@ -144,11 +144,11 @@ class ReporteController extends Controller
                                 INNER JOIN (
                                 SELECT marcador.codigo_operador, marcador.ingreso, tareo.labor_id,turno 
                                 FROM marcador INNER JOIN tareo on tareo.codigo_operador=marcador.codigo_operador
-                                where DATE(ingreso) = ? 
+                                where DATE(ingreso) = ? AND DATE(tareo.fecha) = ?
                                 GROUP BY marcador.codigo_operador
                                 ) M on labor.id=M.labor_id
                                 GROUP BY labor.id")
-                    , [$request->fecha]);
+                    , [$request->fecha,$request->fecha]);
         return response()->json($datos);
     }
 }
