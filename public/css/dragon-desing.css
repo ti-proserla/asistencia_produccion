@@ -436,3 +436,44 @@ html{
 .clock *{
     font-size: 50px;
 }
+
+.cl-lg-1{
+    -ms-flex: 0 0 10%;
+    flex: 0 0 10%;
+    max-width: 10%;
+}
+.cl-lg-2{
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+/* .cl-lg-1{
+    -ms-flex: 0 0 6.25%;
+    flex: 0 0 6.25%;
+    max-width: 6.25%;
+}
+.cl-lg-2{
+    -ms-flex: 0 0 12.5%;
+    flex: 0 0 12.5%;
+    max-width: 12.5%;
+}
+.cl-lg-3{
+    -ms-flex: 0 0 18.75%;
+    flex: 0 0 18.75%;
+    max-width: 18.75%;
+}
+.cl-lg-4{
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+} */
+/* .cl-lg-1{
+    -ms-flex: 0 0 6.25%;
+    flex: 0 0 6.25%;
+    max-width: 6.25%;
+}
+.cl-lg-8{
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+} */

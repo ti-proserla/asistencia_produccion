@@ -81,10 +81,11 @@ class ReporteController extends Controller
         return response()->json($resultado);
     }
     public function pendientes(Request $request){
-        $hoy=Carbon::now()->format('Y-m-d');
+        $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
             ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
             ->where(DB::raw('DATE(marcador.ingreso)'),$hoy)
+            ->where('marcador.turno',$request->turno)
             ->whereNull('T.id')
             ->groupBy('operador.dni')
             ->get();

@@ -47,9 +47,8 @@ class MarcadorController extends Controller
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
             ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 17 HOUR)'))
             ->where('turno',$request->turno)
-            ->orderBy('id','DESC')
+            ->orderBy('ingreso','DESC')
             ->first();
-        // dd($marcador);
 
         /**
          * Marca Anterior Encontrada ?

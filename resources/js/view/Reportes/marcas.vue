@@ -6,21 +6,21 @@
             </div>
             <div class="card-body">
                 <div class="row form-group">
-                    <div class="col-lg-3">
+                    <div class="col-sm-6 col-lg-3">
                         <input type="date" v-model="fecha" class="form-control">
                     </div>
                     <div class="col-lg-1">
                         <label for="" class="my-2"><b>Nombre:</b></label>
                     </div>
-                    <div class="col-lg-4">
+                    <div class="col-lg-4 form-group">
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-sm-6 col-lg-2">
                         <button @click="listar(1)" class="btn btn-info">
                             Buscar
                         </button>
                     </div>
-                    <div class="col-lg-2">
+                    <div class="col-sm-6 col-lg-2">
                         <a :href="url" class="btn btn-success">Excel</a>
                     </div>
                 </div>

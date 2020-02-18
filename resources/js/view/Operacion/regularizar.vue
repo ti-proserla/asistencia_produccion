@@ -99,7 +99,6 @@ export default {
             marcas:[],
             marca_edit: null,
             marca_edit_index:-1
-            
         }
     },
     mounted() {

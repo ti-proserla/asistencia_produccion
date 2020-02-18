@@ -56,6 +56,18 @@
                     <Select title="linea:" v-model="tareo.linea_id">
                         <option v-for="linea in lineas" :value="linea.id">{{ linea.nombre }}</option>
                     </Select>
+                    <div class="row">
+                        <div class="col-8">
+                            <Input title="Fecha:" v-model="tareo.fecha" type="date"></Input>
+                        </div>
+                        <div class="col-4">
+                            <Select title="Turno:" v-model="tareo.turno">
+                                <option :value="1">01</option>
+                                <option :value="2">02</option>
+                            </Select>
+                        </div>
+                    </div>
+
                     <Select title="Centro de Costo:" v-model="tareo.proceso_id">
                         <option value="">--SELECCIONAR C.COSTO--</option>
                         <option v-for="proceso in procesos" :value="proceso.id">{{ proceso.id+" - "+ proceso.nom_proceso }}</option>
@@ -91,6 +103,7 @@ export default {
             focus: true,
             isMovil:((navigator.userAgent).search('Android')>-1),
             tareo:{
+                fecha: moment().format('YYYY-MM-DD'),
                 area_id:null,
                 proceso_id:null,
                 labor_id:null,
@@ -215,7 +228,7 @@ export default {
             })
         },
         openPendientes(){
-            axios.get(url_base+'/reporte-pendientes?turno_id='+this.tareo.turno_id)
+            axios.get(url_base+'/reporte-pendientes?turno='+this.tareo.turno+'&fecha='+this.tareo.fecha)
             .then(response => {
                 this.reporte = response.data;
             })

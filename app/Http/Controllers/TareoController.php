@@ -21,6 +21,7 @@ class TareoController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request->all());
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
             $operador=new Operador();
