@@ -45,7 +45,7 @@ class MarcadorController extends Controller
         
         $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 24 HOUR)'))
+            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 17 HOUR)'))
             ->where('turno',$request->turno)
             ->orderBy('id','DESC')
             ->first();
@@ -59,7 +59,8 @@ class MarcadorController extends Controller
             /**
              * Filtro por Marcado reciente
              */
-            $fecha_limite=Carbon::now()->subMinute($configuracion->tiempo_entre_marcas);
+            $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
+            $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
 
             if(
                 ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
@@ -67,9 +68,9 @@ class MarcadorController extends Controller
             ) {
                 $min=0;
                 if ($marcador->salida == null) {
-                    $min=Carbon::parse($marcador->ingreso)->addMinutes($configuracion->tiempo_entre_marcas)->format('H:i');
+                    $min=Carbon::parse($marcador->ingreso)->addMinutes($tiempo_entre_marcas)->format('H:i');
                 }else {
-                    $min=Carbon::parse($marcador->salida)->addMinutes($configuracion->tiempo_entre_marcas)->format('H:i');
+                    $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas)->format('H:i');
                 }
                 return response()->json([
                         "status"    =>  "ERROR",
