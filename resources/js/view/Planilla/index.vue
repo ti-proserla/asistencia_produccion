@@ -9,6 +9,8 @@
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
                             <Input title="Nombre:" v-model="planilla.nom_planilla" :error="errors.nom_planilla"></Input>
+                            <Input title="Tiempo entre Marcas (m):" v-model="planilla.tiempo_entre_marcas" :error="errors.tiempo_entre_marcas"></Input>
+                            <Input title="Limite de Salida (H):" v-model="planilla.salida" :error="errors.salida"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -26,12 +28,16 @@
                             <thead>
                                 <tr>
                                     <th>Descripcion</th>
+                                    <th>T. Entre Marcas</th>
+                                    <th>Limite Salida</th>
                                     <th>Editar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="planilla in table.data">
                                     <td>{{planilla.nom_planilla}}</td>
+                                    <td>{{planilla.tiempo_entre_marcas}}</td>
+                                    <td>{{planilla.salida}}</td>
                                     <td>
                                         <button @click="abrirEditar(planilla.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
@@ -60,6 +66,8 @@
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
                             <Input title="Nombre:" v-model="planilla_editar.nom_planilla" :error="errors_editar.nom_planilla"></Input>
+                            <Input title="Tiempo entre Marcas (m):" v-model="planilla_editar.tiempo_entre_marcas" :error="errors_editar.tiempo_entre_marcas"></Input>
+                            <Input title="Limite de Salida (H):" v-model="planilla_editar.salida" :error="errors_editar.salida"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>

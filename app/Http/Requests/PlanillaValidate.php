@@ -28,6 +28,8 @@ class PlanillaValidate extends FormRequest
     {
         return [
             'nom_planilla' => 'required|max:50',
+            'tiempo_entre_marcas' => 'required',
+            'salida' => 'required',
         ];
     }
     

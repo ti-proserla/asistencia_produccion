@@ -30,6 +30,8 @@ class PlanillaController extends Controller
     {
         $planilla=new Planilla();
         $planilla->nom_planilla=$request->nom_planilla;
+        $planilla->tiempo_entre_marcas=$request->tiempo_entre_marcas;
+        $planilla->salida=$request->salida;
         $planilla->save();
         return response()->json([
             "status"=> "OK",
@@ -49,7 +51,9 @@ class PlanillaController extends Controller
     public function update(PlanillaValidate $request, $id)
     {
         $planilla=Planilla::where('id',$id)->first();
-        $planilla->nom_planilla=$request->nom_planilla;      
+        $planilla->nom_planilla=$request->nom_planilla;     
+        $planilla->tiempo_entre_marcas=$request->tiempo_entre_marcas;
+        $planilla->salida=$request->salida; 
         $planilla->save();
         return response()->json([
             "status"=> "OK",
