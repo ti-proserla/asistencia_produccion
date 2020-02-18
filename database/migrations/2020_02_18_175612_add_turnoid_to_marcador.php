@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTurnoTable extends Migration
+class AddTurnoidToMarcador extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,8 @@ class CreateTurnoTable extends Migration
      */
     public function up()
     {
-        Schema::create('turno', function (Blueprint $table) {
-            $table->increments('id');
-            $table->date('fecha');
-            $table->integer('turno');
+        Schema::table('marcador', function (Blueprint $table) {
+            $table->integer('turno_id')->default(0); 
         });
     }
 
@@ -27,6 +25,8 @@ class CreateTurnoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('turno');
+        Schema::table('marcador', function (Blueprint $table) {
+            //
+        });
     }
 }
