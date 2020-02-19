@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddTurnoidToMarcador extends Migration
+class AddFecharefToMarcador extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddTurnoidToMarcador extends Migration
     public function up()
     {
         Schema::table('marcador', function (Blueprint $table) {
-            $table->integer('turno_id')->default(0); 
+            $table->date('fecha_ref')->nullable(); 
         });
     }
 
