@@ -7,7 +7,7 @@
         <div class="card-body">
             <div class="row">
 
-                <div class="col-sm-8 col-lg-6 form-group">
+                <div class="col-sm-8 col-lg-5 form-group">
                     <label for="">Seleccionar Trabajador:</label>
                     <v-select label="dni" :options="opt" @search="getOperadores" :value="hola" @input="setSelected" :filterable="false" >
                         <!-- <template slot="no-options">
@@ -35,6 +35,13 @@
                     <input type="date" class="form-control" v-model="fecha">
                 </div>
                 <div class="col-sm-4 col-lg-2">
+                    <label for="">TURNO:</label>
+                    <select v-model="turno" class="form-control">
+                        <option value="1">Turno 1</option>
+                        <option value="2">Turno 2</option>
+                    </select>    
+                </div>
+                <div class="col-sm-4 col-lg-2">
                     <button class="btn btn-danger" @click="buscar">Buscar</button>
                 </div>
             </div>
@@ -52,7 +59,7 @@
                                 <th>Ingreso</th>
                                 <th>Salida</th>
                                 <th>Editar</th>
-                                <th></th>
+                                <th>Eliminar</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -62,12 +69,29 @@
                                 <td v-else><input type="datetime-local" v-model="marca_edit.ingreso"></td>
                                 <td v-if="marca_edit_index!=index">{{marca.salida}}</td>
                                 <td v-else><input type="datetime-local" v-model="marca_edit.salida"></td>
-                                <td v-if="marca_edit_index!=index"><button class="btn-link-warning" @click="selectEdit(index)"><i class="material-icons">edit</i></button></td>
+                                <td v-if="marca_edit_index!=index">
+                                    <button class="btn-link-warning" @click="selectEdit(index)">
+                                        <i class="material-icons">edit</i>
+                                    </button>
+                                </td>
                                 <td v-else>
                                     <button class="btn-link-info" @click="editar()"><i class="material-icons">save</i></button>
+                                    <button class="btn-link-danger" @click="cancelar()"><i class="material-icons">cancel</i></button>
                                 </td>
                                 <td v-if="marca_edit_index==index">
-                                    <button class="btn-link-danger" @click="cancelar()"><i class="material-icons">cancel</i></button>
+                                </td>
+                                <td v-else>
+                                    <button class="btn-link-danger">
+                                        <i class="material-icons" @click="eliminar(marca.id)">
+                                            delete
+                                        </i>
+                                    </button>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="text-center" colspan="5">
+                                    <button class="btn btn-sm btn-success" @click="agregar">Agregar Marca</button>
                                 </td>
                             </tr>
                         </tbody>
@@ -98,7 +122,8 @@ export default {
             fecha: moment().format('YYYY-MM-DD'),
             marcas:[],
             marca_edit: null,
-            marca_edit_index:-1
+            marca_edit_index:-1,
+            turno: 1,
         }
     },
     mounted() {
@@ -179,6 +204,18 @@ export default {
             .then(response => {
                 this.cancelar();
                 this.marcas=response.data;
+            });
+        },
+        agregar(){
+            axios.get(url_base+'/marcador/add?codigo_operador='+this.hola.dni+'&fecha='+this.fecha+'&turno='+this.turno)
+            .then(response => {
+                this.buscar();
+            });
+        },
+        eliminar(id){
+            axios.get(url_base+'/marcador/remove?codigo_operador='+this.hola.dni+'&marcador_id='+id)
+            .then(response => {
+                this.buscar();
             });
         },
         cancelar(){

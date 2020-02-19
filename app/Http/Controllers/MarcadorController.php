@@ -17,7 +17,7 @@ class MarcadorController extends Controller
 {
     public function index(Request $request){
         $marcas=Marcador::where('codigo_operador',$request->codigo_operador)
-            ->where(DB::raw('DATE(ingreso)'),$request->fecha)
+            ->where(DB::raw('DATE(fecha_ref)'),$request->fecha)
             ->get();
         return response()->json($marcas);
     }
@@ -147,7 +147,26 @@ class MarcadorController extends Controller
         return response()->json($actividad);
     }
     
-    public function consulta(Request $request){
+    public function add(Request $request){
+        // dd($request->all());
+        $marcador=new Marcador();
+        $marcador->codigo_operador=$request->codigo_operador;
+        $marcador->cuenta_id=$request->user_id;
+        $marcador->turno=$request->turno;
+        $marcador->fecha_ref=$request->fecha;
+        $marcador->save();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Marca Agregada"
+        ]);
+    }
 
+    public function remove(Request $request){
+        $marcador=Marcador::where('id',$request->marcador_id)->first();
+        $marcador->delete();
+        return response()->json([
+            "status"=> "OK",
+            "data"  => "Marca Eliminada"
+        ]);
     }
 }

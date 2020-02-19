@@ -46,7 +46,10 @@ Route::post('linea/{id}/estado','LineaController@estado')->name('linea.estado');
 Route::resource('turno', 'TurnoController');
 
 Route::post('marcador2','MarcadorController@store2')->name('marcador.store2');
+Route::get('marcador/add','MarcadorController@add')->name('marcador.add')->middleware('auth.token');
+Route::get('marcador/remove','MarcadorController@remove')->name('marcador.remove')->middleware('auth.token');
 Route::resource('marcador', 'MarcadorController')->middleware('auth.token');
+
 
 Route::post('tareo', 'TareoController@store')->name('tareo.store')->middleware('auth.token');
 

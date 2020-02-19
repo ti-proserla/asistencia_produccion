@@ -17,35 +17,35 @@
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-Route::get('prueba', function () {
+// Route::get('prueba', function () {
     
-    dd(glob(public_path('storage/operador/7738*')));
-});
-Route::get('operador', function () {
-    return view('reporte');    
-});
-Route::get('capturador', function () {
-    return view('capturador');    
-});
-Route::get('reporte', function () {
-    return view('reporte');    
-});
-Route::get('scanner', function () {
-    return view('scanner');    
-});
-Route::get('refresh', function () {
-    return view('scanner');    
-});
-Route::get('refreshOperario', function () {
-    return view('scanner');    
-});
-/**
- * Operaciones
- */
-// Route::get('linea', 'LineaController@index');
-Route::get('producto/nuevo','ProductoController@nuevo');
-Route::get('producto/editar','ProductoController@editar');
-Route::get('producto/eliminar','ProductoController@eliminar');
+//     dd(glob(public_path('storage/operador/7738*')));
+// });
+// Route::get('operador', function () {
+//     return view('reporte');    
+// });
+// Route::get('capturador', function () {
+//     return view('capturador');    
+// });
+// Route::get('reporte', function () {
+//     return view('reporte');    
+// });
+// Route::get('scanner', function () {
+//     return view('scanner');    
+// });
+// Route::get('refresh', function () {
+//     return view('scanner');    
+// });
+// Route::get('refreshOperario', function () {
+//     return view('scanner');    
+// });
+// /**
+//  * Operaciones
+//  */
+// // Route::get('linea', 'LineaController@index');
+// Route::get('producto/nuevo','ProductoController@nuevo');
+// Route::get('producto/editar','ProductoController@editar');
+// Route::get('producto/eliminar','ProductoController@eliminar');
 
 Route::get('/{any}', function(){
     return view('reporte');

@@ -196,31 +196,31 @@ var routes =[
         component: require('./view/capturador.vue').default,
         beforeEnter: auth
     },
-    { 
-        path: '/scanner', 
-        component: require('./view/scanner.vue').default,
-        beforeEnter: auth
-    },
-    { 
-        path: '/reporte', 
-        component: require('./view/reporte.vue').default,
-        beforeEnter: auth
-    },
-    { 
-        path: '/refresh', 
-        component: require('./view/refresh.vue').default,
-        beforeEnter: auth
-    },
-    { 
-        path: '/refreshOperario', 
-        component: require('./view/refreshOperario.vue').default,
-        beforeEnter: auth
-    },
-    {
-        path: '/pendientes',
-        component:require('./view/Reportes/pendientes.vue').default,
-        beforeEnter: auth
-    },
+    // { 
+    //     path: '/scanner', 
+    //     component: require('./view/scanner.vue').default,
+    //     beforeEnter: auth
+    // },
+    // { 
+    //     path: '/reporte', 
+    //     component: require('./view/reporte.vue').default,
+    //     beforeEnter: auth
+    // },
+    // { 
+    //     path: '/refresh', 
+    //     component: require('./view/refresh.vue').default,
+    //     beforeEnter: auth
+    // },
+    // { 
+    //     path: '/refreshOperario', 
+    //     component: require('./view/refreshOperario.vue').default,
+    //     beforeEnter: auth
+    // },
+    // {
+    //     path: '/pendientes',
+    //     component:require('./view/Reportes/pendientes.vue').default,
+    //     beforeEnter: auth
+    // },
     {
         path: '/configuracion',
         component:require('./view/configuracion.vue').default,

@@ -47,7 +47,8 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
         )->join('marcador','operador.dni','=','marcador.codigo_operador')
         // ->where(DB::raw("fecha_ref"),$request->fecha)
         ->where(DB::raw("fecha_ref"),$this->fecha)
-        ->where('marcador.turno',$this->turno)       
+        ->where('marcador.turno',$this->turno) 
+        ->whereNotNull('ingreso')      
         ->groupBy('operador.dni')->get();
         return view('excel.marcastrabajador', [
             'operadores' => $resultado
