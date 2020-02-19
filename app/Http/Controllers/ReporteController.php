@@ -110,11 +110,13 @@ class ReporteController extends Controller
                 DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total')
             )->join('marcador','operador.dni','=','marcador.codigo_operador')
             ->where(DB::raw("DATE_FORMAT(marcador.ingreso, '%Y-%m-%d')"),$request->fecha)
-            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%")
+            ->where('marcador.turno',$request->turno);
             for ($i=1; $i < count($texto_busqueda); $i++) { 
                 $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
             }
             $resultado=$resultado->groupBy('operador.dni')
+            // ->get();
             ->paginate(8);
         return response()->json($resultado);
     }

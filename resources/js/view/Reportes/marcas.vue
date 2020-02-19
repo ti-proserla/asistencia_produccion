@@ -9,6 +9,10 @@
                     <div class="col-sm-6 col-lg-3">
                         <input type="date" v-model="fecha" class="form-control">
                     </div>
+                    <select v-model="turno">
+                        <option value="1">Turno 1</option>
+                        <option value="2">Turno 2</option>
+                    </select>    
                     <div class="col-lg-1">
                         <label for="" class="my-2"><b>Nombre:</b></label>
                     </div>
@@ -108,7 +112,7 @@ export default {
         },
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/reporte-marcas?fecha='+this.fecha+'&search='+this.search+'&page='+n)
+            axios.get(url_base+'/reporte-marcas?turno='+this.turno+'&fecha='+this.fecha+'&search='+this.search+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })
