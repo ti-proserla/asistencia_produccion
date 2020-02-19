@@ -89,6 +89,7 @@ class MarcadorController extends Controller
                     $hora_fecha_actual>$hora_fecha_limite
                 )
             ) {
+                $newMarcador=$marcador;
                 $marcador=new Marcador();
                 $marcador->codigo_operador=$operador->dni;
                 $marcador->ingreso=Carbon::now();
@@ -96,6 +97,7 @@ class MarcadorController extends Controller
                 $marcador->fundo_id=$request->fundo_id;
                 $marcador->cuenta_id=$request->user_id;
                 $marcador->turno=$request->turno;
+                $marcador->fecha_ref=$newMarcador->fecha_ref;
                 $marcador->save();
             }else{
                 $marcador->salida=Carbon::now();
@@ -113,6 +115,7 @@ class MarcadorController extends Controller
             $marcador->fundo_id=$request->fundo_id;
             $marcador->cuenta_id=$request->user_id;
             $marcador->turno=$request->turno;
+            $marcador->fecha_ref=Carbon::now();
             $marcador->save();
         }
         return response()->json([
