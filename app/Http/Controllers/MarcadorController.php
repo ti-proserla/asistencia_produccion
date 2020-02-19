@@ -18,6 +18,7 @@ class MarcadorController extends Controller
     public function index(Request $request){
         $marcas=Marcador::where('codigo_operador',$request->codigo_operador)
             ->where(DB::raw('DATE(fecha_ref)'),$request->fecha)
+            ->where('turno',$request->turno)
             ->get();
         return response()->json($marcas);
     }

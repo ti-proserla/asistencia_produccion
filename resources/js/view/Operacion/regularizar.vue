@@ -200,7 +200,7 @@ export default {
             });
         },
         buscar(){
-            axios.get(url_base+'/marcador?codigo_operador='+this.hola.dni+'&fecha='+this.fecha)
+            axios.get(url_base+'/marcador?codigo_operador='+this.hola.dni+'&fecha='+this.fecha+'&turno='+this.turno)
             .then(response => {
                 this.cancelar();
                 this.marcas=response.data;
