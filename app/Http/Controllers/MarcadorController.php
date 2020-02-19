@@ -45,7 +45,7 @@ class MarcadorController extends Controller
         
         $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 17 HOUR)'))
+            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 14 HOUR)'))
             ->where('turno',$request->turno)
             ->orderBy('ingreso','DESC')
             ->first();
