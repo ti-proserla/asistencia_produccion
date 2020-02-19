@@ -213,10 +213,29 @@ export default {
             });
         },
         eliminar(id){
-            axios.get(url_base+'/marcador/remove?codigo_operador='+this.hola.dni+'&marcador_id='+id)
-            .then(response => {
-                this.buscar();
+            swal({
+                title: "", 
+                text: "¿Desea Eliminar Par de Marcas?", 
+                icon: "warning",
+                buttons: true,
+            }).then((value) => {
+                if(value){
+                    axios.get(url_base+'/marcador/remove?codigo_operador='+this.hola.dni+'&marcador_id='+id)
+                    .then(response => {
+                        var respuesta=response.data;
+                        switch (respuesta.status) {
+                            case "OK":
+                                swal("","Marca Eliminada","success")
+                                this.buscar();
+                                break;
+                        }
+                    });
+                }else{
+                    this.buscar();
+                }
             });
+
+
         },
         cancelar(){
             this.marca_edit_index=-1;
