@@ -89,6 +89,7 @@ export default {
             },
             selectPage: 1,
             search: '',
+            turno: 1
         }
     },
     mounted() {
@@ -96,7 +97,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/marcas-tuno/'+this.fecha;
+            return url_base+'/marcas-tuno/'+this.fecha+'/'+this.turno;
         }
     
     },

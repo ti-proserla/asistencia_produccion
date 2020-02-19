@@ -78,8 +78,8 @@ Route::get('/horas-semana/{datos}', function ($datos) {
 // function ($anio,$semana,$planilla_id,$fundo_id) {
 //     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
 // });
-Route::get('/marcas-tuno/{fecha}', function ($fecha) {
-    return Excel::download(new MarcasTurnoTrabajadorExport($fecha), "marcas-turno-$fecha.xlsx");
+Route::get('/marcas-tuno/{fecha}/{turno}', function ($fecha,$turno) {
+    return Excel::download(new MarcasTurnoTrabajadorExport($fecha,$turno), "marcas-turno-$fecha-$turno.xlsx");
 });
 
 // use Carbon\Carbon;

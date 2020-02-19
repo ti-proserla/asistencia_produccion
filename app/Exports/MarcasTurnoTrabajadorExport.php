@@ -23,9 +23,10 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
     */
     private $fecha;
  
-    public function __construct(String $fecha)
+    public function __construct(String $fecha,$turno)
     {
         $this->fecha = $fecha;
+        $this->turno = $turno;
     }
 
     public function columnFormats(): array
@@ -44,7 +45,10 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
             DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),
             DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total')
         )->join('marcador','operador.dni','=','marcador.codigo_operador')
-        ->where(DB::raw("DATE_FORMAT(marcador.ingreso, '%Y-%m-%d')"),$this->fecha)->groupBy('operador.dni')->get();
+        // ->where(DB::raw("fecha_ref"),$request->fecha)
+        ->where(DB::raw("fecha_ref"),$this->fecha)
+        ->where('marcador.turno',$this->turno)       
+        ->groupBy('operador.dni')->get();
         return view('excel.marcastrabajador', [
             'operadores' => $resultado
         ]);
