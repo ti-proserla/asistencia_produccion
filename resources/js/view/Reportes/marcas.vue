@@ -6,26 +6,34 @@
             </div>
             <div class="card-body">
                 <div class="row form-group">
-                    <div class="col-sm-6 col-lg-3">
+                    <div class="col-sm-6 col-lg-3 form-group">
+                        <label for="">Día:</label>
                         <input type="date" v-model="fecha" class="form-control">
                     </div>
-                    <select v-model="turno">
-                        <option value="1">Turno 1</option>
-                        <option value="2">Turno 2</option>
-                    </select>    
-                    <div class="col-lg-1">
-                        <label for="" class="my-2"><b>Nombre:</b></label>
+                    <div class="col-lg-2 form-group">
+                        <label for="">Turno:</label>
+                        <select v-model="turno" class="form-control">
+                            <option value="1">Turno 1</option>
+                            <option value="2">Turno 2</option>
+                        </select>    
                     </div>
-                    <div class="col-lg-4 form-group">
+                    <div class="form-group col-5 col-lg-3">
+                        <label for="" >Planilla:</label>
+                        <select v-model="planilla_id" class="form-control">
+                            <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 form-group">
+                        <label>Nombre:</label>
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
-                    <div class="col-sm-6 col-lg-2">
-                        <button @click="listar(1)" class="btn btn-info">
+                    <div class="col-sm-6 col-lg-2 form-group">
+                        <button @click="listar(1)" class="btn btn-info mt-3">
                             Buscar
                         </button>
                     </div>
                     <div class="col-sm-6 col-lg-2">
-                        <a :href="url" class="btn btn-success">Excel</a>
+                        <a :href="url" class="btn btn-success mt-3">Excel</a>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -89,11 +97,14 @@ export default {
             },
             selectPage: 1,
             search: '',
-            turno: 1
+            turno: 1,
+            planillas:[],
+            planilla_id: null
         }
     },
     mounted() {
         this.listarTurnos();
+        this.listarPlanilla();
     },
     computed: {
         url(){
@@ -102,6 +113,14 @@ export default {
     
     },
     methods: {
+        listarPlanilla(n=this.table.from){
+            axios.get(url_base+'/planilla?all=true')
+            .then(response => {
+                this.planillas = response.data;
+                this.planilla_id=this.planillas[0].id;
+
+            })
+        },
         listarTurnos(){
             axios.get(url_base+'/turno?all=true')
             .then(response => {

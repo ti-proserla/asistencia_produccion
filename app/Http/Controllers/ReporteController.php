@@ -44,41 +44,79 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
+        $raw_query=DB::table('marcador')->select(
+            DB::raw("SELECT 	marcador.codigo_operador,
+                                CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
+                                DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
+                                T.area_id codActividad,
+                                T.labor_id codLabor,
+                                T.proceso_id codProceso,
+                                labor.nom_labor,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
+                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo
+                    FROM 		marcador
+                                LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
+                                    on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
+                                LEFT JOIN labor on labor.id = T.labor_id
+                                INNER JOIN operador on operador.dni = marcador.codigo_operador
+                    WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '2020-08'
+                                AND planilla_id=1
+                    GROUP BY 	marcador.codigo_operador, codLabor"));
+        $totalCount = count($raw_query);
+        $perPage = $request->input("per_page", 10);
+        $page = $request->input("page", 1);
+        $skip = $page * $perPage;
+        $take=10;
+        if($take < 1) { $take = 1; }
+        if($skip < 0) { $skip = 0; }
+
+        $results = $raw_query
+                ->take($perPage)
+                ->skip($skip)
+                ->get();
+
+        $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $totalCount, $take, $page);
+
         // dd($texto_busqueda);
-        $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
-            ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
-                $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
-                $join->on(DB::raw("DATE(T.fecha)"), '=',DB::raw("DATE(marcador.ingreso)"));
-            })
-            ->leftJoin('labor','labor.id','=','T.labor_id')
-            ->selectRaw(
-                "operador.dni,".
-                "marcador.fundo_id,".
-                "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
-                "DATE_FORMAT(ingreso, '%Y%m-%v') periodo,".
-                "T.area_id codActividad,".
-                "T.labor_id codLabor,".
-                "T.proceso_id codProceso,".
-                "labor.nom_labor,".
-                "ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=2 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Lunes,".
-                " ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=3 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Martes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=4 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Miercoles, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=5 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Jueves, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=6 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Viernes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=7 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Sabado,ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=1 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Domingo"
-            )
-            ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
-            ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
-            ->where(DB::raw('YEAR(ingreso)'),$request->year)
-            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
-            // ->where('marcador.fundo_id',$request->fundo_id);
-            for ($i=1; $i < count($texto_busqueda); $i++) { 
-                $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
-            }
-            if ($request->planilla_id==null||$request->planilla_id=="") {
-                $resultado=$resultado->whereNull('operador.planilla_id');
-            }else{
-                $resultado=$resultado->where('planilla_id',$request->planilla_id);
-            }
+        // $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
+        //     ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
+        //         $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
+        //         $join->on(DB::raw("DATE(T.fecha)"), '=',DB::raw("DATE(marcador.ingreso)"));
+        //     })
+        //     ->leftJoin('labor','labor.id','=','T.labor_id')
+        //     ->selectRaw(
+        //         "operador.dni,".
+        //         "marcador.fundo_id,".
+        //         "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
+        //         "DATE_FORMAT(ingreso, '%Y%m-%v') periodo,".
+        //         "T.area_id codActividad,".
+        //         "T.labor_id codLabor,".
+        //         "T.proceso_id codProceso,".
+        //         "labor.nom_labor,".
+        //         "ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=2 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Lunes,".
+        //         " ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=3 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Martes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=4 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Miercoles, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=5 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Jueves, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=6 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Viernes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=7 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Sabado,ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=1 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Domingo"
+        //     )
+        //     ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
+        //     ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
+        //     ->where(DB::raw('YEAR(ingreso)'),$request->year)
+        //     ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
+        //     for ($i=1; $i < count($texto_busqueda); $i++) { 
+        //         $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
+        //     }
+        //     if ($request->planilla_id==null||$request->planilla_id=="") {
+        //         $resultado=$resultado->whereNull('operador.planilla_id');
+        //     }else{
+        //         $resultado=$resultado->where('planilla_id',$request->planilla_id);
+        //     }
             // dd($resultado->toSql());
-            $resultado=$resultado->paginate(15);
-        return response()->json($resultado);
+            // $resultado=$resultado->toSql();
+            // $resultado=$resultado->paginate(15);
+        return response()->json($paginator);
     }
     public function pendientes(Request $request){
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');

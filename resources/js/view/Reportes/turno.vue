@@ -6,27 +6,21 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-5 col-lg-1">
-                        <label for="" class="my-2"><b>Año/Semana:</b></label>
+                    <div class="form-group col-5 col-lg-3">
+                        <label>Año/Semana:</label>
+                        <div class="row">
+                            <div class="col-7">
+                                <input type="number" v-model="consulta.year" class="form-control">
+                            </div>
+                            <div class="col-5">
+                                <input type="number" v-model="consulta.week" class="form-control">
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-4 col-lg-1">
-                        <input type="number" v-model="consulta.year" class="form-control">
-                    </div>
-                    <div class="col-3 col-lg-1">
-                        <input type="number" v-model="consulta.week" class="form-control">
-                    </div>
-                    <div class="form-group col-5 col-lg-1">
-                        <label for="" class="my-2"><b>Planilla:</b></label>
-                    </div>
-                    <div class="col-7 col-lg-2">
+                    <div class="form-group col-5 col-lg-3">
+                        <label>Planilla:</label>
                         <select v-model="consulta.planilla_id" class="form-control">
                             <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
-                        </select>
-                    </div>
-                    <div class="col-7 col-lg-3">
-                        <select v-model="consulta.fundo_id" class="form-control">
-                            <option value="">Seleccionar Fundo</option>
-                            <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                         </select>
                     </div>
                     <div class="form-group col-12 col-lg-3">
