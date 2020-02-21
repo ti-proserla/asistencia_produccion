@@ -7,6 +7,8 @@ use App\Model\Operador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Exports\HorasSemanaTrabajadorExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteController extends Controller
 {
@@ -44,6 +46,12 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+        $week=str_pad($request->week, 2, "0", STR_PAD_LEFT);
+        $year=$request->year;
         $planilla_id=$request->planilla_id;
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
@@ -64,57 +72,28 @@ class ReporteController extends Controller
                             on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
-                WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '2020-08'
-                        AND planilla_id=$planilla_id
+                WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '$year-$week'
+                        AND planilla_id=$planilla_id $query_busqueda
                 GROUP BY 	marcador.codigo_operador, codLabor";
-        $per_page=15;
-        $current_page=$request->page;
-        $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"))[0]->conteo;
-        $last_page=(int)ceil($total/$per_page);
-        $offset=($current_page-1)*$per_page;
         
-        // dd($count);
-        $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"));
-        return response()->json([
-                "current_page"  =>  $current_page,
-                "data"          =>  $raw_query,
-                "total"         =>  $total,
-                "last_page"     =>  $last_page
-            ]);
-        // $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
-        //     ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
-        //         $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
-        //         $join->on(DB::raw("DATE(T.fecha)"), '=',DB::raw("DATE(marcador.ingreso)"));
-        //     })
-        //     ->leftJoin('labor','labor.id','=','T.labor_id')
-        //     ->selectRaw(
-        //         "operador.dni,".
-        //         "marcador.fundo_id,".
-        //         "CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,".
-        //         "DATE_FORMAT(ingreso, '%Y%m-%v') periodo,".
-        //         "T.area_id codActividad,".
-        //         "T.labor_id codLabor,".
-        //         "T.proceso_id codProceso,".
-        //         "labor.nom_labor,".
-        //         "ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=2 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Lunes,".
-        //         " ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=3 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Martes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=4 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Miercoles, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=5 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Jueves, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=6 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Viernes, ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=7 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Sabado,ROUND(SUM( CASE WHEN DAYOFWEEK(ingreso)=1 THEN (TIMESTAMPDIFF(MINUTE,ingreso,IF(salida is null,ingreso,salida))/60) ELSE 0 END),2) as Domingo"
-        //     )
-        //     ->groupBy('dni','operador.nom_operador','operador.ape_operador',DB::raw('DATE(ingreso)'))
-        //     ->where(DB::raw('WEEK(ingreso,3)'),$request->week)
-        //     ->where(DB::raw('YEAR(ingreso)'),$request->year)
-        //     ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%");
-        //     for ($i=1; $i < count($texto_busqueda); $i++) { 
-        //         $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
-        //     }
-        //     if ($request->planilla_id==null||$request->planilla_id=="") {
-        //         $resultado=$resultado->whereNull('operador.planilla_id');
-        //     }else{
-        //         $resultado=$resultado->where('planilla_id',$request->planilla_id);
-        //     }
-            // dd($resultado->toSql());
-            // $resultado=$resultado->toSql();
-            // $resultado=$resultado->paginate(15);
-        return response()->json($paginator);
+        if ($request->has('excel')) {
+            $raw_query=DB::select(DB::raw("$query"));
+            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "horas-semana-$year-$week.xlsx");
+        }else{
+            $per_page=15;
+            $current_page=$request->page;
+            $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"))[0]->conteo;
+            $last_page=(int)ceil($total/$per_page);
+            $offset=($current_page-1)*$per_page;
+            
+            $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"));
+            return response()->json([
+                    "current_page"  =>  $current_page,
+                    "data"          =>  $raw_query,
+                    "total"         =>  $total,
+                    "last_page"     =>  $last_page
+                ]);
+        }
     }
     public function pendientes(Request $request){
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');

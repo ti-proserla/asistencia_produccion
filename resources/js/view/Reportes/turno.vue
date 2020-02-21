@@ -122,7 +122,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/horas-semana/'+this.consulta.year+'-'+this.consulta.week+'-'+this.consulta.planilla_id+'-'+this.consulta.fundo_id;
+            return url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&planilla_id='+this.consulta.planilla_id+'&excel';
         }
     },
     mounted() {
