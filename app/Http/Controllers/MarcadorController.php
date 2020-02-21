@@ -45,11 +45,21 @@ class MarcadorController extends Controller
         }
         
         $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
+        $hora_fecha_actual=Carbon::now();
+        $hora_fecha_limite=Carbon::now()->startOfDay()->addHours($salida);
+        $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
+
+        $fecha_consulta=Carbon::now()->format('Y-m-d');
+        if ($hora_fecha_actual<$hora_fecha_limite&&$request->turno==2) {
+            $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
+        }
+        
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 14 HOUR)'))
+            ->where('fecha_ref',$fecha_consulta)
             ->where('turno',$request->turno)
             ->orderBy('ingreso','DESC')
             ->first();
+        // dd($marcador);
 
         /**
          * Marca Anterior Encontrada ?
@@ -78,10 +88,7 @@ class MarcadorController extends Controller
                     ]);
             }
 
-            $hora_fecha_actual=Carbon::now();
-            $hora_fecha_limite=Carbon::now()->startOfDay()->addHours($salida);
-            $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
-
+            
             if ( 
                 $marcador->salida!=null||
                 (
