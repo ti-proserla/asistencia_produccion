@@ -44,7 +44,7 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
-
+        $planilla_id=$request->planilla_id;
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
                         DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
@@ -65,7 +65,7 @@ class ReporteController extends Controller
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
                 WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '2020-08'
-                        AND planilla_id=2
+                        AND planilla_id=$planilla_id
                 GROUP BY 	marcador.codigo_operador, codLabor";
         $per_page=15;
         $current_page=$request->page;
