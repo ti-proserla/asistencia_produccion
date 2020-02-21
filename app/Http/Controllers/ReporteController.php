@@ -44,45 +44,43 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
-        $raw_query=DB::table('marcador')->select(
-            DB::raw("SELECT 	marcador.codigo_operador,
-                                CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
-                                DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
-                                T.area_id codActividad,
-                                T.labor_id codLabor,
-                                T.proceso_id codProceso,
-                                labor.nom_labor,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
-                                ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo
-                    FROM 		marcador
-                                LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
-                                    on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
-                                LEFT JOIN labor on labor.id = T.labor_id
-                                INNER JOIN operador on operador.dni = marcador.codigo_operador
-                    WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '2020-08'
-                                AND planilla_id=1
-                    GROUP BY 	marcador.codigo_operador, codLabor"));
-        $totalCount = count($raw_query);
-        $perPage = $request->input("per_page", 10);
-        $page = $request->input("page", 1);
-        $skip = $page * $perPage;
-        $take=10;
-        if($take < 1) { $take = 1; }
-        if($skip < 0) { $skip = 0; }
 
-        $results = $raw_query
-                ->take($perPage)
-                ->skip($skip)
-                ->get();
-
-        $paginator = new \Illuminate\Pagination\LengthAwarePaginator($results, $totalCount, $take, $page);
-
-        // dd($texto_busqueda);
+        $query="SELECT 	marcador.codigo_operador dni,
+                        CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
+                        DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
+                        T.area_id codActividad,
+                        T.labor_id codLabor,
+                        T.proceso_id codProceso,
+                        labor.nom_labor,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo
+                FROM 		marcador
+                        LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
+                            on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
+                        LEFT JOIN labor on labor.id = T.labor_id
+                        INNER JOIN operador on operador.dni = marcador.codigo_operador
+                WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '2020-08'
+                        AND planilla_id=2
+                GROUP BY 	marcador.codigo_operador, codLabor";
+        $per_page=15;
+        $current_page=$request->page;
+        $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"))[0]->conteo;
+        $last_page=(int)ceil($total/$per_page);
+        $offset=($current_page-1)*$per_page;
+        
+        // dd($count);
+        $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"));
+        return response()->json([
+                "current_page"  =>  $current_page,
+                "data"          =>  $raw_query,
+                "total"         =>  $total,
+                "last_page"     =>  $last_page
+            ]);
         // $resultado=Operador::join('marcador','operador.dni','=','marcador.codigo_operador')
         //     ->leftJoin(DB::raw('(SELECT * FROM tareo GROUP BY codigo_operador,DATE(tareo.fecha)) AS T'),function($join){
         //         $join->on('T.codigo_operador', '=', 'marcador.codigo_operador');
