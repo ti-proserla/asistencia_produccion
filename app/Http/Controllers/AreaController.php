@@ -20,7 +20,7 @@ class AreaController extends Controller
     {
         $Areas=Area::select('nom_area','id','estado');
         if ($request->all==true) {
-            $Areas=$Areas->get();
+            $Areas=$Areas::where('estado','0')->get();
         }else{
             $Areas=$Areas->paginate(8);
         }
