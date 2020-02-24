@@ -31,6 +31,7 @@ class AreaController extends Controller
      */
     public function labor(Request $request){
         $areas=Area::with('labores')
+            ->where('estado','0')
             ->select('nom_area','id')
             ->get();
         
