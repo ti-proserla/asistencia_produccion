@@ -55,10 +55,10 @@ class ReporteController extends Controller
         $planilla_id=$request->planilla_id;
 
         $query_turno="";
-        if ($request->turno!=null) {
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
             $query_turno="AND turno=".$request->turno;
         }
-        dd($query_turno);
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
                         DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
@@ -79,7 +79,8 @@ class ReporteController extends Controller
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
                 WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '$year-$week'
-                        AND planilla_id=$planilla_id $query_busqueda 
+                        AND planilla_id=$planilla_id $query_busqueda
+                        $query_turno 
                 GROUP BY 	marcador.codigo_operador, codLabor";
         
         if ($request->has('excel')) {

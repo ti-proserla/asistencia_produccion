@@ -17,6 +17,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="col-lg-2 form-group">
+                        <label for="">Turno:</label>
+                        <select v-model="consulta.turno" class="form-control">
+                            <option value=null>Todos</option>
+                            <option value="1">Turno 1</option>
+                            <option value="2">Turno 2</option>
+                        </select>    
+                    </div>
                     <div class="form-group col-5 col-lg-3">
                         <label>Planilla:</label>
                         <select v-model="consulta.planilla_id" class="form-control">
@@ -111,7 +119,8 @@ export default {
                 year: moment().format('YYYY'),
                 week: moment().week(),
                 planilla_id: "",
-                fundo_id: ""
+                fundo_id: "",
+                turno: null
             },
             search: '',
             table:{
@@ -122,7 +131,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&planilla_id='+this.consulta.planilla_id+'&excel';
+            return url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
         }
     },
     mounted() {
@@ -132,7 +141,7 @@ export default {
     methods: {
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&page='+n)
+            axios.get(url_base+'/reporte-semana?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&turno='+this.consulta.turno+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })
