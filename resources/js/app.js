@@ -196,6 +196,7 @@ var routes =[
         component: require('./view/capturador.vue').default,
         beforeEnter: auth
     },
+    sas,
     // { 
     //     path: '/scanner', 
     //     component: require('./view/scanner.vue').default,

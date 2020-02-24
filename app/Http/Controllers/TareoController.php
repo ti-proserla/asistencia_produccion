@@ -31,7 +31,7 @@ class TareoController extends Controller
             $operador->planilla_id=1;
             $operador->save();
         }
-        $fecha_hoy=Carbon::now()->format('Y-m-d');
+        $fecha_hoy=Carbon::parse($request->fecha)->format('Y-m-d');
         $marcador=Marcador::where('codigo_operador',$operador->dni)
             ->where(DB::raw("DATE(ingreso)"),$fecha_hoy)
             ->first();
@@ -50,7 +50,7 @@ class TareoController extends Controller
         $tareo->area_id=$request->area_id;
         $tareo->fundo_id=$request->fundo_id;
         $tareo->cuenta_id=$request->user_id;
-        $tareo->fecha=Carbon::now();
+        $tareo->fecha=$fecha_hoy;
         $tareo->save();
         return response()->json([
             "status"=> "OK",
