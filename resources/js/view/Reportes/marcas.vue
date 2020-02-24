@@ -42,25 +42,31 @@
                             <tr>
                                 <th>DNI</th>
                                 <th>Nombre y Apellidos</th>
+                                <th>Cod.Actividad</th>
+                                <th>Cod.Labor</th>
+                                <th>Cod.Proceso</th>
+                                <th>Nom.Labor</th>
                                 <th>Marca 1</th>
                                 <th>Marca 2</th>
                                 <th>Marca 3</th>
                                 <th>Marca 4</th>
-                                <th>Marca 5</th>
-                                <th>Marca 6</th>
+                                <!-- <th>Marca 5</th>
+                                <th>Marca 6</th> -->
                                 <th>Total</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in table.data">
                                 <td>{{ item.dni }}</td>
-                                <td>{{ item.nom_operador }} {{ item.ape_operador }}</td>
+                                <td>{{ item.NombreApellido }}</td>
+                                <td>{{ item.codActividad }}</td>
+                                <td>{{ item.codLabor }}</td>
+                                <td>{{ item.codProceso }}</td>
+                                <td>{{ item.nom_labor }}</td>
                                 <td>{{ item.marcas.split('@')[0]}}</td>
                                 <td>{{ item.marcas.split('@')[1]}}</td>
                                 <td>{{ item.marcas.split('@')[2]}}</td>
                                 <td>{{ item.marcas.split('@')[3]}}</td>
-                                <td>{{ item.marcas.split('@')[4]}}</td>
-                                <td>{{ item.marcas.split('@')[5]}}</td>
                                 <td>{{ item.total}}</td>
                             </tr>
                         </tbody>
@@ -108,7 +114,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/marcas-tuno/'+this.fecha+'/'+this.turno;
+            return url_base+'/reporte-marcas?turno='+this.turno+'&fecha='+this.fecha+'&planilla_id='+this.planilla_id+'&excel';
         }
     
     },
@@ -132,7 +138,7 @@ export default {
         },
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/reporte-marcas?turno='+this.turno+'&fecha='+this.fecha+'&search='+this.search+'&page='+n)
+            axios.get(url_base+'/reporte-marcas?turno='+this.turno+'&fecha='+this.fecha+'&search='+this.search+'&planilla_id='+this.planilla_id+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })

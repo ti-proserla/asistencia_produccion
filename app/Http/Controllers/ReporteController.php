@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Operador;
+use App\Model\Planilla;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -112,7 +113,7 @@ class ReporteController extends Controller
             ->groupBy('operador.dni')
             ->get();
         // dd($resultado);
-            return response()->json($resultado);
+        return response()->json($resultado);
     }
         
     public function marcas(Request $request){
@@ -123,25 +124,68 @@ class ReporteController extends Controller
          * Genera un array de palabras de busqueda
          */
         $texto_busqueda=explode(" ",$request->search);
-
-        $resultado=Operador::select(
-                'dni',
-                'nom_operador',
-                'ape_operador',
-                DB::raw('GROUP_CONCAT(CONCAT_WS("@",marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),
-                DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total')
-            )->join('marcador','operador.dni','=','marcador.codigo_operador')
-            ->where(DB::raw("fecha_ref"),$request->fecha)
-            ->whereNotNull('ingreso')
-            ->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[0]."%")
-            ->where('marcador.turno',$request->turno);
-            for ($i=1; $i < count($texto_busqueda); $i++) { 
-                $resultado=$resultado->where(DB::raw("CONCAT(dni,' ',nom_operador,' ',ape_operador)"),"like","%".$texto_busqueda[$i]."%");
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+        
+        $query="SELECT 	dni,
+                        CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
+                        DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,	
+                        T.area_id codActividad,
+                        T.labor_id codLabor,
+                        T.proceso_id codProceso,
+                        labor.nom_labor,
+                        GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
+                        ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo 
+                FROM	operador inner join marcador on operador.dni = marcador.codigo_operador
+                        LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
+                        LEFT JOIN labor on labor.id = T.labor_id
+                                on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref 
+                where 	fecha_ref = ?  and ingreso is not null 
+                        $query_busqueda 
+                        and operador.planilla_id = ? 
+                        and marcador.turno = ? 
+                group by operador.dni";
+            
+            if ($request->has('excel')) {
+                $raw_query=DB::select(DB::raw("$query"),[
+                    $request->fecha,$request->planilla_id,$request->turno        
+                    ]);
+                $turno=$request->turno;
+                $fecha=$request->fecha;
+                $planilla=Planilla::where('id',$request->planilla_id)->first();
+                $nom_planilla=$planilla->nom_planilla;
+                return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "turno-$turno-dia-$fecha-$nom_planilla.xlsx");
+            }else{
+                /**
+                 * Paginacion
+                 */
+                $per_page=15;
+                $current_page=$request->page;
+                $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"),[
+                        $request->fecha,$request->planilla_id,$request->turno        
+                        ])[0]->conteo;
+                $last_page=(int)ceil($total/$per_page);
+                $offset=($current_page-1)*$per_page;
+    
+                $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"),[
+                    $request->fecha,$request->planilla_id,$request->turno
+                    ]);
+                return response()->json([
+                        "current_page"  =>  $current_page,
+                        "data"          =>  $raw_query,
+                        "total"         =>  $total,
+                        "last_page"     =>  $last_page
+                    ]);
             }
-            $resultado=$resultado->groupBy('operador.dni')
-            // ->get();
-            ->paginate(8);
-        return response()->json($resultado);
     }
 
     public function marcasPorCodigo(Request $request,$codigo){
