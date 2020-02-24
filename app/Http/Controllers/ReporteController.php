@@ -86,7 +86,10 @@ class ReporteController extends Controller
         
         if ($request->has('excel')) {
             $raw_query=DB::select(DB::raw("$query"));
-            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "horas-semana-$year-$week.xlsx");
+            $planilla=Planilla::where('id',$request->planilla_id)->first();
+            $nom_planilla=$planilla->nom_planilla;
+            $turno=$request->turno;
+            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "turno-$turno semana-$year-$week-$nom_planilla.xlsx");
         }else{
             $per_page=15;
             $current_page=$request->page;
