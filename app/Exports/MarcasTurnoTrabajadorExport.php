@@ -45,7 +45,7 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
             'dni',
             'nom_operador',
             'ape_operador',
-            DB::raw('GROUP_CONCAT(CONCAT_WS("@",DATE_FORMAT(marcador.ingreso, "%Y/%M/%d %H:%i"),DATE_FORMAT(marcador.salida, "%Y/%M/%d %H:%i")) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),
+            DB::raw('GROUP_CONCAT(CONCAT_WS("@",DATE_FORMAT(marcador.ingreso, "%Y/%m/%d %H:%i"),DATE_FORMAT(marcador.salida, "%Y/%m/%d %H:%i")) ORDER BY marcador.ingreso ASC SEPARATOR "@") AS marcas'),
             DB::raw('ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total')
         )->join('marcador','operador.dni','=','marcador.codigo_operador')
         // ->where(DB::raw("fecha_ref"),$request->fecha)
