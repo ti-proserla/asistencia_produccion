@@ -22,11 +22,14 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
     * @return \Illuminate\Support\Collection
     */
     private $fecha;
+    private $turno;
+    private $planilla;
  
-    public function __construct(String $fecha,$turno)
+    public function __construct(String $fecha,$turno,$planilla)
     {
         $this->fecha = $fecha;
         $this->turno = $turno;
+        $this->planilla = $planilla;
     }
 
     public function columnFormats(): array
@@ -48,6 +51,7 @@ class MarcasTurnoTrabajadorExport implements FromView, WithColumnFormatting
         // ->where(DB::raw("fecha_ref"),$request->fecha)
         ->where(DB::raw("fecha_ref"),$this->fecha)
         ->where('marcador.turno',$this->turno) 
+        ->where('planilla_id',$this->planilla) 
         ->whereNotNull('ingreso')      
         ->groupBy('operador.dni')->get();
         return view('excel.marcastrabajador', [
