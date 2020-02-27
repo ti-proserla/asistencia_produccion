@@ -85,6 +85,8 @@ Route::get('/marcas-tuno/{fecha}/{turno}/{planilla}', function ($fecha,$turno,$p
     return Excel::download(new MarcasTurnoTrabajadorExport($fecha,$turno,$planilla), "marcas-turno-$fecha-$turno-$planilla.xlsx");
 });
 
+Route::get('rpt/horas_nocturnas','ReporteController@horas_nocturnas');
+
 // use Carbon\Carbon;
 Route::get('/producto', function () {
     // dd(Carbon::now()->addMinutes(45)->format('H:i'));

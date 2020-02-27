@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\HorasSemanaTrabajadorExport;
+use App\Exports\HorasNocturnasExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteController extends Controller
@@ -224,4 +225,83 @@ class ReporteController extends Controller
                     , [$request->fecha,$request->fecha]);
         return response()->json($datos);
     }
+
+    public function horas_nocturnas(Request $request){
+
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        $texto_busqueda=explode(" ",$request->search);
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+        /**
+         * YYYY-MM
+         */
+        $fecha=$request->year.'-'.str_pad($request->week, 2, "0", STR_PAD_LEFT);
+        
+
+        $query = "SELECT	O.dni,
+                            CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
+                            T.area_id codActividad,
+                            T.labor_id codLabor,
+                            T.proceso_id codProceso,
+                            labor.nom_labor,
+                            M.marcas,
+                            M.h_trabajadas,
+                            M.fecha_ref,
+                            ROUND( (	
+                                    (TIME_TO_SEC(s) - TIME_TO_SEC(i))
+                                    + TIME_TO_SEC( IF(i < '22:00', IF( '06:00' < i , i , '06:00' ) , '22:00' ) ) 
+                                    - TIME_TO_SEC( IF(s < '22:00', IF( '06:00' < s , s , '06:00' ) , '22:00' ) )
+                                    + IF(s<i, TIME_TO_SEC('24:00') - (TIME_TO_SEC('22:00')-TIME_TO_SEC('06:00')),0)
+                            )/3600 , 2) h_nocturnas
+                FROM (
+                        SELECT 		codigo_operador,
+                                    fecha_ref,
+                                    GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
+                                    DATE_FORMAT(MIN(ingreso),'%H:%i') i,
+                                    DATE_FORMAT(MAX(salida),'%H:%i') s,
+                                    ROUND( SUM(IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60)) , 2) h_Trabajadas
+                        FROM 		marcador 
+                        WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = ?
+                        GROUP BY 	codigo_operador,fecha_ref
+                ) M 
+                INNER JOIN  operador O on O.dni=M.codigo_operador
+                LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
+                LEFT JOIN labor on labor.id = T.labor_id
+                WHERE       O.planilla_id=?
+                            $query_busqueda
+                HAVING      h_nocturnas > 0
+                ";
+        if ($request->has('excel')) {
+            $raw_query=DB::select(DB::raw("$query"),[$fecha,$request->planilla_id]);
+            $planilla=Planilla::where('id',$request->planilla_id)->first();
+            $nom_planilla=$planilla->nom_planilla;
+            return Excel::download(new HorasNocturnasExport($raw_query), "rpt-horas-nocturnas-$fecha-$nom_planilla.xlsx");
+        }else{
+            $datos=$this->paginate($query,[$fecha,$request->planilla_id],15,$request->page);
+        }
+        return response()->json($datos);
+    }
+
+    public function paginate($query,$param,$per_page = 10,$page = 1){
+        $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"),$param)[0]->conteo;
+        $last_page=(int)ceil($total/$per_page);
+        $offset=($page-1)*$per_page;
+        
+        $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"),$param);
+        return [
+                "current_page"  =>  $page,
+                "data"          =>  $raw_query,
+                "total"         =>  $total,
+                "last_page"     =>  $last_page
+            ];
+    }
+
 }
+
