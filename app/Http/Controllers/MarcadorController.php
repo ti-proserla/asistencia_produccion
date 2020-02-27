@@ -139,17 +139,17 @@ class MarcadorController extends Controller
         $marcador=Marcador::where('id',$id)->first();
         $fecha_ref=$marcador->fecha_ref;
         $fecha_siguiente=Carbon::parse($fecha_ref)->addDay()->format("Y-m-d");
-        dd($fecha_ref,$fecha_siguiente);
-        /**
-         * Condicion turno
-         */
-        // $fecha_ref=Carbon::parse($fecha_ref);
-        if (Carbon::parse($fec)) {
+        // dd($fecha_ref,$fecha_siguiente);
+        // /**
+        //  * Condicion turno
+        //  */
+        // // $fecha_ref=Carbon::parse($fecha_ref);
+        // if (Carbon::parse($fec)) {
             
-        }
-        if ($marcador->turno==2) {
+        // }
+        // if ($marcador->turno==2) {
             
-        }
+        // }
         
         
         $marcador->ingreso=($request->ingreso == null||$request->salida == 'Invalid date') ? $marcador->ingreso : $request->ingreso;
