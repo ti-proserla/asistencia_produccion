@@ -20,7 +20,7 @@ class CreateMarcadorTable extends Migration
             $table->dateTime('salida')->nullable();
             $table->string('fundo_id',8)->nullable();
             $table->integer('cuenta_id')->nullable();
-            $table->integer('turno');
+            $table->integer('turno')->nullable();
         });
     }
 

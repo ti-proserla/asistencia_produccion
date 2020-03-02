@@ -40,7 +40,7 @@ class CuentaController extends Controller
         $cuenta->api_token='moment';
         $cuenta->estado='0';
         $cuenta->rol=strtoupper($request->rol);
-        $cuenta->fundo_id=strtoupper($request->fundo_id);
+        $cuenta->fundo_id=$request->fundo_id;
         $cuenta->save();
         $cuenta->api_token=$cuenta->id.'_'.Carbon::now()->format('YmdHisu');
         $cuenta->save();

@@ -19,7 +19,7 @@ class AuthToken
         if ($user==null) {
             return response()->json(["status"=>"ERROR","data"=>"Token no existe"]);
         }
-        $request->merge(['fundo_id'=>$user->fundo_id,'user_id'=>$user->id]);
+        $request->merge(['user_id'=>$user->id]);
         session(['cuenta_id' => $user->id]);
         return $next($request);
     }

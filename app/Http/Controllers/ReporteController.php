@@ -55,12 +55,24 @@ class ReporteController extends Controller
         $week=str_pad($request->week, 2, "0", STR_PAD_LEFT);
         $year=$request->year;
         $planilla_id=$request->planilla_id;
-
         $query_turno="";
         if ($request->turno==null||$request->turno=="null") {
         }else{
             $query_turno="AND turno=".$request->turno;
         }
+        
+         /**
+         * Query fundo WHERE
+         */
+        if ($request->fundo_id==null||$request->fundo_id=="null") {
+            $query_fundo="";
+        }else{
+            $fundo_id=$request->fundo_id;
+            $query_fundo="AND marcador.fundo_id='$fundo_id'";
+        }
+
+
+
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
                         DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
@@ -83,6 +95,7 @@ class ReporteController extends Controller
                 WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '$year-$week'
                         AND planilla_id=$planilla_id $query_busqueda
                         $query_turno 
+                        $query_fundo
                 GROUP BY 	marcador.codigo_operador, codLabor";
         
         if ($request->has('excel')) {
@@ -111,12 +124,13 @@ class ReporteController extends Controller
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
             ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
-            ->where(DB::raw('DATE(marcador.ingreso)'),$hoy)
-            ->where('marcador.turno',$request->turno)
-            ->whereNull('T.id')
+            ->where(DB::raw('DATE(marcador.ingreso)'),$hoy);
+        if ($request->turno!=null) {
+            $resultado=$resultado->where('marcador.turno',$request->turno);
+        }
+        $resultado=$resultado->whereNull('T.id')
             ->groupBy('operador.dni')
             ->get();
-        // dd($resultado);
         return response()->json($resultado);
     }
         
@@ -131,6 +145,24 @@ class ReporteController extends Controller
         $query_busqueda="";
         for ($i=0; $i < count($texto_busqueda); $i++) { 
             $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+
+        /**
+         * Query fundo WHERE
+         */
+        if ($request->fundo_id==null||$request->fundo_id=="null") {
+            $query_fundo="";
+        }else{
+            $fundo_id=$request->fundo_id;
+            $query_fundo="AND marcador.fundo_id='$fundo_id'";
+        }
+        /**
+         * Query turno WHERE
+         */
+        $query_turno="";
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
+            $query_turno="AND turno=".$request->turno;
         }
         
         $query="SELECT 	dni,
@@ -155,14 +187,15 @@ class ReporteController extends Controller
                                 on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref 
                 where 	fecha_ref = ?  and ingreso is not null 
                         $query_busqueda 
+                        $query_fundo
+                        $query_turno
                         and operador.planilla_id = ? 
-                        and marcador.turno = ? 
                 group by operador.dni";
             
             if ($request->has('excel')) {
                 $raw_query=DB::select(DB::raw("$query"),[
-                    $request->fecha,$request->planilla_id,$request->turno        
-                    ]);
+                    $request->fecha,$request->planilla_id       
+                ]);
                 $turno=$request->turno;
                 $fecha=$request->fecha;
                 $planilla=Planilla::where('id',$request->planilla_id)->first();
@@ -239,6 +272,17 @@ class ReporteController extends Controller
         for ($i=0; $i < count($texto_busqueda); $i++) { 
             $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
         }
+
+        /**
+         * Query fundo WHERE
+         */
+        if ($request->fundo_id==null||$request->fundo_id=="null") {
+            $query_fundo="";
+        }else{
+            $fundo_id=$request->fundo_id;
+            $query_fundo="AND fundo_id='$fundo_id'";
+        }
+
         /**
          * YYYY-MM
          */
@@ -269,6 +313,7 @@ class ReporteController extends Controller
                                     ROUND( SUM(IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60)) , 2) h_Trabajadas
                         FROM 		marcador 
                         WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = ?
+                                    $query_fundo
                         GROUP BY 	codigo_operador,fecha_ref
                 ) M 
                 INNER JOIN  operador O on O.dni=M.codigo_operador

@@ -18,7 +18,7 @@ class ProcesoController extends Controller
     public function index(Request $request)
     {
         $Procesos=Proceso::select('*');
-        if ($request->fundo_id!=null) {   
+        if ($request->fundo_id!=null) {
             $Procesos=$Procesos->where('fundo_id',$request->fundo_id);
         }
         if ($request->all==true) {
