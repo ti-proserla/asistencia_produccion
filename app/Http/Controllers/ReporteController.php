@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Operador;
 use App\Model\Planilla;
+use App\Model\Fundo;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -40,39 +41,32 @@ class ReporteController extends Controller
     }
 
     public function semana(Request $request){
-        
-        if ($request->search==null||$request->search=="null") {
-            $request->search="";
-        }
         /**
-         * Genera un array de palabras de busqueda
+         * Query Busqueda 
          */
         $texto_busqueda=explode(" ",$request->search);
         $query_busqueda="";
         for ($i=0; $i < count($texto_busqueda); $i++) { 
             $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
         }
+        /**
+         * Query YYYY-MM
+         */
         $week=str_pad($request->week, 2, "0", STR_PAD_LEFT);
         $year=$request->year;
         $planilla_id=$request->planilla_id;
-        $query_turno="";
-        if ($request->turno==null||$request->turno=="null") {
-        }else{
-            $query_turno="AND turno=".$request->turno;
-        }
-        
-         /**
-         * Query fundo WHERE
+        /**
+         * Query Turno
          */
-        if ($request->fundo_id==null||$request->fundo_id=="null") {
-            $query_fundo="";
-        }else{
-            $fundo_id=$request->fundo_id;
-            $query_fundo="AND marcador.fundo_id='$fundo_id'";
-        }
-
-
-
+        $query_turno=($request->turno!=null) ? "AND turno=".$request->turno : "";
+        /**
+         * Query fundo WHERE
+         */        
+        $query_fundo=($request->fundo_id!=null) ? "AND marcador.fundo_id='$request->fundo_id'" : "";
+        $query_fundo2=($request->fundo_id!=null) ? "WHERE tareo.fundo_id='$request->fundo_id'" : "";
+        /**
+         * Query
+         */
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
                         DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
@@ -88,12 +82,13 @@ class ReporteController extends Controller
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo
                 FROM 		marcador
-                        LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
+                        LEFT JOIN (SELECT * FROM tareo $query_fundo2 GROUP BY codigo_operador,fecha) AS T 
                             on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
                 WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = '$year-$week'
-                        AND planilla_id=$planilla_id $query_busqueda
+                        AND planilla_id=$planilla_id 
+                        $query_busqueda
                         $query_turno 
                         $query_fundo
                 GROUP BY 	marcador.codigo_operador, codLabor";
@@ -102,8 +97,16 @@ class ReporteController extends Controller
             $raw_query=DB::select(DB::raw("$query"));
             $planilla=Planilla::where('id',$request->planilla_id)->first();
             $nom_planilla=$planilla->nom_planilla;
-            $turno=$request->turno;
-            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "turno-$turno semana-$year-$week-$nom_planilla.xlsx");
+            /**
+             * Descripcion Turno
+             */
+            $descripcion_turno=($request->turno!=null) ? "-turno-".$request->turno : "" ;
+            /**
+             * Descripcion Fundo
+             */
+            $fundo=Fundo::where('id',$request->fundo_id)->first();
+            $descripcion_fundo=($fundo!=null) ? "-".$fundo->nom_fundo : "";
+            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "rpt-semana-$year-$week".$descripcion_fundo.$descripcion_turno."-$nom_planilla.xlsx");
         }else{
             $per_page=15;
             $current_page=$request->page;
@@ -125,6 +128,9 @@ class ReporteController extends Controller
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
             ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
             ->where(DB::raw('DATE(marcador.ingreso)'),$hoy);
+        if ($request->fundo_id!=null) {
+            $resultado=$resultado->where('marcador.fundo_id',$request->fundo_id);
+        }
         if ($request->turno!=null) {
             $resultado=$resultado->where('marcador.turno',$request->turno);
         }

@@ -19,7 +19,8 @@ class ProcesoController extends Controller
     {
         $Procesos=Proceso::select('*');
         if ($request->fundo_id!=null) {
-            $Procesos=$Procesos->where('fundo_id',$request->fundo_id);
+            $Procesos=$Procesos->where('fundo_id',$request->fundo_id)
+                ->orWhereNull('fundo_id');
         }
         if ($request->all==true) {
             $Procesos=$Procesos->get();
