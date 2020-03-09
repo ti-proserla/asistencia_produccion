@@ -124,8 +124,8 @@ class SincronizarController extends Controller
     }
 
     public function marcador(Request $request){
-        $rowids=[];
         // dd($request->all());
+        $rowids=[];
         for ($i=0; $i < count($request->data) ; $i++) { 
             $row=$request->data[$i];
 
@@ -135,7 +135,7 @@ class SincronizarController extends Controller
                 $operador->dni=$row['codigo_operador'];
                 $operador->nom_operador="Nuevo";
                 $operador->ape_operador="Trabajador";
-                $operador->planilla_id=null;
+                $operador->planilla_id=1;
                 $operador->save();
             }
             $marcador=new Marcador();
@@ -144,6 +144,7 @@ class SincronizarController extends Controller
             $marcador->salida=$row['salida'];
             $marcador->fundo_id=$row['fundo_id'];
             $marcador->cuenta_id=$row['cuenta_id'];
+            $marcador->fecha_ref=$row['fecha_ref'];
             $marcador->save();
             array_push($rowids,$row['rowid']);
         }

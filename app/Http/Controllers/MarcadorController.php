@@ -52,13 +52,14 @@ class MarcadorController extends Controller
         $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
 
         $fecha_consulta=Carbon::now()->format('Y-m-d');
-        if ($hora_fecha_actual<$hora_fecha_limite&&$request->turno==2) {
+        if ($hora_fecha_actual<$hora_fecha_limite) {
             $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
         }
         
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
             ->where('fecha_ref',$fecha_consulta)
             ->where('turno',$request->turno)
+            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 15 HOUR)'))
             ->orderBy('ingreso','DESC')
             ->first();
 
