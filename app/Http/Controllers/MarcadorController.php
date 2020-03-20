@@ -67,8 +67,6 @@ class MarcadorController extends Controller
         if ($consulta_1!=null) {
             $marcador=Marcador::where('id',$consulta_1->id)->first();
         }
-        // dd($marcador);
-        // dd($marcador);
 
         /**
          * Marca Anterior Encontrada ?
@@ -88,8 +86,6 @@ class MarcadorController extends Controller
             $marcador->fecha_ref=Carbon::now();
             $marcador->save();
         }else{
-
-        
 
             /**
              * Filtro por Marcado reciente
