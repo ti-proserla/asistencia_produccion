@@ -56,16 +56,40 @@ class MarcadorController extends Controller
             $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
         }
         
-        $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
+
+        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
             ->where('fecha_ref',$fecha_consulta)
-            ->where('turno',$request->turno)
-            ->orderBy('ingreso','DESC')
+            ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 15 HOUR)'))
+            ->groupBy('codigo_operador')
             ->first();
+        $marcador=null;
+        if ($consulta_1!=null) {
+            $marcador=Marcador::where('id',$consulta_1->id)->first();
+        }
+        // dd($marcador);
+        // dd($marcador);
 
         /**
          * Marca Anterior Encontrada ?
          */
-        if ($marcador!=null) {
+        if ($marcador==null) {
+            
+            /**
+             * Agregar Marca
+             */
+            $marcador=new Marcador();
+            $marcador->codigo_operador=$operador->dni;
+            $marcador->ingreso=Carbon::now();
+            $marcador->salida=null;
+            $marcador->fundo_id=$request->fundo_id;
+            $marcador->cuenta_id=$request->user_id;
+            $marcador->turno=$request->turno;
+            $marcador->fecha_ref=Carbon::now();
+            $marcador->save();
+        }else{
+
+        
 
             /**
              * Filtro por Marcado reciente
@@ -99,6 +123,7 @@ class MarcadorController extends Controller
                 )
             ) {
                 $newMarcador=$marcador;
+                
                 $marcador=new Marcador();
                 $marcador->codigo_operador=$operador->dni;
                 $marcador->ingreso=Carbon::now();
@@ -113,19 +138,6 @@ class MarcadorController extends Controller
                 $marcador->save();
             }
             
-        }else{
-            /**
-             * Agregar Marca
-             */
-            $marcador=new Marcador();
-            $marcador->codigo_operador=$operador->dni;
-            $marcador->ingreso=Carbon::now();
-            $marcador->salida=null;
-            $marcador->fundo_id=$request->fundo_id;
-            $marcador->cuenta_id=$request->user_id;
-            $marcador->turno=$request->turno;
-            $marcador->fecha_ref=Carbon::now();
-            $marcador->save();
         }
         return response()->json([
             "status"=> "OK",
