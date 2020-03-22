@@ -63,10 +63,48 @@ class MarcadorController extends Controller
             ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 15 HOUR)'))
             ->groupBy('codigo_operador')
             ->first();
+
         $marcador=null;
+
         if ($consulta_1!=null) {
             $marcador=Marcador::where('id',$consulta_1->id)->first();
         }
+
+        
+        /**
+         * Inicio de algoritmo de comprobacion de Ultima Marca.
+         */
+        $ultimo_par_marca=$marcador;
+        
+        if ($ultimo_par_marca==null) {
+            $ultimo_par_marca=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->orderBy('ingreso','DESC')
+            ->first();
+        }
+
+        if ($ultimo_par_marca!=null) { // En caso sea su primera marca en todo el sistema.
+            $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
+            $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
+
+            if(
+                ( $ultimo_par_marca->salida == null && $fecha_limite < Carbon::parse($ultimo_par_marca->ingreso) ) ||
+                ( $ultimo_par_marca->salida != null && $fecha_limite < Carbon::parse($ultimo_par_marca->salida) )
+            ) {
+                $min=0;
+                if ($ultimo_par_marca->salida == null) {
+                    $min=Carbon::parse($ultimo_par_marca->ingreso)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                }else {
+                    $min=Carbon::parse($ultimo_par_marca->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                }
+                return response()->json([
+                        "status"    =>  "ERROR",
+                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
+                    ]);
+            }
+        }
+        /**
+         * Fin de algoritmo de ultima marca.
+         */ 
 
         /**
          * Marca Anterior Encontrada ?
@@ -87,29 +125,6 @@ class MarcadorController extends Controller
             $marcador->save();
         }else{
 
-            /**
-             * Filtro por Marcado reciente
-             */
-            $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
-            $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
-
-            if(
-                ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
-                ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
-            ) {
-                $min=0;
-                if ($marcador->salida == null) {
-                    $min=Carbon::parse($marcador->ingreso)->addMinutes($tiempo_entre_marcas)->format('H:i');
-                }else {
-                    $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas)->format('H:i');
-                }
-                return response()->json([
-                        "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
-                    ]);
-            }
-
-            
             if ( 
                 $marcador->salida!=null||
                 (
@@ -183,7 +198,6 @@ class MarcadorController extends Controller
              */
             $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
             $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
-            // dd($fecha_limite);
             if(
                 ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
                 ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
@@ -199,7 +213,6 @@ class MarcadorController extends Controller
                         "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
                     ]);
             }
-
             
             if ( 
                 $marcador->salida!=null||
@@ -250,7 +263,6 @@ class MarcadorController extends Controller
         $marcador=Marcador::where('id',$id)->first();
         $fecha_ref=$marcador->fecha_ref;
         $fecha_siguiente=Carbon::parse($fecha_ref)->addDay()->format("Y-m-d");
-        // dd($fecha_ref,$fecha_siguiente);
         // /**
         //  * Condicion turno
         //  */
@@ -262,9 +274,13 @@ class MarcadorController extends Controller
             
         // }
         
+        // $fecha_consulta=Carbon::parse()->format('Y-m-d');
+        // if ($hora_fecha_actual<$hora_fecha_limite) {
+        //     $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
+        // }
         
-        $marcador->ingreso=($request->ingreso == null||$request->salida == 'Invalid date') ? $marcador->ingreso : $request->ingreso;
-        $marcador->salida=($request->salida == null||$request->salida == 'Invalid date') ?  $request->salida: $request->salida;
+        $marcador->ingreso = ( $request->ingreso == null || $request->salida == 'Invalid date' ) ? $marcador->ingreso : $request->ingreso;
+        $marcador->salida  = ( $request->salida == null || $request->salida == 'Invalid date' ) ?  $request->salida: $request->salida;
         $marcador->save();
         return response()->json([
             "status"=> "OK",
