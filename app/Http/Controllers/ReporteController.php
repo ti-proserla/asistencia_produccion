@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\HorasSemanaTrabajadorExport;
 use App\Exports\HorasNocturnasExport;
+use App\Exports\MarcasTurnoExport;
 use Maatwebsite\Excel\Facades\Excel;
 
 class ReporteController extends Controller
@@ -69,7 +70,7 @@ class ReporteController extends Controller
          */
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
-                        DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,
+                        DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
                         T.area_id codActividad,
                         T.labor_id codLabor,
                         T.proceso_id codProceso,
@@ -199,14 +200,21 @@ class ReporteController extends Controller
                 group by operador.dni";
             
             if ($request->has('excel')) {
-                $raw_query=DB::select(DB::raw("$query"),[
-                    $request->fecha,$request->planilla_id       
-                ]);
+                /**
+                 * Nombre de excel
+                 */
+                $nom_excel="";
                 $turno=$request->turno;
                 $fecha=$request->fecha;
                 $planilla=Planilla::where('id',$request->planilla_id)->first();
                 $nom_planilla=$planilla->nom_planilla;
-                return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "turno-$turno-dia-$fecha-$nom_planilla.xlsx");
+                $nom_excel="turno-$turno-dia-$fecha-$nom_planilla.xlsx";
+                $raw_query=DB::select(DB::raw("$query"),[
+                    $request->fecha,$request->planilla_id       
+                ]);
+                return Excel::download(new MarcasTurnoExport($raw_query),$nom_excel);
+                
+                return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "Nisira-".$nom_excel);
             }else{
                 /**
                  * Paginacion
