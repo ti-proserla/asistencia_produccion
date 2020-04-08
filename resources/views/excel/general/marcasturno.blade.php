@@ -15,7 +15,7 @@
             <tr>
                 <th ></th>
                 <th><b>Fecha:</b></th>
-                <th colspan="3"></th>
+                <th colspan="3">{{ $fecha }}</th>
             </tr>
             <tr></tr>
             <tr>

@@ -212,9 +212,11 @@ class ReporteController extends Controller
                 $raw_query=DB::select(DB::raw("$query"),[
                     $request->fecha,$request->planilla_id       
                 ]);
-                return Excel::download(new MarcasTurnoExport($raw_query),$nom_excel);
-                
-                return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "Nisira-".$nom_excel);
+                if ($request->excel=='nisira') {
+                    return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "Nisira-".$nom_excel);
+                }else{
+                    return Excel::download(new MarcasTurnoExport($raw_query,$fecha),$nom_excel);
+                }
             }else{
                 /**
                  * Paginacion

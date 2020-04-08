@@ -32,13 +32,15 @@ WithDrawings, WithEvents
     * @return \Illuminate\Support\Collection
     */
     private $resultado;
+    private $fecha;
  
-    public function __construct($resultado)
+    public function __construct($resultado,$fecha)
     {
         Sheet::macro('styleCells', function (Sheet $sheet, string $cellRange, array $style) { $sheet->getDelegate()->getStyle($cellRange)->applyFromArray($style); });
         // Sheet::macro('setWidth', function (Sheet $sheet, string $cellRange, array $style) { $sheet->getDelegate()->getStyle($cellRange)->applyFromArray($style); });
 
         $this->resultado=$resultado;
+        $this->fecha=$fecha;
     }
 
     public function registerEvents(): array
@@ -83,7 +85,7 @@ WithDrawings, WithEvents
         $drawing->setName('Logo');
         $drawing->setDescription('This is my logo');
         $drawing->setPath(public_path('/storage/logotipo.png'));
-        $drawing->setWidth(90);
+        $drawing->setWidth(95);
         $drawing->setCoordinates('A1');
         return $drawing;
     }
@@ -100,7 +102,8 @@ WithDrawings, WithEvents
     public function view(): View
     {
         return view('excel.general.marcasturno', [
-            'operadores' => $this->resultado
+            'operadores'    => $this->resultado,
+            'fecha'         => $this->fecha
         ]);
     }
 }
