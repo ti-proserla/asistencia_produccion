@@ -174,7 +174,7 @@ class ReporteController extends Controller
         
         $query="SELECT 	dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
-                        DATE_FORMAT(fecha_ref, '%Y%m-%v') periodo,	
+                        DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
                         T.area_id codActividad,
                         T.labor_id codLabor,
                         T.proceso_id codProceso,
