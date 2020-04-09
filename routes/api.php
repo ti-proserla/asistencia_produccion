@@ -86,6 +86,7 @@ Route::get('/marcas-tuno/{fecha}/{turno}/{planilla}', function ($fecha,$turno,$p
 });
 
 Route::get('rpt/horas_nocturnas','ReporteController@horas_nocturnas');
+Route::get('rpt/rango','ReporteController@rango');
 
 // use Carbon\Carbon;
 Route::get('/producto', function () {
