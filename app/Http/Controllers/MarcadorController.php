@@ -263,24 +263,47 @@ class MarcadorController extends Controller
         $marcador=Marcador::where('id',$id)->first();
         $fecha_ref=$marcador->fecha_ref;
         $fecha_siguiente=Carbon::parse($fecha_ref)->addDay()->format("Y-m-d");
-        // /**
-        //  * Condicion turno
-        //  */
-        // // $fecha_ref=Carbon::parse($fecha_ref);
-        // if (Carbon::parse($fec)) {
-            
-        // }
-        // if ($marcador->turno==2) {
-            
-        // }
         
-        // $fecha_consulta=Carbon::parse()->format('Y-m-d');
-        // if ($hora_fecha_actual<$hora_fecha_limite) {
-        //     $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
-        // }
+        /**
+         * Fuera de semana
+         */
+        if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
+            if (Carbon::now()->startOfWeek()->subDay()>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
+                ]);
+            }
+        }else{
+            if (Carbon::now()->startOfWeek()->subDay(8)>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
+                ]);
+            }
+        }
         
-        $marcador->ingreso = ( $request->ingreso == null || $request->salida == 'Invalid date' ) ? $marcador->ingreso : $request->ingreso;
+        /**
+         * Evaluacion de fechas
+         */
+        $ini=($request->ingreso == null || $request->ingreso == 'Invalid date') ? null: Carbon::parse($request->ingreso)->format("Y-m-d");
+        $fin=($request->salida == null || $request->salida == 'Invalid date') ? null: Carbon::parse($request->salida)->format("Y-m-d");
+        $prueba=!($fecha_ref==$ini || $fecha_siguiente==$ini||$ini==null) || !($fecha_ref==$fin || $fecha_siguiente==$fin||$fin==null);
+
+        if ($prueba) {
+            return response()->json([
+                "status"=> "error",
+                "data"  => "Fecha no permitida, fecha de referencia ".$fecha_ref
+            ]);    
+        }
+        
+        $marcador->ingreso = ( $request->ingreso == null || $request->ingreso == 'Invalid date' ) ? $marcador->ingreso : $request->ingreso;
         $marcador->salida  = ( $request->salida == null || $request->salida == 'Invalid date' ) ?  $request->salida: $request->salida;
+        
+        // Carbon::parse();
+        // if ($fecha_ref==Carbon::parse()) {
+        //     # code...
+        // }
         $marcador->save();
         return response()->json([
             "status"=> "OK",
