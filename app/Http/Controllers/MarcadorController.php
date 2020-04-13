@@ -268,14 +268,14 @@ class MarcadorController extends Controller
          * Fuera de semana
          */
         if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
-            if (Carbon::now()->startOfWeek()->subDay()>Carbon::parse($fecha_ref)) {
+            if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
                 return response()->json([
                     "status"=> "error",
                     "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
                 ]);
             }
         }else{
-            if (Carbon::now()->startOfWeek()->subDay(8)>Carbon::parse($fecha_ref)) {
+            if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
                 return response()->json([
                     "status"=> "error",
                     "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
