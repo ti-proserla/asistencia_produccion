@@ -60,7 +60,7 @@ class MarcadorController extends Controller
         $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
             ->where('fecha_ref',$fecha_consulta)
             ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
-            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 20 HOUR)'))
+            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
             ->groupBy('codigo_operador')
             ->first();
 
@@ -181,7 +181,7 @@ class MarcadorController extends Controller
         $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
         
         $marcador=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 20 HOUR)'))
+            ->where('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
             ->orderBy('ingreso','DESC')
             ->first();
         $fecha_consulta=Carbon::now()->format('Y-m-d');
