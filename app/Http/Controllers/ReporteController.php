@@ -173,7 +173,7 @@ class ReporteController extends Controller
         }
         
         $query="SELECT 	dni,
-                        CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
+                        CONCAT(operador.ape_operador,', ',operador.nom_operador) NombreApellido,
                         DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
                         T.area_id codActividad,
                         T.labor_id codLabor,
@@ -197,7 +197,7 @@ class ReporteController extends Controller
                         $query_fundo
                         $query_turno
                         and operador.planilla_id = ? 
-                group by operador.dni";
+                group by NombreApellido";
             
             if ($request->has('excel')) {
                 /**
