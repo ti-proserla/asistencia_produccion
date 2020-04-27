@@ -5,12 +5,12 @@
             <tr>
                 <th ></th>
                 <th><b>Razón social:</b></th>
-                <th colspan="3">Promotora y Servicios Lambayeque S.A.C</th>
+                <th colspan="3">JAYANCA FRUITS S.A.C.</th>
             </tr>
             <tr>
                 <th></th>
                 <th><b>RUC:</b></th>
-                <th colspan="3"> 12345678901</th>
+                <th colspan="3"> 20561338281</th>
             </tr>
             <tr>
                 <th ></th>
