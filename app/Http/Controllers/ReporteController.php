@@ -188,8 +188,10 @@ class ReporteController extends Controller
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo 
-                FROM	operador inner join marcador on operador.dni = marcador.codigo_operador
-                        LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T 
+                FROM	operador 
+                        INNER JOIN marcador on operador.dni = marcador.codigo_operador
+                        LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T
+                            -- ON tareo
                         LEFT JOIN labor on labor.id = T.labor_id
                                 on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref 
                 where 	fecha_ref = ?  and ingreso is not null 
@@ -197,7 +199,7 @@ class ReporteController extends Controller
                         $query_fundo
                         $query_turno
                         and operador.planilla_id = ? 
-                group by NombreApellido";
+                group by dni ORDER BY NombreApellido ASC";
             
             if ($request->has('excel')) {
                 /**
