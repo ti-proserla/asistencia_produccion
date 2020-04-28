@@ -14,9 +14,10 @@ use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 
 // class HorasSemanaTrabajadorExport implements FromCollection
-class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting
+class HorasSemanaTrabajadorExport implements FromView, WithColumnFormatting, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection
