@@ -40,7 +40,12 @@ class OperadorController extends Controller
         }
         return response()->json($operadores);
     }
-
+    public function unitarios(Request $request){
+        $ids=$request->ids;
+        $newIds=explode('-',$ids);
+        $operadores=Operador::with('cargo')->whereIn('id',$newIds)->get();
+        return response()->json($operadores);
+    }
     /**
      * Registra un nuevo Operador
      */
@@ -51,6 +56,7 @@ class OperadorController extends Controller
         $operador->nom_operador=strtoupper($request->nom_operador);
         $operador->ape_operador=strtoupper($request->ape_operador);
         $operador->planilla_id=($request->planilla_id==0) ? null : $request->planilla_id;
+        $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
         $operador->save();
         if($request->file('foto')!=null){
             $foto = $request->file('foto');
@@ -82,6 +88,7 @@ class OperadorController extends Controller
         $operador->nom_operador=strtoupper(utf8_decode($request->nom_operador));        
         $operador->ape_operador=strtoupper(utf8_decode($request->ape_operador));
         $operador->planilla_id=($request->planilla_id==0) ? null : $request->planilla_id;
+        $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
         $operador->save();
         
         if($request->file('foto')!=null){

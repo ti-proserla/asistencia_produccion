@@ -11,4 +11,7 @@ class Operador extends Model
     {
         return $this->hasOne('App\Model\Marcador');
     }
+    public function cargo(){
+        return $this->belongsTo('App\Model\Cargo');
+    }
 }

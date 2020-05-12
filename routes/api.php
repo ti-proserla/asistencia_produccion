@@ -23,10 +23,12 @@ Route::post('privilegios','CuentaController@privilegios')
 Route::resource('cuenta', 'CuentaController');
 
 Route::post('login','CuentaController@login')->name('cuenta.login');
+Route::get('operador/unitarios', 'OperadorController@unitarios');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
 Route::resource('planilla', 'PlanillaController');
 Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
+Route::resource('cargo', 'CargoController');
 
 Route::get('fundo/proceso','FundoController@proceso')->name('fundo.proceso');
 Route::resource('fundo', 'FundoController');
