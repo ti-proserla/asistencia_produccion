@@ -267,21 +267,21 @@ class MarcadorController extends Controller
         /**
          * Fuera de semana
          */
-        // if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
-        //     if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
-        //         ]);
-        //     }
-        // }else{
-        //     if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
-        //         ]);
-        //     }
-        // }
+        if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
+            if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
+                ]);
+            }
+        }else{
+            if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible editar"
+                ]);
+            }
+        }
         
         /**
          * Evaluacion de fechas
@@ -325,21 +325,21 @@ class MarcadorController extends Controller
         /**
          * Fuera de semana
          */
-        // if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
-        //     if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Agregar"
-        //         ]);
-        //     }
-        // }else{
-        //     if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Agregar"
-        //         ]);
-        //     }
-        // }
+        if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
+            if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Agregar"
+                ]);
+            }
+        }else{
+            if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Agregar"
+                ]);
+            }
+        }
         $marcador=new Marcador();
         $marcador->codigo_operador=$request->codigo_operador;
         $marcador->cuenta_id=$request->user_id;
@@ -356,24 +356,25 @@ class MarcadorController extends Controller
         $marcador=Marcador::where('id',$request->marcador_id)->first();
         $fecha_ref=$marcador->fecha_ref;
         
-        // /**
-        //  * Fuera de semana
-        //  */
-        // if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
-        //     if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Eliminar."
-        //         ]);
-        //     }
-        // }else{
-        //     if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
-        //         return response()->json([
-        //             "status"=> "error",
-        //             "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Eliminar."
-        //         ]);
-        //     }
-        // }
+        /**
+         * Fuera de semana
+         */
+        if (Carbon::now()->startOfWeek()->addHours(12)<Carbon::now()) {
+            if (Carbon::now()->startOfWeek()>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Eliminar."
+                ]);
+            }
+        }else{
+            if (Carbon::now()->startOfWeek()->subDays(7)>Carbon::parse($fecha_ref)) {
+                return response()->json([
+                    "status"=> "error",
+                    "data"  => "Fecha ".$fecha_ref." cerrada. No es posible Eliminar."
+                ]);
+            }
+        }
+
         $marcador->delete();
         return response()->json([
             "status"=> "OK",
