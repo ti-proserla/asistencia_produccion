@@ -29,7 +29,7 @@ class CargoController extends Controller
     public function store(CargoValidate $request)
     {
         $Cargo=new Cargo();
-        $Cargo->nom_cargo=$request->nom_cargo;
+        $Cargo->nom_cargo=strtoupper($request->nom_cargo);
         $Cargo->save();
         return response()->json([
             "status"=> "OK",
@@ -49,7 +49,7 @@ class CargoController extends Controller
     public function update(CargoValidate $request, $id)
     {
         $Cargo=Cargo::where('id',$id)->first();
-        $Cargo->nom_cargo=$request->nom_cargo;
+        $Cargo->nom_cargo=strtoupper($request->nom_cargo);
         $Cargo->save();
         return response()->json([
             "status"=> "OK",
