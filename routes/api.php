@@ -29,6 +29,11 @@ Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.
 Route::resource('planilla', 'PlanillaController');
 Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
 Route::resource('cargo', 'CargoController');
+Route::resource('modulo', 'ModuloController');
+
+Route::get('rol/{id}/modulos', 'RolController@showModulos');
+Route::post('rol/{id}/modulos', 'RolController@updateModulos');
+Route::resource('rol', 'RolController');
 
 Route::get('fundo/proceso','FundoController@proceso')->name('fundo.proceso');
 Route::resource('fundo', 'FundoController');

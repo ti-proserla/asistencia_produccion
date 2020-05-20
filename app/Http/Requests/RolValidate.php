@@ -4,11 +4,10 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-// use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
 
-class CuentaNuevo extends FormRequest
+class RolValidate extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -28,17 +27,14 @@ class CuentaNuevo extends FormRequest
     public function rules()
     {
         return [
-            'nombre' => 'required',
-            'apellido' => 'required',
-            'usuario' => 'required',
-            'password' => 'required',
-            'rol_id'   => 'required'
+            'nombre_rol' => 'required|max:100'
         ];
     }
-
+    
     protected function failedValidation(Validator $validator) {
         //extraer array
         $sin_array=str_replace(["[","]"], "",json_encode($validator->errors()));
+        
         throw new HttpResponseException(response()->json([
             "status" => "VALIDATION",
             "data"   =>  json_decode($sin_array)
