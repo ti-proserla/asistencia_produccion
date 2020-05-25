@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Rol;
+use App\Model\Cuenta;
 use App\Model\RolModulo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -61,8 +62,9 @@ class RolController extends Controller
 
     public function showModulos(Request $request,$id){
         $arrayModulos=[];
+        $cuenta=Cuenta::where('id',$id)->first();
         $modulos=RolModulo::join('modulo','modulo.id','=','rol_modulo.modulo_id')
-            ->where('rol_modulo.rol_id',$id)
+            ->where('rol_modulo.rol_id',$cuenta->rol_id)
             ->select('rol_modulo.modulo_id','nombre_modulo')
             ->get();
         if ($request->has('name')) {
