@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="{{ asset('css/dragon-desing.css') }}">
     <link rel="stylesheet" href="{{ asset('font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <link href="https://unpkg.com/vue-croppa/dist/vue-croppa.min.css" rel="stylesheet" type="text/css">
-    @laravelPWA
+    {{-- @laravelPWA --}}
 </head>
 <body>
     <div id="app"></div>
@@ -22,28 +22,5 @@
     <!-- use the latest vue-select release -->
     {{-- <script src="https://unpkg.com/vue-select@latest"></script> --}}
     @include('footer')
-    <script>
-        window.onload = (e) => { 
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-        // Prevent Chrome 67 and earlier from automatically showing the prompt
-        e.preventDefault();
-        // Stash the event so it can be triggered later.
-        deferredPrompt = e;
-        });
-        // Show the prompt
-        deferredPrompt.prompt();
-        // Wait for the user to respond to the prompt
-        deferredPrompt.userChoice
-        .then((choiceResult) => {
-            if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
-            } else {
-            console.log('User dismissed the A2HS prompt');
-            }
-            deferredPrompt = null;
-        });
-    }
-    </script>
 </body>
 </html>
