@@ -2,6 +2,7 @@ var staticCacheName = "pwa-v" + new Date().getTime();
 var filesToCache = [
     '/offline',
     '/css/dragon-desing.css',
+    '/js/app.js',
     '/images/icons/icon-72x72.png',
     '/images/icons/icon-96x96.png',
     '/images/icons/icon-128x128.png',
@@ -11,31 +12,20 @@ var filesToCache = [
     '/images/icons/icon-384x384.png',
     '/images/icons/icon-512x512.png',
 ];
-// var json;
-// const useRequest = async () => {
-//     const response = await fetch('mix-manifest.json');
-//     json = await response.json();
-//     filesToCache.push(json['/js/app.js']);
-// }
-// useRequest();
-
 
 // Cache on install
 self.addEventListener("install", event => {
-    console.log("hola");
     this.skipWaiting();
     event.waitUntil(
         caches.open(staticCacheName)
-        .then(cache => {
-            console.log(filesToCache);
-            return cache.addAll(filesToCache);
-        })
+            .then(cache => {
+                return cache.addAll(filesToCache);
+            })
     )
 });
 
 // Clear cache on activate
 self.addEventListener('activate', event => {
-    console.log("hola2")
     event.waitUntil(
         caches.keys().then(cacheNames => {
             return Promise.all(
