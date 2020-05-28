@@ -49,17 +49,23 @@ class Utileria {
 }
 
 let utils = new Utileria(fs);
-let archivo = "./escribir.txt"
-let mensaje = "Este es un mensaje enorme jajajajajaja"
-utils.escibir(archivo, mensaje, function (err) {
+    // var
+utils.leer('./public/pre-serviceworker.js', function (err, data) {
     if (err) {
         return console.log(err);
     }
-    console.log("Archivo escrito correctamente!")
-    utils.leer(archivo, function (err, data) {
+    utils.leer('./public/mix-manifest.json', function (err, data2) {
         if (err) {
             return console.log(err);
         }
-        console.log("Contenido: ", data)
+        var mix=JSON.parse(data2);
+        console.log("Contenido: ", data.replace('/js/app.js',mix['/js/app.js']));
+        utils.escibir(archivo, mensaje, function (err) {
+            if (err) {
+                return console.log(err);
+            }
+            console.log("Archivo escrito correctamente!")
+
+        });
     });
 });
