@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-if="existe('marcador')">
-            <router-link to="marcador">
+            <router-link to="/marcador">
                 <i class="material-icons">airplay</i>
                 <p>marcador</p>
             </router-link>

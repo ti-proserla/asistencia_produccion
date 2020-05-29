@@ -3,19 +3,23 @@
         <div class="card-header">
             <h4 class="card-title">Seleccionar fundo a Usar</h4>
         </div>
-        <div class="card-body">
-            <select name="" id="">
-                <option v-for="fundo in fundos" value="">{{ fundo }}</option>
+        <div class="card-body text-center">
+            <select class="form-control mb-3" v-model="fundo_id">
+                <option value="">- Seleccionar Fundo -</option>
+                <option v-for="fundo in fundos" :value="fundo">{{ fundo }}</option>
             </select>
-            <button @click="">Usar</button>
+            <button @click="seleccionar()" class="btn btn-danger">Usar</button>
         </div>
     </div>
 </template>
 <script>
+import { mapState,mapMutations } from 'vuex'
+
 export default {
     data() {
         return {
-            fundos: []
+            fundos: [],
+            fundo_id: localStorage.getItem('fundo') || null
         }
     },
     mounted() {
@@ -25,7 +29,7 @@ export default {
     },
     methods: {
         seleccionar(){
-            
+            this.$store.commit( 'updateFundo' , this.fundo_id );
         }
     },
 }

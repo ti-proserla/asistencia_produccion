@@ -14,6 +14,15 @@ var auth=(to, from,next)=>{
     }
 }
 
+var fundo=(to,from,next)=>{
+    console.log('comprobar fundo');
+    if (localStorage.getItem('fundo')===null) {
+        next('fundo/seleccionar');
+    }else{
+        next();
+    }
+}
+
 var routes =[
     {
         path: '/',
@@ -21,8 +30,8 @@ var routes =[
     },
     { 
         path: '/marcador', 
-        component: require('../view/Operacion/marcador.vue').default,
-        beforeEnter: auth
+        component: (mix_empresa=="PROSERLA") ? require('../view/Operacion/p.marcador.vue').default : require('../view/Operacion/j.marcador.vue').default,
+        beforeEnter: fundo
     },
     { 
         path: '/tareo', 

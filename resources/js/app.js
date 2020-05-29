@@ -11,9 +11,12 @@ import Croppa from 'vue-croppa'
 
 import swal from 'sweetalert';
 import vSelect from 'vue-select'
-
-
 Vue.component('v-select', vSelect)
+
+window.mix_empresa=process.env.MIX_EMPRESA||null;
+window.db = window.openDatabase("asistencia", "1.0", "appAsistencia", 200000);
+
+
 // Vue.component('v-select', VueSelect.VueSelect)
 /**
  * Vuex session
@@ -40,7 +43,8 @@ window.store=new Vuex.Store({
     state: {
         cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null,
         turno: localStorage.getItem('turno') || null,
-        modulos: localStorage.getItem('modulos') || []
+        fundo: localStorage.getItem('fundo') || null,
+        modulos: JSON.parse(localStorage.getItem('modulos')) || []
     },
     modules:{
         'sidebar': moduleSidebar
@@ -70,7 +74,11 @@ window.store=new Vuex.Store({
                 localStorage.setItem('modulos',JSON.stringify(state.modulos));
             });
         }
-      }
+      },
+        updateFundo(state,data){
+            state.fundo=data;
+            localStorage.setItem('fundo',data);
+        }
     },
     actions: {}
 });

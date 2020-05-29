@@ -7,7 +7,7 @@
         <nav class="navbar">
             <button v-if="cuenta.rol!='COMUN'" @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
             <div>
-                <h5>Sist. Asistencia y Tareo</h5>
+                <h5>Sist. Asistencia y Tareo - {{ fundo }}</h5>
             </div>
             <button @click="cerrar()" class="btn btn-danger btn-sm btn-float-right">Salir</button>
         </nav>
@@ -30,7 +30,7 @@ export default {
         comun
     },
     computed: {
-        ...mapState(['cuenta']),
+        ...mapState(['cuenta','fundo']),
         ...mapState('sidebar',['statusSidebar']),
     },
     mounted() {
