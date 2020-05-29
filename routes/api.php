@@ -17,7 +17,7 @@ use App\Model\Operador;
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
 
-Route::get('privilegios','CuentaController@verPrivilegios');
+Route::get('privilegios','CuentaController@verPrivilegios')->middleware('auth.token');
 Route::post('privilegios','CuentaController@privilegios')
 ->name('cuenta.privilegios');
 Route::resource('cuenta', 'CuentaController');

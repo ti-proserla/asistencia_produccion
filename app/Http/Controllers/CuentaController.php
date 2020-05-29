@@ -107,7 +107,8 @@ class CuentaController extends Controller
     }
 
     public function verPrivilegios(Request $request){
-        $privilegios=Privilegios::where('cuenta_id',$request->cuenta_id)->get();
+        // dd($request->all());
+        $privilegios=Privilegios::where('cuenta_id',$request->user_id)->get();
         $privilegios_enviar=[];
         foreach($privilegios as $privilegio){
             array_push($privilegios_enviar,$privilegio->fundo_id);

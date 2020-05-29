@@ -100,3 +100,9 @@ PASOS
 * .env registro
 * PHP ARTISAN MIGRATE
 * ACTUALIZAR LOS PARAMETROS
+
+
+# actualizacion 29/05/2020
+PWA ejecutar
+* composer require silviolleite/laravelpwa --prefer-dist
+* php artisan vendor:publish --provider="LaravelPWA\Providers\LaravelPWAServiceProvider"
