@@ -69,10 +69,9 @@ export default {
     },
     mounted() {
         db.transaction((tx)=>{
-            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCADOR(codigo_operador,marca,fecha_ref,fundo_id,enviado,cuenta_id)');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCADOR(codigo_operador,marca)');
         });
         console.log("Marcador solo para Proserla");
-        
         this.listarTurnos();
     },
     methods: {
