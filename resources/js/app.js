@@ -44,7 +44,8 @@ window.store=new Vuex.Store({
         cuenta: JSON.parse(localStorage.getItem('cuenta_sistema'))||null,
         turno: localStorage.getItem('turno') || null,
         fundo: localStorage.getItem('fundo') || null,
-        modulos: JSON.parse(localStorage.getItem('modulos')) || []
+        modulos: JSON.parse(localStorage.getItem('modulos')) || [],
+        conexion: false
     },
     modules:{
         'sidebar': moduleSidebar
@@ -86,6 +87,25 @@ store.state.turno=localStorage.getItem('turno') || null;
 if (store.state.cuenta!=null) {
     axios.defaults.headers.common['Authorization'] = store.state.cuenta.api_token;
 }
+
+
+/**
+ * Socket IO
+ */
+var socket = io.connect('http://localhost:8070', { 'forceNew': true });
+socket.on('connect', function(){
+    store.state.conexion=true;
+});                                 
+socket.on('disconnect', function (){
+    store.state.conexion=false;
+    console.log('disconnected')
+});
+socket.on('reconnect', function (){
+    console.log('reconnect')
+    store.state.conexion=true;
+
+});
+
 // import router from './router/jayanca.js'
 var router =require('./router/jayanca.js').default;
 

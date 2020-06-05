@@ -2,6 +2,9 @@
     <div id="app" :class="(statusSidebar) ? 'open':''">
         <div class="sidebar" >
             <administrador></administrador>
+            <div class="text-center mb-3">
+                <button @click="cerrar()" class="btn btn-danger btn-sm">Salir</button>
+            </div>
         </div>
         <div class="background-sidebar" @click="close()"></div>
         <nav class="navbar">
@@ -9,7 +12,12 @@
             <div>
                 <h5>Sist. Asistencia y Tareo - {{ fundo }}</h5>
             </div>
-            <button @click="cerrar()" class="btn btn-danger btn-sm btn-float-right">Salir</button>
+            <span v-if="conexion" class="material-icons text-success">
+                cloud_queue
+            </span>
+            <span v-else class="material-icons text-danger">
+                cloud_off
+            </span>
         </nav>
         <div class="content">
             <slot/>
@@ -30,7 +38,7 @@ export default {
         comun
     },
     computed: {
-        ...mapState(['cuenta','fundo']),
+        ...mapState(['cuenta','fundo','conexion']),
         ...mapState('sidebar',['statusSidebar']),
     },
     mounted() {

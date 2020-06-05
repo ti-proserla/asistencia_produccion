@@ -29,8 +29,6 @@ class MarcadorController extends Controller
      */
     public function store(Request $request) 
     {    
-
-
         $configuracion=Configuracion::first();
 
         /**
@@ -157,6 +155,141 @@ class MarcadorController extends Controller
             "foto"  => $operador->foto
         ]);
         
+    }
+
+    public function storeOffline(Request $request){
+        /**
+         * Creación de Operador y Asignacion a la planilla General
+         */
+        
+        $operador=Operador::where('dni',$request->codigo_barras)->first();
+        if ($operador==null) {
+            $operador=new Operador();
+            $operador->dni=$request->codigo_barras;
+            $operador->nom_operador="Nuevo";
+            $operador->ape_operador="Trabajador";
+            $operador->planilla_id=1;
+            $operador->save();
+        }
+        
+        $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
+        $fecha_analisis=Carbon::parse($request->fecha);
+        $fecha_limite=Carbon::parse($request->fecha)->startOfDay()->addHours($salida);
+        
+        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->where('fecha_ref','=',Carbon::parse($request->fecha))
+            ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
+            ->groupBy('codigo_operador')
+            ->first();
+        dd($fecha_analisis,$fecha_limite,$consulta_1);
+        $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
+
+        $fecha_consulta=Carbon::now()->format('Y-m-d');
+        if ($hora_fecha_actual<$hora_fecha_limite) {
+            $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
+        }
+        
+
+        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->where('fecha_ref',$fecha_consulta)
+            ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
+            ->groupBy('codigo_operador')
+            ->first();
+
+        $marcador=null;
+
+        if ($consulta_1!=null) {
+            $marcador=Marcador::where('id',$consulta_1->id)->first();
+        }
+
+        
+        /**
+         * Inicio de algoritmo de comprobacion de Ultima Marca.
+         */
+        $ultimo_par_marca=$marcador;
+        
+        if ($ultimo_par_marca==null) {
+            $ultimo_par_marca=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->orderBy('ingreso','DESC')
+            ->first();
+        }
+
+        if ($ultimo_par_marca!=null) { // En caso sea su primera marca en todo el sistema.
+            $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
+            $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
+
+            if(
+                ( $ultimo_par_marca->salida == null && $fecha_limite < Carbon::parse($ultimo_par_marca->ingreso) ) ||
+                ( $ultimo_par_marca->salida != null && $fecha_limite < Carbon::parse($ultimo_par_marca->salida) )
+            ) {
+                $min=0;
+                if ($ultimo_par_marca->salida == null) {
+                    $min=Carbon::parse($ultimo_par_marca->ingreso)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                }else {
+                    $min=Carbon::parse($ultimo_par_marca->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                }
+                return response()->json([
+                        "status"    =>  "ERROR",
+                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
+                    ]);
+            }
+        }
+        /**
+         * Fin de algoritmo de ultima marca.
+         */ 
+
+        /**
+         * Marca Anterior Encontrada ?
+         */
+        if ($marcador==null) {
+            
+            /**
+             * Agregar Marca
+             */
+            $marcador=new Marcador();
+            $marcador->codigo_operador=$operador->dni;
+            $marcador->ingreso=Carbon::now();
+            $marcador->salida=null;
+            $marcador->fundo_id=$request->fundo_id;
+            $marcador->cuenta_id=$request->user_id;
+            $marcador->turno=$request->turno;
+            $marcador->fundo_id=$request->fundo;
+            $marcador->fecha_ref=Carbon::now();
+            $marcador->save();
+        }else{
+
+            if ( 
+                $marcador->salida!=null||
+                (
+                    $marcador->salida==null&&
+                    $fecha_ayer==Carbon::parse($marcador->ingreso)->format('Y-m-d')&&
+                    $hora_fecha_actual>$hora_fecha_limite
+                )
+            ) {
+                $newMarcador=$marcador;
+                
+                $marcador=new Marcador();
+                $marcador->codigo_operador=$operador->dni;
+                $marcador->ingreso=Carbon::now();
+                $marcador->salida=null;
+                $marcador->fundo_id=$request->fundo_id;
+                $marcador->cuenta_id=$request->user_id;
+                $marcador->turno=$request->turno;
+                $marcador->fecha_ref=$newMarcador->fecha_ref;
+                $marcador->save();
+            }else{
+                $marcador->salida=Carbon::now();
+                $marcador->save();
+            }
+            
+        }
+        return response()->json([
+            "status"=> "OK",
+            "data"  => $operador->nom_operador." ".$operador->ape_operador,
+            "foto"  => $operador->foto
+        ]);
     }
 
     public function store2(Request $request) 

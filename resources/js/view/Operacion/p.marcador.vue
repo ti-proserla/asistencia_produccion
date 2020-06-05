@@ -3,7 +3,7 @@
         <div class="col-sm-6">
              <div class="card">
                  <div class="card-header">
-                    <h4 class="card-title">Registro de Marcación</h4>
+                    <h4 class="card-title">Registro de Marcación {{ conexion }}</h4>
                 </div>
                 <div class="card-body">
                     <h4 class="text-center">TURNO {{ turno }}</h4>
@@ -11,12 +11,6 @@
                         <div class="col-sm-12 text-center">
                             <digital-clock :blink="true"/>
                         </div>
-                        <!-- <div class="col-12 form-group">
-                            <label for="">Seleccionar Turno:</label>
-                            <select class="form-control" v-model="turno_id">
-                                <option v-for="turno in turnos" :value="turno.id">{{turno.descripcion}}</option>
-                            </select>
-                        </div> -->
                         <div class="col-12">
                             <form v-on:submit.prevent="guardar()">
                                 <Input title="Codigo de Barras" type="number" :focusSelect="true" v-model="codigo_barras"></Input>
@@ -59,19 +53,18 @@ export default {
             turnos:[],
             codigo_barras: null,
             respuesta: null,
-            // turno: localStorage.getItem('turno') || null,
             alert: null,
             foto: null,
         }
     },
     computed: {
-        ...mapState(['turno','fundo']),
+        ...mapState(['turno','fundo','conexion']),
     },
     mounted() {
         db.transaction((tx)=>{
-            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCADOR(codigo_operador,marca)');
+            // tx.executeSql('DROP TABLE MARCADOR');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCAS(codigo,fecha)');
         });
-        console.log("Marcador solo para Proserla");
         this.listarTurnos();
     },
     methods: {
@@ -94,28 +87,47 @@ export default {
                 if (this.codigo_barras.length==8) {
                     var cod_barras_paso=this.codigo_barras;
                     this.codigo_barras=null;
-                    axios.post(url_base+'/marcador2',{ codigo_barras: cod_barras_paso,turno: this.turno,fundo: this.fundo})
-                    .then(response => {
-                        var resp=response.data;
-                        switch (resp.status) {
-                            case "VALIDATION":
-                                this.errors_editar=resp.data;
-                                break;
-                            case "OK":
-                                this.alert={
-                                    status: 'primary',
-                                    data: resp.data
-                                }
-                                this.foto=resp.foto;
-                                break;
-                            case "ERROR":
-                                this.alert={
-                                    status: 'warning',
-                                    data: resp.data
-                                }
-                                break;
-                        }
-                    })
+                    
+                    /**
+                     * Con conexion
+                     */
+                    if (this.conexion) {
+                        axios.post(url_base+'/marcador2',{ codigo_barras: cod_barras_paso,turno: this.turno,fundo: this.fundo})
+                        .then(response => {
+                            var resp=response.data;
+                            switch (resp.status) {
+                                case "VALIDATION":
+                                    this.errors_editar=resp.data;
+                                    break;
+                                case "OK":
+                                    this.alert={
+                                        status: 'primary',
+                                        data: resp.data
+                                    }
+                                    this.foto=resp.foto;
+                                    break;
+                                case "ERROR":
+                                    this.alert={
+                                        status: 'warning',
+                                        data: resp.data
+                                    }
+                                    break;
+                            }
+                        })
+                    }
+                    /**
+                     * Sin conexion
+                     */
+                    else{
+                        db.transaction((tx)=>{
+                            tx.executeSql('INSERT INTO MARCAS(codigo,fecha) VALUES (?,?)',
+                                [cod_barras_paso,moment().format('YYYY-MM-DD HH:mm')]
+                            ,(res)=>{
+                                console.log(res);
+                            });
+                        });
+                    }
+
                 }else{
                     if (this.codigo_barras=="1001") {
                         this.$store.commit( 'update_turno' , 1 );

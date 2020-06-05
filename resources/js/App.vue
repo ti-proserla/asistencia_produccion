@@ -5,6 +5,7 @@
 </template>
 <script>
 var default_layouts="panel";
+
 export default {
     computed:{
         layout(){
