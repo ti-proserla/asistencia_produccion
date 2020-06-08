@@ -176,19 +176,23 @@ class MarcadorController extends Controller
         $fecha_analisis=Carbon::parse($request->fecha);
         $fecha_limite=Carbon::parse($request->fecha)->startOfDay()->addHours($salida);
         
-        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('fecha_ref','=',Carbon::parse($request->fecha))
-            ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
-            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
-            ->groupBy('codigo_operador')
-            ->first();
-        dd($fecha_analisis,$fecha_limite,$consulta_1);
-        $fecha_ayer=Carbon::now()->subDay()->format('Y-m-d');
-
-        $fecha_consulta=Carbon::now()->format('Y-m-d');
-        if ($hora_fecha_actual<$hora_fecha_limite) {
-            $fecha_consulta=Carbon::now()->subDay()->format('Y-m-d');
+        $fecha_consulta=null;
+        if ($fecha_analisis<$fecha_limite) {
+            $fecha_consulta=Carbon::parse($request->fecha)->subDay()->format('Y-m-d');
+        }else{
+            $fecha_consulta=Carbon::parse($request->fecha)->format('Y-m-d');
         }
+        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
+            ->where('fecha_ref','>=',$fecha_consulta)
+            ->where('fecha_ref','<=',Carbon::parse($request->fecha)->format('Y-m-d'))
+            ->select('codigo_operador',DB::raw('DATE_SUB("'.Carbon::parse($request->fecha).'", INTERVAL 16 HOUR)'),'fecha_ref',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+            ->having('ingreso','>',DB::raw('DATE_SUB("'.Carbon::parse($request->fecha).'", INTERVAL 16 HOUR)'))
+            ->groupBy('codigo_operador','fecha_ref')
+            ->get();
+
+        dd($fecha_analisis,$fecha_limite,$consulta_1);
+
+        // $fecha_consulta=() ? :  ;
         
 
         $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
