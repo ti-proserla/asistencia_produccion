@@ -8,7 +8,7 @@
         </div>
         <div class="background-sidebar" @click="close()"></div>
         <nav class="navbar">
-            <button v-if="cuenta.rol!='COMUN'" @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
+            <button @click="open()" class="btn-link-success"><i class="material-icons">menu</i></button>
             <div>
                 <h5>Sist. Asistencia y Tareo - {{ fundo }}</h5>
             </div>
