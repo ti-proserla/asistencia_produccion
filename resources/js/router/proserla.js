@@ -31,7 +31,7 @@ var routes =[
     { 
         path: '/marcador', 
         component: require('../view/Operacion/p.marcador.vue').default,
-        beforeEnter: auth
+        beforeEnter: fundo
     },
     { 
         path: '/tareo', 
@@ -181,7 +181,8 @@ var routes =[
     // 29/05/2020
     {
         path: '/fundo/seleccionar',
-        component: require('../view/Fundo/seleccionar.vue').default
+        component: require('../view/Fundo/seleccionar.vue').default,
+        beforeEnter: auth
     }
 ];
 export default new VueRouter({
