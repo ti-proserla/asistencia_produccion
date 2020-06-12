@@ -31,7 +31,7 @@ var routes =[
     { 
         path: '/marcador', 
         component: require('../view/Operacion/p.marcador.vue').default,
-        beforeEnter: fundo
+        beforeEnter: auth
     },
     { 
         path: '/tareo', 
