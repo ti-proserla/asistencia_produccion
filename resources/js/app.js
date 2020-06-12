@@ -61,6 +61,7 @@ window.store=new Vuex.Store({
         state.cuenta=null;
         localStorage.removeItem('cuenta_sistema');
         localStorage.removeItem('modulos');
+        localStorage.removeItem('fundo');
       },
       update_turno(state,data){
         state.turno=data;
