@@ -92,7 +92,7 @@ if (store.state.cuenta!=null) {
 /**
  * Socket IO
  */
-var socket = io.connect('http://localhost:8070', { 'forceNew': true });
+var socket = io.connect((process.env.MIX_SOCKET||'http://localhost:8070'), { 'forceNew': true });
 socket.on('connect', function(){
     store.state.conexion=true;
 });                                 

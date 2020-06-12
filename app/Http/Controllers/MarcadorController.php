@@ -158,10 +158,10 @@ class MarcadorController extends Controller
     }
 
     public function storeOffline(Request $request){
+        dd($request->all());
         /**
          * Creación de Operador y Asignacion a la planilla General
          */
-        
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
             $operador=new Operador();
@@ -176,63 +176,36 @@ class MarcadorController extends Controller
         $fecha_analisis=Carbon::parse($request->fecha);
         $fecha_limite=Carbon::parse($request->fecha)->startOfDay()->addHours($salida);
         
-        $fecha_consulta=null;
-        if ($fecha_analisis<$fecha_limite) {
-            $fecha_consulta=Carbon::parse($request->fecha)->subDay()->format('Y-m-d');
-        }else{
-            $fecha_consulta=Carbon::parse($request->fecha)->format('Y-m-d');
-        }
+        $fecha_consulta=($fecha_analisis<$fecha_limite) ? Carbon::parse($request->fecha)->subDay()->format('Y-m-d') : $fecha_consulta=Carbon::parse($request->fecha)->format('Y-m-d');
+
         $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
             ->where('fecha_ref','>=',$fecha_consulta)
             ->where('fecha_ref','<=',Carbon::parse($request->fecha)->format('Y-m-d'))
-            ->select('codigo_operador',DB::raw('DATE_SUB("'.Carbon::parse($request->fecha).'", INTERVAL 16 HOUR)'),'fecha_ref',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+            ->select('codigo_operador','fecha_ref',DB::raw('min(ingreso) ingreso,MAX(id) id'))
             ->having('ingreso','>',DB::raw('DATE_SUB("'.Carbon::parse($request->fecha).'", INTERVAL 16 HOUR)'))
             ->groupBy('codigo_operador','fecha_ref')
-            ->get();
-
-        dd($fecha_analisis,$fecha_limite,$consulta_1);
-
-        // $fecha_consulta=() ? :  ;
-        
-
-        $consulta_1=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->where('fecha_ref',$fecha_consulta)
-            ->select('codigo_operador',DB::raw('min(ingreso) ingreso,MAX(id) id'))
-            ->having('ingreso','>',DB::raw('DATE_SUB(NOW(), INTERVAL 16 HOUR)'))
-            ->groupBy('codigo_operador')
             ->first();
 
+            
         $marcador=null;
-
+        
         if ($consulta_1!=null) {
             $marcador=Marcador::where('id',$consulta_1->id)->first();
         }
 
-        
-        /**
-         * Inicio de algoritmo de comprobacion de Ultima Marca.
-         */
-        $ultimo_par_marca=$marcador;
-        
-        if ($ultimo_par_marca==null) {
-            $ultimo_par_marca=Marcador::where('codigo_operador',$request->codigo_barras)
-            ->orderBy('ingreso','DESC')
-            ->first();
-        }
-
-        if ($ultimo_par_marca!=null) { // En caso sea su primera marca en todo el sistema.
+        if ($marcador!=null) { // En caso sea su primera marca en todo el sistema.
             $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
-            $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
-
+            $fecha_limite=Carbon::parse($request->fecha)->subMinute($tiempo_entre_marcas);
+            
             if(
-                ( $ultimo_par_marca->salida == null && $fecha_limite < Carbon::parse($ultimo_par_marca->ingreso) ) ||
-                ( $ultimo_par_marca->salida != null && $fecha_limite < Carbon::parse($ultimo_par_marca->salida) )
+                ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
+                ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
             ) {
                 $min=0;
-                if ($ultimo_par_marca->salida == null) {
-                    $min=Carbon::parse($ultimo_par_marca->ingreso)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                if ($marcador->salida == null) {
+                    $min=Carbon::parse($marcador->ingreso)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
                 }else {
-                    $min=Carbon::parse($ultimo_par_marca->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                    $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
                 }
                 return response()->json([
                         "status"    =>  "ERROR",
@@ -240,43 +213,23 @@ class MarcadorController extends Controller
                     ]);
             }
         }
-        /**
-         * Fin de algoritmo de ultima marca.
-         */ 
-
-        /**
-         * Marca Anterior Encontrada ?
-         */
-        if ($marcador==null) {
-            
-            /**
-             * Agregar Marca
-             */
+        
+        if (is_null($marcador)) {
             $marcador=new Marcador();
             $marcador->codigo_operador=$operador->dni;
-            $marcador->ingreso=Carbon::now();
+            $marcador->ingreso=$fecha_analisis;
             $marcador->salida=null;
             $marcador->fundo_id=$request->fundo_id;
             $marcador->cuenta_id=$request->user_id;
-            $marcador->turno=$request->turno;
             $marcador->fundo_id=$request->fundo;
-            $marcador->fecha_ref=Carbon::now();
+            $marcador->fecha_ref=$fecha_analisis;
             $marcador->save();
         }else{
-
-            if ( 
-                $marcador->salida!=null||
-                (
-                    $marcador->salida==null&&
-                    $fecha_ayer==Carbon::parse($marcador->ingreso)->format('Y-m-d')&&
-                    $hora_fecha_actual>$hora_fecha_limite
-                )
-            ) {
+            if (!is_null($marcador->salida)) {
                 $newMarcador=$marcador;
-                
                 $marcador=new Marcador();
                 $marcador->codigo_operador=$operador->dni;
-                $marcador->ingreso=Carbon::now();
+                $marcador->ingreso=$fecha_analisis;
                 $marcador->salida=null;
                 $marcador->fundo_id=$request->fundo_id;
                 $marcador->cuenta_id=$request->user_id;
@@ -284,7 +237,7 @@ class MarcadorController extends Controller
                 $marcador->fecha_ref=$newMarcador->fecha_ref;
                 $marcador->save();
             }else{
-                $marcador->salida=Carbon::now();
+                $marcador->salida=$fecha_analisis;
                 $marcador->save();
             }
             
