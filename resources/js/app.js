@@ -107,7 +107,7 @@ socket.on('reconnect', function (){
 });
 
 // import router from './router/jayanca.js'
-var router =require('./router/jayanca.js').default;
+var router = (mix_empresa=="PROSERLA") ? require('./router/proserla.js').default : require('./router/jayanca.js').default;
 
 import Dashboard from './App.vue';
 Vue.component('empty',require("./layouts/empty.vue").default);

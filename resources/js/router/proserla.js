@@ -14,6 +14,15 @@ var auth=(to, from,next)=>{
     }
 }
 
+var fundo=(to,from,next)=>{
+    console.log('comprobar fundo');
+    if (localStorage.getItem('fundo')===null) {
+        next('fundo/seleccionar');
+    }else{
+        next();
+    }
+}
+
 var routes =[
     {
         path: '/',
@@ -22,7 +31,7 @@ var routes =[
     { 
         path: '/marcador', 
         component: require('../view/Operacion/p.marcador.vue').default,
-        beforeEnter: auth
+        beforeEnter: fundo
     },
     { 
         path: '/tareo', 
