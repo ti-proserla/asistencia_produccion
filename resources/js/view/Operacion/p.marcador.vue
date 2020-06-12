@@ -3,10 +3,10 @@
         <div class="col-sm-6">
              <div class="card">
                  <div class="card-header">
-                    <h4 class="card-title">Registro de Marcación {{ conexion }}</h4>
+                    <h4 class="card-title">Registro de Marcación</h4>
                 </div>
                 <div class="card-body">
-                    <h4 class="text-center">TURNO {{ turno }}</h4>
+                    <!-- <h4 class="text-center">TURNO {{ turno }}</h4> -->
                     <div class="row">
                         <div class="col-sm-12 text-center">
                             <digital-clock :blink="true"/>
@@ -62,8 +62,8 @@ export default {
     },
     mounted() {
         db.transaction((tx)=>{
-            // tx.executeSql('DROP TABLE MARCADOR');
-            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCAS(codigo,fecha)');
+            // tx.executeSql('DROP TABLE MARCAS');
+            tx.executeSql('CREATE TABLE IF NOT EXISTS MARCAS(codigo,fecha,fundo)');
         });
         this.listarTurnos();
     },
@@ -120,10 +120,17 @@ export default {
                      */
                     else{
                         db.transaction((tx)=>{
-                            tx.executeSql('INSERT INTO MARCAS(codigo,fecha) VALUES (?,?)',
-                                [cod_barras_paso,moment().format('YYYY-MM-DD HH:mm')]
+                            tx.executeSql('INSERT INTO MARCAS(codigo,fecha,fundo) VALUES (?,?,?)',
+                                [cod_barras_paso,moment().format('YYYY-MM-DD HH:mm'),this.fundo]
                             ,(res)=>{
-                                console.log(res);
+                                this.alert={
+                                    status: 'primary',
+                                    data: "Marca Correcta (offline)."
+                                }
+                            },(tx, err) => {
+                                console.log(err);
+                                
+                                alert("Error processing SQL: "+err);
                             });
                         });
                     }

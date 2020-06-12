@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
+import multiguard from 'vue-router-multiguard';
 /**
  * ROUTER VUE
  */
@@ -17,7 +18,7 @@ var auth=(to, from,next)=>{
 var fundo=(to,from,next)=>{
     console.log('comprobar fundo');
     if (localStorage.getItem('fundo')===null) {
-        next('fundo/seleccionar');
+        next('/fundo/seleccionar');
     }else{
         next();
     }
@@ -31,12 +32,12 @@ var routes =[
     { 
         path: '/marcador', 
         component: require('../view/Operacion/p.marcador.vue').default,
-        beforeEnter: fundo
+        beforeEnter: multiguard([auth,fundo])
     },
     { 
         path: '/tareo', 
         component: require('../view/Operacion/tareo.vue').default,
-        beforeEnter: auth
+        beforeEnter:  multiguard([auth,fundo])
     },
     { 
         path: '/regularizar', 

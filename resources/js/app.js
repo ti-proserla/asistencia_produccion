@@ -93,9 +93,49 @@ if (store.state.cuenta!=null) {
 /**
  * Socket IO
  */
+
+async function subirDatos(results_rows) {
+    for (let i = 0; i < results_rows.length; i++) {
+        // t.listaTareo.push(results_rows.item(i));
+        
+        
+        var res=await axios.post(url_base+'/marcador/offline',results_rows.item(i)).then(res=>res.data);
+        db.transaction((tx)=>{
+            tx.executeSql('DELETE FROM MARCAS WHERE rowid='+res.data, [], function (tx, results) {
+                // swal("", 'Datos Antiguos Eliminados.', "info");
+            },(res,error)=>{
+                console.log(error);
+                console.log(res);
+            });
+        });
+    }
+}
 var socket = io.connect((process.env.MIX_SOCKET||'http://localhost:8070'), { 'forceNew': true });
 socket.on('connect', function(){
     store.state.conexion=true;
+    console.log('connected')
+    db.transaction((tx)=>{
+        tx.executeSql('SELECT *,rowid FROM MARCAS', [], function (tx, results) {
+            subirDatos(results.rows)
+            // for (let i = 0; i < results.rows.length; i++) {
+            //     // t.listaTareo.push(results.rows.item(i));
+                
+                
+            //     axios.post(url_base+'/marcador/offline',results.rows.item(i))
+            //     .then(response => {
+            //         console.log(response.data);
+            //         db.transaction((tx)=>{
+            //             tx.executeSql('DELETE FROM MARCAS WHERE rowid='+response.data.data, [], function (tx, results) {
+            //                 // swal("", 'Datos Antiguos Eliminados.', "info");
+            //             },(res,error)=>{
+            //                 console.log(error);
+            //                 console.log(res);
+            //             });
+            //         });
+            //     })
+            // }
+        });
+    });
 });                                 
 socket.on('disconnect', function (){
     store.state.conexion=false;
