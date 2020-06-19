@@ -135,7 +135,7 @@ var routes =[
     },
     { 
         path: '/reporte-semana', 
-        component: require('../view/Reportes/semana.vue').default,
+        component: require('../view/Reportes/p.semana.vue').default,
         beforeEnter: auth
     },
     { 
