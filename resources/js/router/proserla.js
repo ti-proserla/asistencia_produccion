@@ -145,12 +145,12 @@ var routes =[
     },
     { 
         path: '/reporte-marcas', 
-        component: require('../view/Reportes/marcas.vue').default,
+        component: require('../view/Reportes/p.marcas.vue').default,
         beforeEnter: auth
     },
     { 
         path: '/marcas-noche', 
-        component: require('../view/Reportes/marcas-noche.vue').default,
+        component: require('../view/Reportes/p.marcas-noche.vue').default,
         beforeEnter: auth
     },
     { 
