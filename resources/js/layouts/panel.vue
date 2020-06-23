@@ -36,7 +36,7 @@ import comun from './parts/comun.vue'
 export default {
     data() {
         return {
-            empresa: 'PROSERLA'
+            empresa: window.mix_empresa
         }
     },
     components:{

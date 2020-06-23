@@ -8,6 +8,7 @@
                 <div class="col-lg-4 col-sm-6">
                     <div class="card card-login my-5">
                         <div class="card-body">
+                            <h4>Login  - {{ empresa }}</h4>
                             <form v-on:submit.prevent="ingresar">
                                 <Input title="Usuario" v-model="cuenta.usuario"></Input>
                                 <Input title="Contraseña" type="password" v-model="cuenta.password"></Input>
@@ -36,7 +37,8 @@ export default {
             cuenta:{
                 usuario: null,
                 password: null
-            }
+            },
+            empresa: window.mix_empresa
         }
     },
     methods: {
