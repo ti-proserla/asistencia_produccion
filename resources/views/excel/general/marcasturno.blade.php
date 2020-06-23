@@ -5,12 +5,12 @@
             <tr>
                 <th ></th>
                 <th><b>Razón social:</b></th>
-                <th colspan="3">JAYANCA FRUITS S.A.C.</th>
+                <th colspan="4">{{ $empresa->descripcion }}</th>
             </tr>
             <tr>
                 <th></th>
                 <th><b>RUC:</b></th>
-                <th colspan="3"> 20561338281</th>
+                <th colspan="1">{{ $empresa->ruc }}</th>
             </tr>
             <tr>
                 <th ></th>

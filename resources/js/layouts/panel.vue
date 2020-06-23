@@ -23,7 +23,8 @@
             <slot/>
         </div>
         <div class="footer">
-            Jayanca Fruits & Proserla @ Area de TI
+            {{ (empresa=='PROSERLA') ? 'Proserla @ Area de TI' : 'Jayanca Fruits & Proserla @ Area de TI'}}
+            
         </div>
     </div>
 </template>
@@ -33,6 +34,11 @@ import administrador from './parts/administrador.vue'
 import comun from './parts/comun.vue'
 
 export default {
+    data() {
+        return {
+            empresa: 'PROSERLA'
+        }
+    },
     components:{
         administrador,
         comun

@@ -93,7 +93,8 @@ WithDrawings, WithEvents
     public function columnFormats(): array
     {
         return [
-            'A' => NumberFormat::FORMAT_TEXT
+            'A' => NumberFormat::FORMAT_TEXT,
+            'C2' => NumberFormat::FORMAT_TEXT,
         ];
     }
 
@@ -101,9 +102,11 @@ WithDrawings, WithEvents
 
     public function view(): View
     {
+        $data = file_get_contents(public_path('/../empresa.json'));        
         return view('excel.general.marcasturno', [
             'operadores'    => $this->resultado,
-            'fecha'         => $this->fecha
+            'fecha'         => $this->fecha,
+            'empresa'       => json_decode($data)
         ]);
     }
 }
