@@ -20,6 +20,7 @@
                     <div class="form-group col-5 col-lg-3">
                         <label>Fundo:</label>
                         <select v-model="consulta.fundo_id" class="form-control">
+                            <option value="">Todos los Fundos</option>
                             <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                         </select>
                     </div>
@@ -158,9 +159,9 @@ export default {
             axios.get(url_base+'/fundo?all=true')
             .then(response => {
                 this.fundos = response.data;
-                if (this.fundos.length>0) {
-                    this.consulta.fundo_id=this.fundos[0].id;
-                }
+                // if (this.fundos.length>0) {
+                //     this.consulta.fundo_id=this.fundos[0].id;
+                // }
             })
         },
     },

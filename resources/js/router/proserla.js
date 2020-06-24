@@ -41,7 +41,7 @@ var routes =[
     },
     { 
         path: '/regularizar', 
-        component: require('../view/Operacion/regularizar.vue').default,
+        component: require('../view/Operacion/p.regularizar.vue').default,
         beforeEnter: auth
     },
     { 
