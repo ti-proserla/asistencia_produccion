@@ -66,6 +66,7 @@ Route::post('tareo', 'TareoController@store')->name('tareo.store')->middleware('
 Route::get('reporte-rotaciones', 'ReporteController@rotaciones');
 Route::get('reporte-turno', 'ReporteController@turno');
 Route::get('reporte-semana', 'ReporteController@semana');
+Route::get('reporte-semana-partida', 'ReporteController@semana_partida');
 Route::get('reporte-pendientes', 'ReporteController@pendientes')->middleware('auth.token');
 Route::get('reporte/pendientes-regularizar', 'ReporteController@pendientesRegularizar');
 Route::get('reporte-marcas', 'ReporteController@marcas');
@@ -87,10 +88,6 @@ Route::get('/horas-semana/{datos}', function ($datos) {
     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
 });
 
-// Route::get('/horas-semana/{anio}/{semana}/{planilla_id}/{fundo_id}', 
-// function ($anio,$semana,$planilla_id,$fundo_id) {
-//     return Excel::download(new HorasSemanaTrabajadorExport($anio,$semana,$planilla_id,$fundo_id), "horas-semana-$anio-$semana.xlsx");
-// });
 Route::get('/marcas-tuno/{fecha}/{turno}/{planilla}', function ($fecha,$turno,$planilla) {
     return Excel::download(new MarcasTurnoTrabajadorExport($fecha,$turno,$planilla), "marcas-turno-$fecha-$turno-$planilla.xlsx");
 });
@@ -114,6 +111,9 @@ Route::get('sincronizar/proceso',"SincronizarController@proceso");
 Route::get('sincronizar/labor',"SincronizarController@labor");
 Route::get('sincronizar/area',"SincronizarController@area");
 Route::resource('configuracion',"ConfiguracionController");
+
+Route::get('nisira/periodo', 'NisiraController@periodo');
+
 /**
  * Ingreso
  */

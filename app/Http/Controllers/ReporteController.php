@@ -124,6 +124,90 @@ class ReporteController extends Controller
                 ]);
         }
     }
+    public function semana_partida(Request $request){
+        /**
+         * Query Busqueda 
+         */
+        $texto_busqueda=explode(" ",$request->search);
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+        /**
+         * Rango de Fechas y planilla_id
+         */
+        $fecha_inicio=$request->inicio;
+        $fecha_fin=$request->fin;
+        $planilla_id=$request->planilla_id;
+        /**
+         * Query Turno
+         */
+        $query_turno=($request->turno!=null) ? "AND turno=".$request->turno : "";
+        /**
+         * Query fundo WHERE
+         */        
+        $query_fundo=($request->fundo_id!=null) ? "AND marcador.fundo_id='$request->fundo_id'" : "";
+        $query_fundo2=($request->fundo_id!=null) ? "WHERE tareo.fundo_id='$request->fundo_id'" : "";
+        /**
+         * Query
+         */
+        $query="SELECT 	marcador.codigo_operador dni,
+                        CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
+                        DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
+                        T.area_id codActividad,
+                        T.labor_id codLabor,
+                        T.proceso_id codProceso,
+                        labor.nom_labor,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo
+                FROM 		marcador
+                        LEFT JOIN (SELECT * FROM tareo $query_fundo2 GROUP BY codigo_operador,fecha) AS T 
+                            on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
+                        LEFT JOIN labor on labor.id = T.labor_id
+                        INNER JOIN operador on operador.dni = marcador.codigo_operador
+                WHERE   fecha_ref <= '$fecha_fin'
+                        AND fecha_ref >='$fecha_inicio'
+                        AND planilla_id=$planilla_id 
+                        $query_busqueda
+                        $query_turno 
+                        $query_fundo
+                GROUP BY 	marcador.codigo_operador, codLabor";
+        
+        if ($request->has('excel')) {
+            $raw_query=DB::select(DB::raw("$query"));
+            $planilla=Planilla::where('id',$request->planilla_id)->first();
+            $nom_planilla=$planilla->nom_planilla;
+            /**
+             * Descripcion Turno
+             */
+            $descripcion_turno=($request->turno!=null) ? "-turno-".$request->turno : "" ;
+            /**
+             * Descripcion Fundo
+             */
+            $fundo=Fundo::where('id',$request->fundo_id)->first();
+            $descripcion_fundo=($fundo!=null) ? "-".$fundo->nom_fundo : "";
+            return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "rpt-semana-$fecha_inicio-al-$fecha_fin".$descripcion_fundo.$descripcion_turno."-$nom_planilla.xlsx");
+        }else{
+            $per_page=15;
+            $current_page=$request->page;
+            $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"))[0]->conteo;
+            $last_page=(int)ceil($total/$per_page);
+            $offset=($current_page-1)*$per_page;
+            
+            $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"));
+            return response()->json([
+                    "current_page"  =>  $current_page,
+                    "data"          =>  $raw_query,
+                    "total"         =>  $total,
+                    "last_page"     =>  $last_page
+                ]);
+        }
+    }
     public function pendientes(Request $request){
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')

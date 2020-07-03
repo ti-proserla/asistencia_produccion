@@ -129,6 +129,11 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/reporte-semana-partida', 
+        component: require('../view/Reportes/j.semana-partida.vue').default,
+        beforeEnter: auth
+    },
+    { 
         path: '/reporte-pendientes', 
         component: require('../view/Reportes/pendientes.vue').default,
         beforeEnter: auth

@@ -96,6 +96,12 @@
                 <p>Reporte por Semana</p>
             </router-link>
         </li>
+        <li v-if="existe('reporte-semana-partida')">
+            <router-link to="/reporte-semana-partida">
+                <i class="material-icons">book</i>
+                <p>Reporte por Semana Partida</p>
+            </router-link>
+        </li>
         <li v-if="existe('reporte-marcas')">
             <router-link to="/reporte-marcas">
                 <i class="material-icons">book</i>
