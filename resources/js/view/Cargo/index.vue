@@ -9,6 +9,9 @@
                     <div class="card-body">
                         <form action="" v-on:submit.prevent="grabarNuevo()">
                             <Input title="Nombre:" v-model="cargo.nom_cargo" :error="errors.nom_cargo"></Input>
+                            <Input title="Centro Costo:" v-model="cargo.proceso_id"></Input>
+                            <Input title="Actividad:" v-model="cargo.area_id"></Input>
+                            <Input title="Labor:" v-model="cargo.labor_id"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>
@@ -60,6 +63,9 @@
                     <div class="modal-body">
                         <form action="" v-on:submit.prevent="grabarEditar()">
                             <Input title="Nombre:" v-model="cargo_editar.nom_cargo" :error="errors_editar.nom_cargo"></Input>
+                            <Input title="Centro Costo:" v-model="cargo_editar.proceso_id"></Input>
+                            <Input title="Actividad:" v-model="cargo_editar.area_id"></Input>
+                            <Input title="Labor:" v-model="cargo_editar.labor_id"></Input>
                             <div class="text-center">
                                 <button type="submit" class="btn btn-success">Guardar</button>
                             </div>

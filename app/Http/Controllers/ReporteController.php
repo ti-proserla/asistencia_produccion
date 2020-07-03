@@ -154,7 +154,7 @@ class ReporteController extends Controller
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
                         DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
-                        T.area_id codActividad,
+                        SI(T.area_id codActividad is NULL,cargo.actividad_id,T.area_id codActividad),
                         T.labor_id codLabor,
                         T.proceso_id codProceso,
                         labor.nom_labor,
@@ -170,6 +170,7 @@ class ReporteController extends Controller
                             on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
+                        LEFT JOIN cargo on operador.cargo_id=cargo.id
                 WHERE   fecha_ref <= '$fecha_fin'
                         AND fecha_ref >='$fecha_inicio'
                         AND planilla_id=$planilla_id 

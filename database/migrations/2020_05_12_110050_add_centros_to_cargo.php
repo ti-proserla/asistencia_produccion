@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCargoTable extends Migration
+class AddCentrosToCargo extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,7 @@ class CreateCargoTable extends Migration
      */
     public function up()
     {
-        Schema::create('cargo', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('nom_cargo',50);
+        Schema::table('cargo', function (Blueprint $table) {
             $table->string('proceso_id',8)->nullable();
             $table->string('area_id',3)->nullable();
             $table->string('labor_id',6)->nullable();
@@ -29,6 +27,8 @@ class CreateCargoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cargo');
+        Schema::table('cargo', function (Blueprint $table) {
+            //
+        });
     }
 }
