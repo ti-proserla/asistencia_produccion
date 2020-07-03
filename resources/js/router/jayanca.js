@@ -21,7 +21,7 @@ var routes =[
     },
     { 
         path: '/marcador', 
-        component: require('../view/Operacion/p.marcador.vue').default,
+        component: require('../view/Operacion/marcador.vue').default,
         beforeEnter: auth
     },
     { 
