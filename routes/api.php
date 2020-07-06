@@ -110,6 +110,7 @@ Route::get('/consulta/marcas', function ($id) {
 Route::get('sincronizar/proceso',"SincronizarController@proceso");
 Route::get('sincronizar/labor',"SincronizarController@labor");
 Route::get('sincronizar/area',"SincronizarController@area");
+Route::get('sincronizar/asistencia',"SincronizarController@asistencia");
 Route::resource('configuracion',"ConfiguracionController");
 
 Route::get('nisira/periodo', 'NisiraController@periodo');

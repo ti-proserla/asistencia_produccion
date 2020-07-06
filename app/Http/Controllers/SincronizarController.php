@@ -14,6 +14,7 @@ use App\Model\Proceso;
 use App\Model\Operador;
 use App\Model\Tareo;
 use App\Model\Marcador;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 
@@ -123,34 +124,13 @@ class SincronizarController extends Controller
         ]);
     }
 
-    public function marcador(Request $request){
-        // dd($request->all());
-        $rowids=[];
-        for ($i=0; $i < count($request->data) ; $i++) { 
-            $row=$request->data[$i];
-
-            $operador=Operador::where('dni',$row['codigo_operador'])->first();
-            if ($operador==null) {
-                $operador=new Operador();
-                $operador->dni=$row['codigo_operador'];
-                $operador->nom_operador="Nuevo";
-                $operador->ape_operador="Trabajador";
-                $operador->planilla_id=1;
-                $operador->save();
-            }
-            $marcador=new Marcador();
-            $marcador->codigo_operador=$row['codigo_operador'];
-            $marcador->ingreso=$row['ingreso'];
-            $marcador->salida=$row['salida'];
-            $marcador->fundo_id=$row['fundo_id'];
-            $marcador->cuenta_id=$row['cuenta_id'];
-            $marcador->fecha_ref=$row['fecha_ref'];
-            $marcador->save();
-            array_push($rowids,$row['rowid']);
-        }
-        return response()->json([
-            "status"    => "OK",
-            "data"      => $rowids
-        ]);
+    public function asistencia(Request $request){
+        $asistencia=Marcador::where('fecha_ref',$request->fecha)
+                    ->where('fundo_id',$request->fundo_id)
+                    ->join('operador','operador.dni','=','marcador.codigo_operador')
+                    ->select('codigo_operador','fecha_ref','nom_operador','fundo_id')
+                    ->groupBy('codigo_operador','fecha_ref','nom_operador','fundo_id')
+                    ->get();
+        return response()->json($asistencia);
     }
 }
