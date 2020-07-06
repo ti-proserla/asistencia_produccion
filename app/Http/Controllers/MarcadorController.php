@@ -209,9 +209,9 @@ class MarcadorController extends Controller
                     $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
                 }
                 return response()->json([
-                        "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
-                    ]);
+                    "status"=> "OK",
+                    "data"  => $request->rowid
+                ]);
             }
         }
         
