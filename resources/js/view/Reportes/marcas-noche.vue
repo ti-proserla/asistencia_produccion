@@ -6,14 +6,34 @@
             </div>
             <div class="card-body">
                 <div class="row">
-                    <div class="form-group col-5 col-lg-3">
-                        <label>Año/Semana:</label>
+                    <div class="form-group col-5 col-lg-4">
                         <div class="row">
-                            <div class="col-7">
+                            <div class="col-4">
+                                <label>Año:</label>
                                 <input type="number" v-model="consulta.year" class="form-control">
                             </div>
-                            <div class="col-5">
-                                <input type="number" v-model="consulta.week" class="form-control">
+                            <div class="col-4">
+                                <label>Mes:</label>
+                                <select v-model="consulta.month" class="form-control">
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                </select>
+                            </div>
+                            <div class="col-4">
+                                <label for="">Semana:</label>
+                                <select name="" id="" v-model="periodo_inicio" class="form-control">
+                                    <option :value="periodo.inicio" v-for="periodo in periodoPorAnio">{{ `${periodo.semana}` }}</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -111,6 +131,10 @@ export default {
     },
     data() {
         return {
+            periodos: [],
+            periodo_inicio: 0,
+            periodo_fin: 0,
+            
             reporte:[],
             planillas:[],
             fundos:[],

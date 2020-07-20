@@ -389,8 +389,18 @@ class ReporteController extends Controller
         /**
          * YYYY-MM
          */
-        $fecha=$request->year.'-'.str_pad($request->week, 2, "0", STR_PAD_LEFT);
+        // $fecha=$request->year.'-'.str_pad($request->week, 2, "0", STR_PAD_LEFT);
         
+        $fecha_inicio=$request->inicio;
+        $fecha_fin=$request->fin;
+        /**
+         * Query turno WHERE
+         */
+        $query_turno="";
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
+            $query_turno="AND turno=".$request->turno;
+        }
 
         $query = "SELECT	O.dni,
                             CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
@@ -415,8 +425,10 @@ class ReporteController extends Controller
                                     DATE_FORMAT(MAX(salida),'%H:%i') s,
                                     ROUND( SUM(IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60)) , 2) h_Trabajadas
                         FROM 		marcador 
-                        WHERE 		DATE_FORMAT(fecha_ref, '%Y-%v') = ?
+                        WHERE 		fecha_ref >= ? AND
+                                    fecha_ref <= ?
                                     $query_fundo
+                                    $query_turno
                         GROUP BY 	codigo_operador,fecha_ref
                 ) M 
                 INNER JOIN  operador O on O.dni=M.codigo_operador
@@ -427,12 +439,12 @@ class ReporteController extends Controller
                 HAVING      h_nocturnas > 0
                 ";
         if ($request->has('excel')) {
-            $raw_query=DB::select(DB::raw("$query"),[$fecha,$request->planilla_id]);
+            $raw_query=DB::select(DB::raw("$query"),[$fecha_inicio,$fecha_fin,$request->planilla_id]);
             $planilla=Planilla::where('id',$request->planilla_id)->first();
             $nom_planilla=$planilla->nom_planilla;
-            return Excel::download(new HorasNocturnasExport($raw_query), "rpt-horas-nocturnas-$fecha-$nom_planilla.xlsx");
+            return Excel::download(new HorasNocturnasExport($raw_query), "rpt-horas-nocturnas-$fecha_inicio-a-$fecha_fin-$nom_planilla.xlsx");
         }else{
-            $datos=$this->paginate($query,[$fecha,$request->planilla_id],15,$request->page);
+            $datos=$this->paginate($query,[$fecha_inicio,$fecha_fin,$request->planilla_id],15,$request->page);
         }
         return response()->json($datos);
     }
