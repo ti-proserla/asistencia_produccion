@@ -460,6 +460,14 @@ class ReporteController extends Controller
             $fundo_id=$request->fundo_id;
             $query_fundo="AND fundo_id='$fundo_id'";
         }
+        /**
+         * Query turno WHERE
+         */
+        $query_turno="";
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
+            $query_turno="AND turno=".$request->turno;
+        }
 
         /**
          * YYYY-MM
@@ -494,6 +502,7 @@ class ReporteController extends Controller
                         WHERE 		fecha_ref >= ? AND
                                     fecha_ref <= ?
                                     $query_fundo
+                                    $query_turno
                         GROUP BY 	codigo_operador,fecha_ref
                 ) M 
                 INNER JOIN  operador O on O.dni=M.codigo_operador
