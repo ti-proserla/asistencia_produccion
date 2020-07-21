@@ -29,12 +29,18 @@
                             <thead>
                                 <tr>
                                     <th>Descripcion</th>
+                                    <th>CC</th>
+                                    <th>Actividad</th>
+                                    <th>Labor</th>
                                     <th>Editar</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr v-for="cargo in table.data">
                                     <td>{{cargo.nom_cargo}}</td>
+                                    <td>{{cargo.proceso_id}}</td>
+                                    <td>{{cargo.area_id}}</td>
+                                    <td>{{cargo.labor_id}}</td>
                                     <td>
                                         <button @click="abrirEditar(cargo.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
@@ -44,7 +50,7 @@
                             </tbody>
                         </table>
                         <div class="pagination">
-                            <a v-for="n in table.last_page" :class="{active: table.from==n}" @click="listar(n)">{{n}}</a>
+                            <a v-for="n in table.last_page" :class="{active: table.current_page==n}" @click="listar(n)">{{n}}</a>
                         </div>
                     </div>
                 </div>
@@ -100,7 +106,7 @@ export default {
         this.listar();
     },
     methods: {
-        listar(n=this.table.from){
+        listar(n=this.table.last_page){
             axios.get(url_base+'/cargo?page='+n)
             .then(response => {
                 this.table = response.data;

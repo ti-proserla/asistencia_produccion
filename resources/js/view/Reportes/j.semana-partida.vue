@@ -163,7 +163,6 @@ export default {
             return this.periodos.filter(periodo => (periodo.anio == this.consulta.year) && (moment(periodo.periodo,'YYYYMM').format('MM')==this.consulta.month) );
         },
         periodoRango(){
-            
             var rango="";
             for (let i = 0; i < this.periodos.length; i++) {
                 const element = this.periodos[i];

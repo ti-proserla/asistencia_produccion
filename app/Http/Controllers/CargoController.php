@@ -30,6 +30,9 @@ class CargoController extends Controller
     {
         $Cargo=new Cargo();
         $Cargo->nom_cargo=strtoupper($request->nom_cargo);
+        $Cargo->proceso_id=$request->proceso_id;
+        $Cargo->area_id=$request->area_id;
+        $Cargo->labor_id=$request->labor_id;
         $Cargo->save();
         return response()->json([
             "status"=> "OK",

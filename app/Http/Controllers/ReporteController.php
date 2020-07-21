@@ -12,7 +12,9 @@ use Carbon\Carbon;
 use App\Exports\HorasSemanaTrabajadorExport;
 use App\Exports\HorasNocturnasExport;
 use App\Exports\MarcasTurnoExport;
+use App\Model\NPeriodo;
 use Maatwebsite\Excel\Facades\Excel;
+
 
 class ReporteController extends Controller
 {
@@ -138,6 +140,13 @@ class ReporteController extends Controller
          */
         $fecha_inicio=$request->inicio;
         $fecha_fin=$request->fin;
+
+        $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'=',$fecha_inicio)
+                    ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->first();
+        $periodo_s=$periodo->periodo.'-'.$periodo->semana;
+        // dd($periodo);
+
         $planilla_id=$request->planilla_id;
         /**
          * Query Turno
@@ -153,11 +162,11 @@ class ReporteController extends Controller
          */
         $query="SELECT 	marcador.codigo_operador dni,
                         CONCAT(operador.nom_operador,' ',operador.ape_operador) NombreApellido,
-                        DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
-                        T.area_id codActividad,
-                        T.labor_id codLabor,
-                        T.proceso_id codProceso,
-                        labor.nom_labor,
+                        '$periodo_s' periodo,
+                        IFNULL(T.area_id,C.area_id ) codActividad,
+                        IFNULL(T.labor_id,C.labor_id ) codLabor,
+                        IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                        IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
@@ -170,7 +179,7 @@ class ReporteController extends Controller
                             on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref
                         LEFT JOIN labor on labor.id = T.labor_id
                         INNER JOIN operador on operador.dni = marcador.codigo_operador
-                        LEFT JOIN cargo on operador.cargo_id=cargo.id
+                        LEFT JOIN cargo AS C on operador.cargo_id=C.id
                 WHERE   fecha_ref <= '$fecha_fin'
                         AND fecha_ref >='$fecha_inicio'
                         AND planilla_id=$planilla_id 
@@ -260,10 +269,10 @@ class ReporteController extends Controller
         $query="SELECT 	dni,
                         CONCAT(operador.ape_operador,', ',operador.nom_operador) NombreApellido,
                         DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
-                        T.area_id codActividad,
-                        T.labor_id codLabor,
-                        T.proceso_id codProceso,
-                        labor.nom_labor,
+                        IFNULL(T.area_id,C.area_id ) codActividad,
+                        IFNULL(T.labor_id,C.labor_id ) codLabor,
+                        IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                        IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
                         GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
                         ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total,
                         ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
@@ -276,9 +285,9 @@ class ReporteController extends Controller
                 FROM	operador 
                         INNER JOIN marcador on operador.dni = marcador.codigo_operador
                         LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T
-                            -- ON tareo
+                            on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref 
                         LEFT JOIN labor on labor.id = T.labor_id
-                                on T.codigo_operador = marcador.codigo_operador and T.fecha = fecha_ref 
+                        LEFT JOIN cargo AS C on C.id=operador.cargo_id
                 where 	fecha_ref = ?  and ingreso is not null 
                         $query_busqueda 
                         $query_fundo
@@ -393,6 +402,12 @@ class ReporteController extends Controller
         
         $fecha_inicio=$request->inicio;
         $fecha_fin=$request->fin;
+
+        $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'=',$fecha_inicio)
+                    ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->first();
+        $periodo_s=$periodo->periodo.'-'.$periodo->semana;
+
         /**
          * Query turno WHERE
          */
@@ -404,10 +419,10 @@ class ReporteController extends Controller
 
         $query = "SELECT	O.dni,
                             CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
-                            T.area_id codActividad,
-                            T.labor_id codLabor,
-                            T.proceso_id codProceso,
-                            labor.nom_labor,
+                            IFNULL(T.area_id,C.area_id ) codActividad,
+                            IFNULL(T.labor_id,C.labor_id ) codLabor,
+                            IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                            IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
                             M.marcas,
                             M.h_trabajadas,
                             M.fecha_ref,
@@ -434,6 +449,7 @@ class ReporteController extends Controller
                 INNER JOIN  operador O on O.dni=M.codigo_operador
                 LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
                 LEFT JOIN labor on labor.id = T.labor_id
+                LEFT JOIN cargo AS C on C.id=O.cargo_id
                 WHERE       O.planilla_id=?
                             $query_busqueda
                 HAVING      h_nocturnas > 0
@@ -490,10 +506,10 @@ class ReporteController extends Controller
 
         $query = "SELECT	O.dni,
                             CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
-                            T.area_id codActividad,
-                            T.labor_id codLabor,
-                            T.proceso_id codProceso,
-                            labor.nom_labor,
+                            IFNULL(T.area_id,C.area_id ) codActividad,
+                            IFNULL(T.labor_id,C.labor_id ) codLabor,
+                            IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                            IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
                             M.marcas,
                             M.h_trabajadas,
                             M.fecha_ref,
@@ -520,6 +536,7 @@ class ReporteController extends Controller
                 INNER JOIN  operador O on O.dni=M.codigo_operador
                 LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
                 LEFT JOIN labor on labor.id = T.labor_id
+                LEFT JOIN cargo AS C on C.id=O.cargo_id
                 WHERE       O.planilla_id=?
                             $query_busqueda
                 ";

@@ -2,7 +2,7 @@
     <div>
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Reporte Horas Nocturnas por Semana</h4>
+                <h4 class="card-title">Reporte Horas Nocturnas por Semana ( {{ periodoRango }} )</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -134,13 +134,14 @@ export default {
             periodos: [],
             periodo_inicio: 0,
             periodo_fin: 0,
-            
+
             reporte:[],
             planillas:[],
             fundos:[],
             consulta:{
                 year: moment().format('YYYY'),
                 week: moment().week(),
+                month: moment().format('MM'),
                 planilla_id: "",
                 fundo_id: "",
                 turno: null
@@ -154,17 +155,55 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/rpt/horas_nocturnas?year='+this.consulta.year+'&week='+this.consulta.week+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
+            return url_base+'/rpt/horas_nocturnas?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
+        },
+        periodoPorAnio(){            
+            return this.periodos.filter(periodo => (periodo.anio == this.consulta.year) && (moment(periodo.periodo,'YYYYMM').format('MM')==this.consulta.month) );
+        },
+        periodoRango(){
+            var rango="";
+            for (let i = 0; i < this.periodos.length; i++) {
+                const element = this.periodos[i];
+                if (this.periodo_inicio==element.inicio) {
+                    this.periodo_fin=element.fin;
+                    rango=`${this.periodo_inicio} al ${this.periodo_fin}`;
+                    break;
+                }
+            }
+
+            return rango;
         }
     },
     mounted() {
+        this.listarPeriodos();
         this.listarPlanilla();
         this.listarFundo();
     },
     methods: {
+        obtenerPeriodoActual(){
+            for (let i = 0; i < this.periodos.length; i++) {
+                const element = this.periodos[i];
+                var compareDate = moment();
+                var startDate   = moment(element.inicio);
+                var endDate     = moment(element.fin);
+
+                if (compareDate.isBetween(startDate, endDate)) {
+                    // console.log(element);
+                    this.periodo_inicio=element.inicio;
+                    this.periodo_fin=element.fin;
+                }
+            }
+        },
+        listarPeriodos(){
+            axios.get(url_base+'/nisira/periodo')
+            .then(response => {
+                this.periodos = response.data;
+                this.obtenerPeriodoActual();
+            })
+        },
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/rpt/horas_nocturnas?year='+this.consulta.year+'&week='+this.consulta.week+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&turno='+this.consulta.turno+'&page='+n)
+            axios.get(url_base+'/rpt/horas_nocturnas?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&turno='+this.consulta.turno+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })
