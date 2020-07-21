@@ -231,7 +231,8 @@ class ReporteController extends Controller
             $resultado=$resultado->where('marcador.turno',$request->turno);
         }
         $resultado=$resultado->whereNull('T.id')
-            ->groupBy('operador.dni')
+            ->groupBy('operador.dni','ape_operador','nom_operador')
+            ->select('operador.dni','ape_operador','nom_operador')
             ->get();
         return response()->json($resultado);
     }
