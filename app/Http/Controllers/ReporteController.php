@@ -222,7 +222,7 @@ class ReporteController extends Controller
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
             ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
-            ->where(DB::raw('DATE(marcador.ingreso)'),$hoy)
+            ->where('marcador.fecha_ref',$hoy)
             ->whereNull('operador.cargo_id');
         if ($request->fundo_id!=null) {
             $resultado=$resultado->where('marcador.fundo_id',$request->fundo_id);
