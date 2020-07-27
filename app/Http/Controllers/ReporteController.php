@@ -268,9 +268,15 @@ class ReporteController extends Controller
             $query_turno="AND turno=".$request->turno;
         }
         
+        $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'<=',$request->fecha)
+                    ->where(DB::raw("FORMAT(FECHA_FIN,'yyyy-MM-dd')"),'>=',$request->fecha)
+                    ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->first();
+        $periodo_s=$periodo->periodo.'-'.$periodo->semana;
+
         $query="SELECT 	dni,
                         CONCAT(operador.ape_operador,', ',operador.nom_operador) NombreApellido,
-                        DATE_FORMAT( STR_TO_DATE(CONCAT(DATE_FORMAT(fecha_ref,'%x%v'),' Thursday'),'%x%v %W') , '%x%m-%v' ) periodo,
+                        '$periodo_s' periodo,
                         IFNULL(T.area_id,C.area_id ) codActividad,
                         IFNULL(T.labor_id,C.labor_id ) codLabor,
                         IFNULL(T.proceso_id,C.proceso_id) codProceso,
