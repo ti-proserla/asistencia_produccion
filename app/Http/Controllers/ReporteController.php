@@ -143,6 +143,7 @@ class ReporteController extends Controller
 
         $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'=',$fecha_inicio)
                     ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->where('IDPLANILLA','=','OBR')
                     ->first();
         $periodo_s=$periodo->periodo.'-'.$periodo->semana;
         // dd($periodo);
@@ -271,6 +272,7 @@ class ReporteController extends Controller
         $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'<=',$request->fecha)
                     ->where(DB::raw("FORMAT(FECHA_FIN,'yyyy-MM-dd')"),'>=',$request->fecha)
                     ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->where('IDPLANILLA','=','OBR')
                     ->first();
         $periodo_s=$periodo->periodo.'-'.$periodo->semana;
 
@@ -413,6 +415,7 @@ class ReporteController extends Controller
 
         $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'=',$fecha_inicio)
                     ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->where('IDPLANILLA','=','OBR')
                     ->first();
         $periodo_s=$periodo->periodo.'-'.$periodo->semana;
 
