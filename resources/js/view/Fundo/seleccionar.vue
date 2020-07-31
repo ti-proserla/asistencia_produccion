@@ -29,7 +29,8 @@ export default {
     },
     methods: {
         seleccionar(){
-            this.$store.commit( 'updateFundo' , this.fundo_id );
+            this.$store.commit('updateFundo' , this.fundo_id );
+            this.$router.push({path: "/marcador"} );
         }
     },
 }

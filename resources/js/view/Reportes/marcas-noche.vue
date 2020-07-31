@@ -181,14 +181,13 @@ export default {
     },
     methods: {
         obtenerPeriodoActual(){
+            var compareDate = moment();
             for (let i = 0; i < this.periodos.length; i++) {
                 const element = this.periodos[i];
-                var compareDate = moment();
                 var startDate   = moment(element.inicio);
-                var endDate     = moment(element.fin);
+                var endDate     = moment(element.fin).endOf('day');
 
                 if (compareDate.isBetween(startDate, endDate)) {
-                    // console.log(element);
                     this.periodo_inicio=element.inicio;
                     this.periodo_fin=element.fin;
                 }

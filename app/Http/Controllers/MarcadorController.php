@@ -21,6 +21,9 @@ class MarcadorController extends Controller
         if ($request->turno!=null) {
             $marcas=$marcas->where('turno',$request->turno);
         }
+        if ($request->fundo_id!=null) {
+            $marcas=$marcas->where('fundo_id',$request->fundo_id);
+        }
         $marcas=$marcas->get();
         return response()->json($marcas);
     }
@@ -509,7 +512,8 @@ class MarcadorController extends Controller
         $marcador=new Marcador();
         $marcador->codigo_operador=$request->codigo_operador;
         $marcador->cuenta_id=$request->user_id;
-        $marcador->turno=($request->turno==null)?1:$request->turno;
+        $marcador->turno=($request->turno==null) ? null:$request->turno;
+        $marcador->fundo_id=($request->fundo_id==null) ? null:$request->fundo_id;
         $marcador->fecha_ref=$request->fecha;
         $marcador->save();
         return response()->json([

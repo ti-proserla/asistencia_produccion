@@ -1,0 +1,98 @@
+.fotocheck2{ width: 942px; display: flex; flex-wrap: wrap; border:1px solid #aaa; margin: 5px}
+.fotocheck2 h3,.fotocheck2 h4,.fotocheck2 h5,.fotocheck2 h6,.fotocheck2 p{ margin: 0 }
+
+.fotocheck2 .logo{ height: 65px; width: auto }
+.fotocheck2 .foto{ height: 210px; width: auto }
+.fotocheck2 .franja-vertical{
+    width: 20px;
+    height: 280px;
+    /* background-color: #ff5416; */
+}
+.fotocheck2 .datos{
+    height: 148px;
+    padding: 10px 0;
+}
+.fotocheck2 .normas{
+    margin-top: 40px;
+    height: 142px;
+}
+.portada,.contra-portada{
+    width: 450px;
+}
+.contra-portada{
+    padding: 0px 10px;
+}
+.portada{
+    padding: 0px 20px;
+    padding-right: 5px;
+}
+.contra-portada ul{
+    /* font-size: 6px; */
+    text-align: justify;
+    padding-left: 15px;
+    list-style: circle;
+}
+.contra-portada ul li{
+    font-size: 11px;
+}
+.contra-portada b{
+    font-size: inherit;
+}
+
+.franja-horizontal{
+    margin-left: 20px;
+    width: 450px;
+    /* background-color: #532122; */
+    height: 10px;
+}
+
+
+.fotocheck-list{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media print{
+    body {-webkit-print-color-adjust: exact;}
+    .oculto-impresion, .oculto-impresion *{
+        display: none !important;
+    }
+}
+.fotocheck .franja{
+    background-color: #009946;
+    padding: 8px;
+    color: #fff;
+    height: 34px;
+}
+.fotocheck{
+    width: 290px;
+    padding: 10px 0;
+    border: 1px solid #000;
+    border-radius: 5px;
+    margin: 5px;
+}
+.fotocheck p{
+    margin-bottom: 0;
+}
+.fotocheck .foto{
+    height: 160px;
+    width: auto;
+    border-radius: 5px;
+    border: 2px solid #009946;
+}
+.fotocheck .logo{
+    height: 100px;
+    width: auto!important;
+}
+.fotocheck h5,.fotocheck2 h5{
+    font-size: 16px!important;
+}
+.fotocheck2 h5{
+    font-weight: 300;
+}
+.fotocheck2 h4{
+    font-size: 18px!important;
+}
+.fotocheck2 h3{
+    font-size: 20px!important;
+}

@@ -2,7 +2,7 @@
     <div>
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Reporte Horas Nocturnas por Semana ( {{ periodoRango }} )</h4>
+                <h4 class="card-title">Reporte Horas por Periodo ( {{ periodoRango }} )</h4>
             </div>
             <div class="card-body">
                 <div class="row">
@@ -37,14 +37,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <div class="col-lg-2 form-group">
-                        <label for="">Turno:</label>
-                        <select v-model="consulta.turno" class="form-control">
-                            <option value=null>Todos</option>
-                            <option value="1">Turno 1</option>
-                            <option value="2">Turno 2</option>
-                        </select>    
-                    </div> -->
                     <div class="form-group col-5 col-lg-3">
                         <label>Fundo:</label>
                         <select v-model="consulta.fundo_id" class="form-control">
@@ -52,15 +44,15 @@
                             <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                         </select>
                     </div>
-                    <div class="form-group col-5 col-lg-2">
+                    <div class="form-group col-5 col-lg-3">
                         <label>Planilla:</label>
                         <select v-model="consulta.planilla_id" class="form-control">
                             <option v-for="planilla in planillas" :value="planilla.id">{{ planilla.nom_planilla }}</option>
                         </select>
                     </div>
                     <div class="form-group col-12 col-lg-3">
-                        <label for="">Search:</label>
-                        <input type="text" class="form-control" placeholder="Busqueda por nombre o Codigo" v-model="search">
+                        <label for="">Busqueda</label>
+                        <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
                     <div class="col-sm-3">
                         <button @click="listar(1)" class="btn btn-info">
@@ -84,29 +76,31 @@
                                 <th>Cod.Labor</th>
                                 <th>C.Costo</th>
                                 <th>Labor</th>
-                                <th>Marca 1</th>
-                                <th>Marca 2</th>
-                                <th>Marca 3</th>
-                                <th>Marca 4</th>
-                                <th>Total</th>
-                                <th>Noche</th>
+                                <th>Dia 01</th>
+                                <th>Dia 02</th>
+                                <th>Dia 03</th>
+                                <th>Dia 04</th>
+                                <th>Dia 05</th>
+                                <th>Dia 06</th>
+                                <th>Dia 07</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-for="item in table.data">
                                 <td>{{ item.dni }}</td>
                                 <td>{{ item.NombreApellido }} </td>
-                                <td>{{ item.fecha_ref }} </td>
+                                <td>{{ item.periodo }} </td>
                                 <td>{{ item.codActividad }} </td>
                                 <td>{{ item.codLabor }} </td>
                                 <td>{{ item.codProceso }} </td>
                                 <td>{{ item.nom_labor }} </td>
-                                <td>{{ item.marcas.split('@')[0]}}</td>
-                                <td>{{ item.marcas.split('@')[1]}}</td>
-                                <td>{{ item.marcas.split('@')[2]}}</td>
-                                <td>{{ item.marcas.split('@')[3]}}</td>
-                                <td>{{ item.h_trabajadas}}</td>
-                                <td>{{ item.h_nocturnas}}</td>
+                                <td>{{ item.Lunes }}</td>
+                                <td>{{ item.Martes }}</td>
+                                <td>{{ item.Miercoles }}</td>
+                                <td>{{ item.Jueves }}</td>
+                                <td>{{ item.Viernes }}</td>
+                                <td>{{ item.Sabado }}</td>
+                                <td>{{ item.Domingo }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -147,11 +141,11 @@ export default {
             fundos:[],
             consulta:{
                 year: moment().format('YYYY'),
-                week: moment().week(),
                 month: moment().format('MM'),
+                week: moment().week(),
                 planilla_id: "",
                 fundo_id: "",
-                turno: null
+                turno: ""
             },
             search: '',
             table:{
@@ -162,7 +156,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/rpt/horas_nocturnas?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
+            return url_base+'/reporte-semana-partida?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
         },
         periodoPorAnio(){            
             return this.periodos.filter(periodo => (periodo.anio == this.consulta.year) && (moment(periodo.periodo,'YYYYMM').format('MM')==this.consulta.month) );
@@ -193,6 +187,7 @@ export default {
                 const element = this.periodos[i];
                 var startDate   = moment(element.inicio);
                 var endDate     = moment(element.fin).endOf('day');
+
                 if (compareDate.isBetween(startDate, endDate)) {
                     this.periodo_inicio=element.inicio;
                     this.periodo_fin=element.fin;
@@ -208,7 +203,7 @@ export default {
         },
         listar(n=this.selectPage){
             this.selectPage=n;
-            axios.get(url_base+'/rpt/horas_nocturnas?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&turno='+this.consulta.turno+'&page='+n)
+            axios.get(url_base+'/reporte-semana-partida?inicio='+this.periodo_inicio+'&fin='+this.periodo_fin+'&search='+this.search+'&planilla_id='+this.consulta.planilla_id+'&fundo_id='+this.consulta.fundo_id+'&turno='+this.consulta.turno+'&page='+n)
             .then(response => {
                 this.table = response.data;
             })

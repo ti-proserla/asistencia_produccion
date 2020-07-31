@@ -62,16 +62,22 @@ class RolController extends Controller
 
     public function showModulos(Request $request,$id){
         $arrayModulos=[];
-        $cuenta=Cuenta::where('id',$id)->first();
-        $modulos=RolModulo::join('modulo','modulo.id','=','rol_modulo.modulo_id')
+        // $rol=Rol::where('id',$id)->first();
+        // dd($rol);
+        if ($request->has('name')) {
+            $cuenta=Cuenta::where('id',$id)->first();
+            $modulos=RolModulo::join('modulo','modulo.id','=','rol_modulo.modulo_id')
             ->where('rol_modulo.rol_id',$cuenta->rol_id)
             ->select('rol_modulo.modulo_id','nombre_modulo')
             ->get();
-        if ($request->has('name')) {
             foreach ($modulos as $key => $modulo) {
                 array_push($arrayModulos,$modulo->nombre_modulo);
             }
         }else{
+            $modulos=RolModulo::join('modulo','modulo.id','=','rol_modulo.modulo_id')
+                ->where('rol_modulo.rol_id',$id)
+                ->select('rol_modulo.modulo_id','nombre_modulo')
+                ->get();
             foreach ($modulos as $key => $modulo) {
                 array_push($arrayModulos,$modulo->modulo_id);
             }

@@ -36,7 +36,7 @@ var routes =[
     },
     { 
         path: '/tareo', 
-        component: require('../view/Operacion/tareo.vue').default,
+        component: require('../view/Operacion/p.tareo.vue').default,
         beforeEnter:  multiguard([auth,fundo])
     },
     { 
@@ -92,7 +92,7 @@ var routes =[
     },
     { 
         path: '/fotocheck', 
-        component: require('../view/Operador/fotocheck.vue').default,
+        component: require('../view/Operador/p.fotocheck.vue').default,
         meta:{
             layout: "empty",
         },
@@ -136,6 +136,11 @@ var routes =[
     { 
         path: '/reporte-semana', 
         component: require('../view/Reportes/p.semana.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/reporte-semana-partida', 
+        component: require('../view/Reportes/p.semana-partida.vue').default,
         beforeEnter: auth
     },
     { 

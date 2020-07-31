@@ -96,7 +96,9 @@
 </div>
 </template>
 <script>
-    import 'vue-search-select/dist/VueSearchSelect.css';
+import { mapState,mapMutations } from 'vuex'
+
+import 'vue-search-select/dist/VueSearchSelect.css';
 import Select from '../../dragon-desing/dg-select.vue';
 import { ModelListSelect } from 'vue-search-select';
 
@@ -123,7 +125,7 @@ export default {
         this.listarTurnos();
     },
     computed: {
-        
+        ...mapState(['fundo'])
     },
     methods: {
         setSelected(value){
@@ -193,14 +195,14 @@ export default {
             });
         },
         buscar(){
-            axios.get(url_base+'/marcador?codigo_operador='+this.hola.dni+'&fecha='+this.fecha)
+            axios.get(url_base+'/marcador?codigo_operador='+this.hola.dni+'&fecha='+this.fecha+'&fundo_id='+this.fundo)
             .then(response => {
                 this.cancelar();
                 this.marcas=response.data;
             });
         },
         agregar(){
-            axios.get(url_base+'/marcador/add?codigo_operador='+this.hola.dni+'&fecha='+this.fecha)
+            axios.get(url_base+'/marcador/add?codigo_operador='+this.hola.dni+'&fecha='+this.fecha+'&fundo_id='+this.fundo)
             .then(response => {
                 this.buscar();
             });

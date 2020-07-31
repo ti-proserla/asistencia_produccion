@@ -19,6 +19,7 @@
                     <div class="form-group col-5 col-lg-3">
                         <label>Fundo:</label>
                         <select v-model="fundo_id" class="form-control">
+                            <option value="">Todos los fundos</option>
                             <option v-for="fundo in fundos" :value="fundo.id">{{ fundo.nom_fundo }}</option>
                         </select>
                     </div>
@@ -26,12 +27,11 @@
                         <label>Nombre:</label>
                         <input type="text" class="form-control" placeholder="Busqueda por nombre" v-model="search">
                     </div>
-                    <div class="col-sm-6 col-lg-2 form-group">
+                    <div class="col-lg-12 form-group">
                         <button @click="listar(1)" class="btn btn-info mt-3">
                             Buscar
                         </button>
-                    </div>
-                    <div class="col-sm-6 col-lg-2">
+                        <a :href="urlNisira" class="btn btn-success mt-3">Nisira</a>
                         <a :href="url" class="btn btn-success mt-3">Excel</a>
                     </div>
                 </div>
@@ -49,8 +49,6 @@
                                 <th>Marca 2</th>
                                 <th>Marca 3</th>
                                 <th>Marca 4</th>
-                                <!-- <th>Marca 5</th>
-                                <th>Marca 6</th> -->
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -105,7 +103,7 @@ export default {
             turno: 1,
             planillas:[],
             planilla_id: null,
-            fundo_id: null,
+            fundo_id: "",
             fundos:[]
         }
     },
@@ -117,8 +115,10 @@ export default {
     computed: {
         url(){
             return url_base+'/reporte-marcas?fecha='+this.fecha+'&planilla_id='+this.planilla_id+'&fundo_id='+this.fundo_id+'&excel';
+        },
+        urlNisira(){
+            return url_base+'/reporte-marcas?&fecha='+this.fecha+'&planilla_id='+this.planilla_id+'&fundo_id='+this.fundo_id+'&excel=nisira';
         }
-    
     },
     methods: {
         listarFundo(){
