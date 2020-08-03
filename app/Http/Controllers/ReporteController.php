@@ -222,7 +222,7 @@ class ReporteController extends Controller
     public function pendientes(Request $request){
         $hoy=($request->has('fecha')) ? $request->fecha : Carbon::now()->format('Y-m-d');
         $resultado=Operador::join('marcador','marcador.codigo_operador','=','operador.dni')
-            ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','operador.dni')
+            ->leftJoin(DB::raw("(SELECT * FROM tareo WHERE DATE(tareo.fecha)='".$hoy."') AS T"),'T.codigo_operador','=','marcador.codigo_operador')
             ->where('marcador.fecha_ref',$hoy)
             ->whereNull('operador.cargo_id');
         if ($request->fundo_id!=null) {
