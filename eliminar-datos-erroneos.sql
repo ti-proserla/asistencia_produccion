@@ -4,7 +4,7 @@ where id IN(
     FROM( 
         SELECT min(id) as id
         FROM tareo 
-        Group by codigo_operador,fecha,labor_id
+        Group by codigo_operador,fecha
         HAVING COUNT(id)>1
     ) AS TAR
 )

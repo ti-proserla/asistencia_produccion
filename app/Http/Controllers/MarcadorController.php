@@ -41,8 +41,13 @@ class MarcadorController extends Controller
             $operador->planilla_id=1;
             $operador->save();
         }
-        
-        $salida=Planilla::where('id',$operador->planilla_id)->first()->salida;
+        $planilla_id=0;
+        if ($operador->planilla_id==null) {
+            $planilla_id=1;
+        }else {
+            $planilla_id=$operador->planilla_id;
+        }
+        $salida=Planilla::where('id',$planilla_id)->first()->salida;
         $fecha_analisis=Carbon::now();
         $fecha_limite=Carbon::now()->startOfDay()->addHours($salida);
         
