@@ -521,6 +521,7 @@ class ReporteController extends Controller
                             IFNULL(T.labor_id,C.labor_id ) codLabor,
                             IFNULL(T.proceso_id,C.proceso_id) codProceso,
                             IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
+                            L.nombre linea,
                             M.marcas,
                             M.h_trabajadas,
                             M.fecha_ref,
@@ -548,6 +549,7 @@ class ReporteController extends Controller
                 LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
                 LEFT JOIN labor on labor.id = T.labor_id
                 LEFT JOIN cargo AS C on C.id=O.cargo_id
+                LEFT JOIN linea AS L on L.id=T.linea_id
                 WHERE       O.planilla_id=?
                             $query_busqueda
                 ";

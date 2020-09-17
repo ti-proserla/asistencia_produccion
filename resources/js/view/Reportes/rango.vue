@@ -65,6 +65,7 @@
                                 <th>Cod.Labor</th>
                                 <th>C.Costo</th>
                                 <th>Labor</th>
+                                <th>Linea</th>
                                 <th>Marca 1</th>
                                 <th>Marca 2</th>
                                 <th>Marca 3</th>
@@ -82,6 +83,7 @@
                                 <td>{{ item.codLabor }} </td>
                                 <td>{{ item.codProceso }} </td>
                                 <td>{{ item.nom_labor }} </td>
+                                <td>{{ item.linea }} </td>
                                 <td>{{ item.marcas.split('@')[0]}}</td>
                                 <td>{{ item.marcas.split('@')[1]}}</td>
                                 <td>{{ item.marcas.split('@')[2]}}</td>
