@@ -125,6 +125,12 @@ export default {
                             status: 'success',
                             data: 'Turno 02 Actualizado'
                         }
+                    }else if(this.codigo_barras=="1003"){
+                        this.$store.commit( 'update_turno' , 3 );
+                        this.alert={
+                            status: 'success',
+                            data: 'Turno 03 Actualizado'
+                        }
                     }else{
                         this.alert={
                             status: 'danger',
