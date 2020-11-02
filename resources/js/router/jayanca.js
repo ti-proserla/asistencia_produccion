@@ -81,6 +81,14 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/code-frame/:codigo/:nom_ape', 
+        component: require('../view/Operador/code-frame.vue').default,
+        beforeEnter: auth,
+        meta:{
+            layout: "empty",
+        },
+    },
+    { 
         path: '/fotocheck', 
         component: require('../view/Operador/fotocheck.vue').default,
         meta:{

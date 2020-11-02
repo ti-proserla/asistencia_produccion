@@ -21,10 +21,21 @@
                                 <option v-for="cargo in cargos" :value="cargo.id">{{ cargo.nom_cargo }}</option>
                             </Select>
                             <div class="croppa-center">
-                                <croppa @new-image-drawn="girarIfxe()" v-model="myCroppa" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true"></croppa>
+                                <croppa 
+                                    @new-image-drawn="girarIfxe()" 
+                                    v-model="myCroppa" 
+                                    :width="croppaConfig.horizontal" 
+                                    :height="croppaConfig.vertical" 
+                                    :quality="croppaConfig.quality" :prevent-white-space="true"
+                                ></croppa>
                             </div>
                             <div class="text-center">
-                                <button type="submit" class="btn btn-success mt-3">Guardar</button>
+                                <button type="submit" class="btn btn-success mt-3">
+                                    Guardar
+                                </button>
+                                <button @click="grabarNuevo();" type="button" class="btn btn-success mt-3">
+                                    Guardar e Imprimir Código
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -135,6 +146,7 @@
                             <div class="text-center">
                                 <button @click="cancelarActualizar()" type="button" class="btn btn-danger">Cancelar</button>
                                 <button type="submit" class="btn btn-success">Guardar</button>
+                                <button type="button" class="btn btn-info" @click="abrirCodeBar(operador_editar.dni,operador_editar.nom_operador+' '+operador_editar.ape_operador)">Imprimir Código</button>
                             </div>
                         </form>
                     </div>
@@ -157,16 +169,33 @@
                 </div>
             </div>
         </div>
+        <!--Modal codebar-->
+        <div id="modal-codebar" class="modal" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <iframe :src="url_codebar" frameborder="0" width="100%"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
+import VueBarcode from 'vue-barcode';
 import Input from '../../dragon-desing/dg-input.vue'
 import Select from '../../dragon-desing/dg-select.vue'
 
 export default {
     components:{
         Input,
-        Select
+        Select,
+        'barcode': VueBarcode 
     },
     data() {
         return {
@@ -192,7 +221,8 @@ export default {
                 horizontal:  225,
                 vertical:  300 ,
                 quality: 2
-            }
+            },
+            url_codebar: ''
         }
     },
     computed: {
@@ -247,6 +277,11 @@ export default {
         this.listarCargo();
     },
     methods: {
+        abrirCodeBar(dni,nom_ape){
+            console.log(nom_ape);
+            this.url_codebar='/code-frame/'+dni+'/'+nom_ape;
+            $('#modal-codebar').modal();
+        },
         consultaJNE(){
             if (this.operador_editar.dni!=null) {
                 if (this.operador_editar.dni.length==8) {
