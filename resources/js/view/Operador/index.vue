@@ -33,7 +33,7 @@
                                 <button type="submit" class="btn btn-success mt-3">
                                     Guardar
                                 </button>
-                                <button @click="grabarNuevo();" type="button" class="btn btn-success mt-3">
+                                <button @click="grabarNuevo('imprimir');" type="button" class="btn btn-success mt-3">
                                     Guardar e Imprimir Código
                                 </button>
                             </div>
@@ -179,7 +179,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <iframe :src="url_codebar" frameborder="0" width="100%"></iframe>
+                        <iframe :src="url_codebar" frameborder="0" width="100%" height="500px"></iframe>
                     </div>
                 </div>
             </div>
@@ -338,18 +338,19 @@ export default {
         },
         iniOperador(){
             this.errors={};
+            // var planilla_id= (!this.operador.planilla_id) ? this.operador.planilla_id: null;
             return {
                 dni: null,
                 nom_operador: null,
                 ape_operador:null,
-                // planilla_id: null
+                planilla_id: null
             }
         },
         verFotoCheck(id){
             this.url=url_base+'/../fotocheck/'+id;
             $('#modal-fotocheck').modal();
         },
-        grabarNuevo(){
+        grabarNuevo(imprimir){
             this.myCroppa.generateBlob((blob) => {
                 var formData = new FormData()
                 if (blob!=null) {
@@ -366,6 +367,9 @@ export default {
                             this.errors=respuesta.data;
                             break;
                         case "OK":
+                            if (imprimir=="imprimir") {
+                                this.abrirCodeBar(this.operador.dni,this.operador.nom_operador+' '+this.operador.ape_operador);
+                            }
                             this.operador=this.iniOperador();
                             swal("", "Operador Registrado", "success");
                             this.myCroppa.remove();
