@@ -34,6 +34,7 @@ class TareoController extends Controller
         $fecha_hoy=Carbon::parse($request->fecha)->format('Y-m-d');
         $marcador=Marcador::where('codigo_operador',$operador->dni)
             ->where(DB::raw("DATE(ingreso)"),$fecha_hoy)
+            ->where("turno",$request->turno)
             ->first();
         if ($marcador==null) {
             return response()->json([
@@ -41,7 +42,6 @@ class TareoController extends Controller
                 "data"  =>'Operador no marco Asistencia.'
             ]);
         }
-        // dd($request->all());
         $tareo=new Tareo();
         $tareo->codigo_operador=$operador->dni;
         $tareo->linea_id=$request->linea_id;
@@ -51,6 +51,7 @@ class TareoController extends Controller
         $tareo->fundo_id=$request->fundo_id;
         $tareo->cuenta_id=$request->user_id;
         $tareo->fecha=$fecha_hoy;
+        $tareo->turno_id=$request->turno;
         $tareo->save();
         return response()->json([
             "status"=> "OK",
