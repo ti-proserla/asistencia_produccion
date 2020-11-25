@@ -6,6 +6,7 @@ use App\Model\Marcador;
 use App\Model\Operador;
 use App\Model\Planilla;
 use App\Model\Turno;
+use App\Model\Parametro;
 use App\Model\Configuracion;
 
 use Illuminate\Http\Request;
@@ -32,6 +33,26 @@ class MarcadorController extends Controller
      */
     public function store(Request $request) 
     {   
+        
+        if ($request->codigo_barras=="00000001") {
+            $parametro=Parametro::where('descripcion','bloqueo_marcador')->first();
+            $parametro->valor=$parametro->valor=='0' ? '1' : '0';
+            $parametro->save();
+
+            if ($parametro->valor=='0') {
+                return response()->json([
+                    "status"=> "OK",
+                    "data"  => "Marcador desbloqueado.",
+                    "foto"  => null
+                    ]);
+            }else{
+                return response()->json([
+                    "status"    =>  "ERROR",
+                    "data"      =>  "Marcador Bloqueado."
+                ]);
+            }
+        }
+        
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
             $operador=new Operador();
@@ -47,6 +68,16 @@ class MarcadorController extends Controller
         }else {
             $planilla_id=$operador->planilla_id;
         }
+
+        $valor=Parametro::where('descripcion','bloqueo_marcador')->first()->valor;
+        if ($valor == '1' && $planilla_id=1) {
+            return response()->json([
+                "status"    =>  "ERROR",
+                "data"      =>  "Marcador Bloqueado, Notificar a RRHH."
+            ]);
+        }
+
+
         $salida=Planilla::where('id',$planilla_id)->first()->salida;
         $fecha_analisis=Carbon::now();
         $fecha_limite=Carbon::now()->startOfDay()->addHours($salida);
