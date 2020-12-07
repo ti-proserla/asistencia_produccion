@@ -46,7 +46,7 @@
                     <h6 v-else></h6>
                 </div>
                 <div class="my-1">
-                    <barcode :value="operador.dni" height="38" width="2" fontSize="14"></barcode>
+                    <barcode :value="operador.dni" height="34" width="2" fontSize="14"></barcode>
                 </div>
             </div>
         </div>
