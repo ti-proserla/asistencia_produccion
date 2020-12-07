@@ -14,9 +14,9 @@ class AddCentrosToCargo extends Migration
     public function up()
     {
         Schema::table('cargo', function (Blueprint $table) {
-            $table->string('proceso_id',8)->nullable();
-            $table->string('area_id',3)->nullable();
-            $table->string('labor_id',6)->nullable();
+            // $table->string('proceso_id',8)->nullable();
+            // $table->string('area_id',3)->nullable();
+            // $table->string('labor_id',6)->nullable();
         });
     }
 
