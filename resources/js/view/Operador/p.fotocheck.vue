@@ -42,11 +42,11 @@
                 <h5>{{ operador.nom_operador }}</h5>
                 <h5>{{ operador.ape_operador }}</h5>
                 <div class="franja">
-                    <h5 class="my-0" v-if="operador.cargo!=null">{{ operador.cargo.nom_cargo }}</h5>
-                    <h5 v-else></h5>
+                    <h6 class="my-0" v-if="operador.cargo!=null">{{ operador.cargo.nom_cargo }}</h6>
+                    <h6 v-else></h6>
                 </div>
                 <div class="my-1">
-                    <barcode :value="operador.dni" height="40" width="2" fontSize="14"></barcode>
+                    <barcode :value="operador.dni" height="38" width="2" fontSize="14"></barcode>
                 </div>
             </div>
         </div>

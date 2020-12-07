@@ -60,9 +60,12 @@
 }
 .fotocheck .franja{
     background-color: #009946;
-    padding: 8px;
+    padding: 6px;
     color: #fff;
-    height: 34px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .fotocheck{
     width: 290px;
@@ -87,6 +90,9 @@
 .fotocheck h5,.fotocheck2 h5{
     font-size: 16px!important;
 }
+.fotocheck h6{
+    font-size: 14px!important;
+} 
 .fotocheck2 h5{
     font-weight: 300;
 }
