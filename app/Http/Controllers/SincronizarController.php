@@ -12,6 +12,7 @@ use App\Model\Configuracion;
 use App\Model\Consumidor;
 use App\Model\Proceso;
 use App\Model\Operador;
+use App\Model\Planilla;
 use App\Model\Tareo;
 use App\Model\Marcador;
 use Carbon\Carbon;
@@ -132,5 +133,99 @@ class SincronizarController extends Controller
                     ->groupBy('codigo_operador','fecha_ref','nom_operador','fundo_id')
                     ->get();
         return response()->json($asistencia);
+    }
+
+    //Sync Imput
+    public function marcas(Request $request){
+        $data=$request->data;
+        for ($i=0; $i < count($data); $i++) {
+            $marca=$data[$i];
+            $codigo=$marca['codigo_operador'];
+            $fecha=$marca['fecha'];
+            $fundo_id=$marca['fundo_id'];
+            $operador=Operador::where('dni',$codigo)->first();
+            if ($operador==null) {
+                $operador=new Operador();
+                $operador->dni=$codigo;
+                $operador->nom_operador="Nuevo";
+                $operador->ape_operador="Trabajador";
+                $operador->planilla_id=1;
+                $operador->save();
+            }
+
+            $planilla_id=0;
+            if ($operador->planilla_id==null) {
+                $planilla_id=1;
+            }else {
+                $planilla_id=$operador->planilla_id;
+            }
+            $salida=Planilla::where('id',$planilla_id)->first()->salida;
+            $fecha_analisis=Carbon::parse($fecha);
+            $fecha_limite=Carbon::parse($fecha)->startOfDay()->addHours($salida);
+            $fecha_consulta=($fecha_analisis<$fecha_limite) ? Carbon::parse($fecha)->subDay()->format('Y-m-d') : Carbon::parse($fecha)->format('Y-m-d');
+            // dd($fecha_consulta);
+
+            $consulta_1=Marcador::where('codigo_operador',$codigo)
+                        ->where('fecha_ref','>=',$fecha_consulta)
+                        ->where('fecha_ref','<=',$fecha_analisis)
+                        ->select('codigo_operador','fecha_ref',DB::raw('min(ingreso) ingreso,MAX(id) id'))
+                        ->having('ingreso','>',DB::raw('DATE_SUB("'.Carbon::now().'", INTERVAL 16 HOUR)'))
+                        ->groupBy('codigo_operador','fecha_ref')
+                        ->first();
+            // dd($marca,$operador,$consulta_1);
+            $marcador=null;
+        
+            if ($consulta_1!=null) {
+                $marcador=Marcador::where('id',$consulta_1->id)->first();
+            }
+
+            do {
+                if ($marcador!=null) { // En caso sea su primera marca en todo el sistema.
+                    $tiempo_entre_marcas=Planilla::where('id',$planilla_id)->first()->tiempo_entre_marcas;
+                    $fecha_limite=Carbon::parse($fecha)->subMinute($tiempo_entre_marcas);
+                    
+                    if(
+                        ( $marcador->salida == null && $fecha_limite < Carbon::parse($marcador->ingreso) ) ||
+                        ( $marcador->salida != null && $fecha_limite < Carbon::parse($marcador->salida) )
+                    ) {
+                        $min=0;
+                        if ($marcador->salida == null) {
+                            $min=Carbon::parse($marcador->ingreso)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                        }else {
+                            $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
+                        }
+                        //salir por horas continuas
+                        break 1;
+                    }
+                }
+
+                if (is_null($marcador)) {
+                    $marcador=new Marcador();
+                    $marcador->codigo_operador=$codigo;
+                    $marcador->ingreso=$fecha_analisis;
+                    $marcador->salida=null;
+                    $marcador->fundo_id=$fundo_id;
+                    $marcador->fecha_ref=$fecha_analisis;
+                    $marcador->save();
+                }else{
+                    if (!is_null($marcador->salida)) {
+                        $newMarcador=$marcador;
+                        $marcador=new Marcador();
+                        $marcador->codigo_operador=$codigo;
+                        $marcador->ingreso=$fecha_analisis;
+                        $marcador->salida=null;
+                        $marcador->fundo_id=$fundo_id;
+                        $marcador->fecha_ref=$newMarcador->fecha_ref;
+                        $marcador->save();
+                    }else{
+                        $marcador->salida=$fecha_analisis;
+                        $marcador->save();
+                    }
+                    
+                }
+            } while (0);
+
+        }
+        return response()->json();
     }
 }

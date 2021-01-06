@@ -101,7 +101,7 @@ class MarcadorController extends Controller
         }
 
         if ($marcador!=null) { // En caso sea su primera marca en todo el sistema.
-            $tiempo_entre_marcas=Planilla::where('id',$operador->planilla_id)->first()->tiempo_entre_marcas;
+            $tiempo_entre_marcas=Planilla::where('id',$planilla_id)->first()->tiempo_entre_marcas;
             $fecha_limite=Carbon::now()->subMinute($tiempo_entre_marcas);
             
             if(
