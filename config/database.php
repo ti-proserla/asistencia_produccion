@@ -82,7 +82,7 @@ return [
             'url' => env('DATABASE_URL'),
             'host' => env('DB_SQL_HOST', '172.16.1.113'),
             'port' => env('DB_SQL_PORT', '1433'),
-            'database' => env('DB_SQL_DATABASE', 'JAYANCA'),
+            'database' => env('DB_SQL_DATABASE', 'PROSERLA2020'),
             'username' => env('DB_SQL_USERNAME', 'sa'),
             'password' => env('DB_SQL_PASSWORD', 'admin2019.rar'),
             'charset' => 'utf8',

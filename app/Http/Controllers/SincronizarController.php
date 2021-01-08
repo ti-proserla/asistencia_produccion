@@ -226,6 +226,8 @@ class SincronizarController extends Controller
             } while (0);
 
         }
-        return response()->json();
+        return response()->json([
+            "status"    => "OK"
+        ]);
     }
 }
