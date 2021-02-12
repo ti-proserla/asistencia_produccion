@@ -16,7 +16,7 @@ class CreateProcesoTable extends Migration
         Schema::create('proceso', function (Blueprint $table) {
             $table->string('id',12)->primary();
             $table->string('nom_proceso',50);
-            $table->string('fundo_id',8)->nullable();
+            $table->string('fundo_id',12)->nullable();
             $table->enum('estado',['0','1'])->default('0'); //0: activo y 1: inactivo 
             $table->timestamps();
         });

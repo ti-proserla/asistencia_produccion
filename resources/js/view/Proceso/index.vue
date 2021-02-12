@@ -29,14 +29,31 @@
                                 <tr>
                                     <th>Código</th>
                                     <th>Descripcion</th>
-                                    <!-- <th>Editar</th> -->
+                                    <th>Fundo</th>
                                     <th>Estado</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="proceso in table.data">
+                                <tr v-for="(proceso,index) in table.data">
                                     <td>{{proceso.id}}</td>
                                     <td>{{proceso.nom_proceso}}</td>
+                                    <td>
+
+                                        <div v-if="proceso_editar_index!=index">
+                                            {{ proceso.fundo_id }}
+                                            <button class="btn-link-warning" @click="proceso_editar_index=index">
+                                                <i class="material-icons">edit</i>
+                                            </button>
+                                        </div>
+                                        <div v-else>
+                                            <select v-model="proceso.fundo_id">
+                                                <option :value="null">Todos los Fundos</option>
+                                                <option :value="fundo.id" v-for="fundo in fundos">{{ fundo.nom_fundo }}</option>
+                                            </select>
+                                            <button class="btn-link-info" @click="editar(proceso.id,proceso.fundo_id)"><i class="material-icons">save</i></button>
+                                            <button class="btn-link-danger" @click="proceso_editar_index=-1"><i class="material-icons">cancel</i></button>
+                                        </div>
+                                    </td>
                                     <!-- <td>
                                         <button @click="abrirEditar(proceso.id)" class="btn-link-info">
                                             <i class="material-icons">create</i>
@@ -101,17 +118,26 @@ export default {
             table:{
                 data:[]
             },
-            url: null
+            url: null,
+            fundos: [],
+            proceso_editar_index:-1,
         }
     },
     mounted() {
         this.listar();
+        this.listarFundos();
     },
     methods: {
         listar(n=this.table.from){
             axios.get(url_base+'/proceso?page='+n)
             .then(response => {
                 this.table = response.data;
+            })
+        },
+        listarFundos(){
+            axios.get(url_base+'/fundo?all=true')
+            .then(response => {
+                this.fundos = response.data;
             })
         },
         iniproceso(){
@@ -137,6 +163,23 @@ export default {
                     default:
                         break;
                 }
+            });
+        },
+        editar(id,fundo_id){
+            axios.post(url_base+'/proceso/'+id+'?_method=PUT',{
+                fundo_id: fundo_id
+            })
+            .then(response => {
+                var respuesta=response.data;
+                switch (respuesta.status) {
+                    case "OK":
+                        swal("", "Estado Actualizado", "success");
+                        this.listar();
+                        break;
+                    default:
+                        break;
+                }
+                this.proceso_editar_index=-1;
             });
         },
         actualizarEstado(id){

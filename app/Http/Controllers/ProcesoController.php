@@ -57,11 +57,10 @@ class ProcesoController extends Controller
         return response()->json($Proceso);
     }
         
-    public function update(ProcesoValidate $request, $id)
+    public function update(Request $request, $id)
     {
         $Proceso=Proceso::where('id',$id)->first();
-        $Proceso->codigo=$request->codigo;
-        $Proceso->nom_proceso=$request->nom_proceso;      
+        $Proceso->fundo_id=$request->fundo_id;      
         $Proceso->save();
         return response()->json([
             "status"=> "OK",

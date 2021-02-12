@@ -48,6 +48,12 @@
                 <p>Cargo</p>
             </router-link>
         </li>
+        <li v-if="existe('fundo')">
+            <router-link to="/fundo">
+                <i class="material-icons">work</i>
+                <p>fundo</p>
+            </router-link>
+        </li>
         <li v-if="existe('modulo')">
             <router-link to="/modulo">
                 <i class="material-icons">work</i>
