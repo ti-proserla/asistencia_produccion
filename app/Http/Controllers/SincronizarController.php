@@ -69,6 +69,7 @@ class SincronizarController extends Controller
         $configuracion=Configuracion::select('ccosto')->first();
         $parametros=explode(',',$configuracion->ccosto);
         $consumidores_fundos=Consumidor::whereIn('IDCONSUMIDOR',$parametros)
+                                ->where('estado','0')
                                 ->selectRaw('RTRIM(IDCONSUMIDOR) idconsumidor,RTRIM(DESCRIPCION) nom_fundo')
                                 ->get();
         // dd($parametros,$consumidores_fundos);
