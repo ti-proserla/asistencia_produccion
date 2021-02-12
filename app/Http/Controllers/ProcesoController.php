@@ -23,7 +23,9 @@ class ProcesoController extends Controller
                 ->orWhereNull('fundo_id');
         }
         if ($request->all==true) {
-            $Procesos=$Procesos->get();
+            $Procesos=$Procesos
+                        ->where('estado','0')
+                        ->get();
         }else{
             $Procesos=$Procesos->paginate(8);
         }
