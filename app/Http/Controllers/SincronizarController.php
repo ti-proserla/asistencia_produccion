@@ -169,10 +169,11 @@ class SincronizarController extends Controller
                         ->where('fecha_ref','>=',$fecha_consulta)
                         ->where('fecha_ref','<=',$fecha_analisis)
                         ->select('codigo_operador','fecha_ref',DB::raw('min(ingreso) ingreso,MAX(id) id'))
-                        ->having('ingreso','>',DB::raw('DATE_SUB("'.Carbon::now().'", INTERVAL 16 HOUR)'))
+                        ->having('ingreso','>',DB::raw('DATE_SUB("'.Carbon::parse($fecha).'", INTERVAL 16 HOUR)'))
                         ->groupBy('codigo_operador','fecha_ref')
                         ->first();
-            // dd($marca,$operador,$consulta_1);
+
+                        // dd($marca,$operador,$consulta_1);
             $marcador=null;
         
             if ($consulta_1!=null) {
