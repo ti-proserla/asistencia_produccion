@@ -13,6 +13,11 @@
                 <th colspan="1">{{ $empresa->ruc }}</th>
             </tr>
             <tr>
+                <th></th>
+                <th><b>DIRECCIÓN:</b></th>
+                <th colspan="1">{{ $empresa->direccion }}</th>
+            </tr>
+            <tr>
                 <th ></th>
                 <th><b>Fecha:</b></th>
                 <th colspan="3">{{ $fecha }}</th>
