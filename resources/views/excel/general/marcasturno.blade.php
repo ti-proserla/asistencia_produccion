@@ -15,7 +15,7 @@
             <tr>
                 <th></th>
                 <th><b>DIRECCIÓN:</b></th>
-                <th colspan="1">{{ $empresa->direccion }}</th>
+                <th colspan="4">{{ $empresa->direccion }}</th>
             </tr>
             <tr>
                 <th ></th>
