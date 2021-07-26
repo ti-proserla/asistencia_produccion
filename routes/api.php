@@ -13,6 +13,8 @@ use App\Exports\HorasSemanaTrabajadorExport;
 use App\Exports\MarcasTurnoTrabajadorExport;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Model\Operador;
+use Peru\Http\ContextClient;
+use Peru\Jne\{Dni, DniParser};
 
 header("Access-Control-Allow-Headers: *");
 header("Access-Control-Allow-Origin: *");
@@ -124,3 +126,60 @@ Route::post('sincronizar/marcador',"SincronizarController@marcador");
 
 //Input
 Route::post('sincronizar/in/marcas',"SincronizarController@marcas");
+
+Route::get('jne-masivo', function () {
+    
+
+    $operadores=Operador::where('nom_operador','Nuevo')->get();
+    foreach ($operadores as $key => $operador) {
+        $cs = new Dni(new ContextClient(), new DniParser());
+        $person = $cs->get($operador->dni);
+        if (!$person) {
+            
+        }else{
+
+            $operador->nom_operador=strtoupper(utf8_decode($person->nombres));        
+            $operador->ape_operador=strtoupper(utf8_decode($person->apellidoPaterno." ".$person->apellidoMaterno));
+            $operador->save();
+        }
+    }
+
+    // for ($i=0; $i < count($fotos); $i++) { 
+    //     $foto=($fotos)[$i];
+    //     $codigo=$foto["codigo"];
+    //     if (strlen($codigo)==8) {
+    //         $cs = new Dni(new ContextClient(), new DniParser());
+    //         $person = $cs->get($codigo);
+    //         $operador=Operador::where('dni',$codigo)->first();
+
+    //         if (!$person) {
+    //             if ($operador==null) {
+    //                 $operador=new Operador();
+    //                 $operador->dni=$codigo;
+    //                 $operador->nom_operador="Nuevo";        
+    //                 $operador->ape_operador="Trabajador";
+    //                 $operador->planilla_id=1;
+    //                 $operador->cargo_id=null;
+    //                 $operador->save();
+    //             }
+    //         }else {
+    //             // dd($person);
+    //             if ($operador==null) {
+    //                 $operador=new Operador();
+    //                 $operador->dni=$codigo;
+    //                 $operador->nom_operador=strtoupper(utf8_decode($person->nombres));        
+    //                 $operador->ape_operador=strtoupper(utf8_decode($person->apellidoPaterno." ".$person->apellidoMaterno));
+    //                 $operador->planilla_id=1;
+    //                 $operador->cargo_id=null;
+    //                 $operador->save();
+    //             }
+
+    //         }
+    //         $fileName = $codigo.".jpeg";
+    //         \Image::make($foto["foto"])
+    //             ->save(public_path('/storage/operador/'.$fileName));
+    //         $operador->foto=$fileName;
+    //         $operador->save();
+    //     }
+    // }
+});
