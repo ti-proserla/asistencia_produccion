@@ -118,6 +118,7 @@ Route::get('nisira/periodo', 'NisiraController@periodo');
 /**
  * Ingreso
  */
+Route::post('sincronizar/fotos',"SincronizarController@fotos");
 Route::post('sincronizar/tareo',"SincronizarController@tareo");
 Route::post('sincronizar/marcador',"SincronizarController@marcador");
 

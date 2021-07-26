@@ -16,6 +16,8 @@ use App\Model\Planilla;
 use App\Model\Tareo;
 use App\Model\Marcador;
 use Carbon\Carbon;
+use Peru\Http\ContextClient;
+use Peru\Jne\{Dni, DniParser};
 
 use Illuminate\Support\Facades\DB;
 
@@ -231,4 +233,51 @@ class SincronizarController extends Controller
             "status"    => "OK"
         ]);
     }
+
+    public function fotos(Request $request){
+        // dd($request->all());
+        $fotos=$request->fotos;
+        for ($i=0; $i < count($fotos); $i++) { 
+            $foto=($fotos)[$i];
+            $codigo=$foto["codigo"];
+            if (strlen($codigo)==8) {
+                $cs = new Dni(new ContextClient(), new DniParser());
+                $person = $cs->get($codigo);
+                $operador=Operador::where('dni',$codigo)->first();
+
+                if (!$person) {
+                    if ($operador==null) {
+                        $operador=new Operador();
+                        $operador->dni=$codigo;
+                        $operador->nom_operador="Nuevo";        
+                        $operador->ape_operador="Trabajador";
+                        $operador->planilla_id=1;
+                        $operador->cargo_id=null;
+                        $operador->save();
+                    }
+                }else {
+                    // dd($person);
+                    if ($operador==null) {
+                        $operador=new Operador();
+                        $operador->dni=$codigo;
+                        $operador->nom_operador=strtoupper(utf8_decode($person->nombres));        
+                        $operador->ape_operador=strtoupper(utf8_decode($person->apellidoPaterno." ".$person->apellidoMaterno));
+                        $operador->planilla_id=1;
+                        $operador->cargo_id=null;
+                        $operador->save();
+                    }
+
+                }
+                $fileName = $codigo.".jpeg";
+                \Image::make($foto["foto"])
+                    ->save(public_path('/storage/operador/'.$fileName));
+                $operador->foto=$fileName;
+                $operador->save();
+            }
+        }
+        return response()->json([
+            "status" => "OK",
+            "data"   => "Fotos Registradas."
+        ]);
+    }   
 }
