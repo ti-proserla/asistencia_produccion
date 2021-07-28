@@ -236,7 +236,7 @@ class SincronizarController extends Controller
     }
 
     public function fotos(Request $request){
-        Log::info("Ingreso a migracion Masiva.". $request->fotos);
+        Log::info("Ingreso a migracion Masiva.". $request->fullUrl());
         $fotos=$request->fotos;
         
         for ($i=0; $i < count($fotos); $i++) { 
