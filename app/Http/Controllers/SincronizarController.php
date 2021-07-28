@@ -268,11 +268,16 @@ class SincronizarController extends Controller
                     }
 
                 }
-                $fileName = $codigo.".jpeg";
-                \Image::make($foto["foto"])
-                    ->save(public_path('/storage/operador/'.$fileName));
-                $operador->foto=$fileName;
-                $operador->save();
+                try {
+                    $fileName = $codigo.".jpeg";
+                    \Image::make($foto["foto"])
+                        ->save(public_path('/storage/operador/'.$fileName));
+                    $operador->foto=$fileName;
+                    $operador->save();
+                } catch (Exception $e) {
+
+                }
+                
             }
         }
         return response()->json([
