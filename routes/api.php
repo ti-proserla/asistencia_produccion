@@ -120,6 +120,7 @@ Route::get('nisira/periodo', 'NisiraController@periodo');
 /**
  * Ingreso
  */
+ini_set('max_execution_time', 10*30);
 Route::post('sincronizar/fotos',"SincronizarController@fotos");
 Route::post('sincronizar/tareo',"SincronizarController@tareo");
 Route::post('sincronizar/marcador',"SincronizarController@marcador");
