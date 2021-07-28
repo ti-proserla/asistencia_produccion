@@ -18,6 +18,7 @@ use App\Model\Marcador;
 use Carbon\Carbon;
 use Peru\Http\ContextClient;
 use Peru\Jne\{Dni, DniParser};
+use Illuminate\Support\Facades\Log;
 
 use Illuminate\Support\Facades\DB;
 
@@ -235,6 +236,7 @@ class SincronizarController extends Controller
     }
 
     public function fotos(Request $request){
+        Log::info("Ingreso a migracion Masiva.");
         $fotos=$request->fotos;
         
         for ($i=0; $i < count($fotos); $i++) { 
