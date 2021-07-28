@@ -237,10 +237,7 @@ class SincronizarController extends Controller
     public function fotos(Request $request){
         // dd($request->all());
         $fotos=$request->fotos;
-        return response()->json([
-            "status" => "OK",
-            "data"   => $fotos
-        ]);
+        
         for ($i=0; $i < count($fotos); $i++) { 
             $foto=($fotos)[$i];
             $codigo=$foto["codigo"];
