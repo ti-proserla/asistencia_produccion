@@ -238,7 +238,7 @@ class SincronizarController extends Controller
     public function fotos(Request $request){
         Log::info("Ingreso a migracion Masiva.". json_encode($request->all()));
         $fotos=$request->fotos;
-        dd($request->all());
+        // dd($request->all());
         
         for ($i=0; $i < count($fotos); $i++) { 
             $foto=($fotos)[$i];
