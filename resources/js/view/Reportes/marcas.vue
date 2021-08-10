@@ -49,8 +49,8 @@
                                 <th>Marca 2</th>
                                 <th>Marca 3</th>
                                 <th>Marca 4</th>
-                                <!-- <th>Marca 5</th>
-                                <th>Marca 6</th> -->
+                                <th>Marca 5</th>
+                                <th>Marca 6</th>
                                 <th>Total</th>
                             </tr>
                         </thead>
@@ -66,6 +66,8 @@
                                 <td>{{ item.marcas.split('@')[1]}}</td>
                                 <td>{{ item.marcas.split('@')[2]}}</td>
                                 <td>{{ item.marcas.split('@')[3]}}</td>
+                                <td>{{ item.marcas.split('@')[4]}}</td>
+                                <td>{{ item.marcas.split('@')[5]}}</td>
                                 <td>{{ item.total}}</td>
                             </tr>
                         </tbody>
