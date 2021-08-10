@@ -13,6 +13,8 @@
             <th>Marca 2</th>            
             <th>Marca 3</th>            
             <th>Marca 4</th>            
+            <th>Marca 5</th>            
+            <th>Marca 6</th>            
             <th>H. Trabajadas</th>            
             <th>H. Nocturnas</th>            
         </tr>
@@ -32,6 +34,8 @@
                 <td>{{ (count(explode("@",$operador->marcas))>=(1+1)) ? explode("@",$operador->marcas)[1] : '-' }}</td>
                 <td>{{ (count(explode("@",$operador->marcas))>=(2+1)) ? explode("@",$operador->marcas)[2] : '-' }}</td>
                 <td>{{ (count(explode("@",$operador->marcas))>=(3+1)) ? explode("@",$operador->marcas)[3] : '-' }}</td>
+                <td>{{ (count(explode("@",$operador->marcas))>=(4+1)) ? explode("@",$operador->marcas)[4] : '-' }}</td>
+                <td>{{ (count(explode("@",$operador->marcas))>=(5+1)) ? explode("@",$operador->marcas)[5] : '-' }}</td>
                 <td>{{ $operador->h_trabajadas }}</td>
                 <td>{{ $operador->h_nocturnas }}</td>
             </tr>

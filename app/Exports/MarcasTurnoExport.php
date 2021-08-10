@@ -48,7 +48,7 @@ WithDrawings, WithEvents
         return [
             AfterSheet::class    => function(AfterSheet $event) {
                 $event->sheet->styleCells(
-                    'A5:H'.(count($this->resultado)+5),
+                    'A6:J'.(count($this->resultado)+5),
                     [
                         'borders' => [
                             'allBorders' => [
