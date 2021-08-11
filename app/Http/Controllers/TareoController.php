@@ -36,12 +36,12 @@ class TareoController extends Controller
             ->where(DB::raw("DATE(ingreso)"),$fecha_hoy)
             ->where("turno",$request->turno)
             ->first();
-        if ($marcador==null) {
-            return response()->json([
-                "status"    =>"WARNING",
-                "data"  =>'Operador no marco Asistencia.'
-            ]);
-        }
+        // if ($marcador==null) {
+        //     return response()->json([
+        //         "status"    =>"WARNING",
+        //         "data"  =>'Operador no marco Asistencia.'
+        //     ]);
+        // }
         $tareo=new Tareo();
         $tareo->codigo_operador=$operador->dni;
         $tareo->linea_id=$request->linea_id;
