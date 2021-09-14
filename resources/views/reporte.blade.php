@@ -17,7 +17,7 @@
 </head>
 <body>
     <div id="app"></div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script> -->
     <script>
         
     </script>
