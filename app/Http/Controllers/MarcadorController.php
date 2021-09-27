@@ -131,8 +131,11 @@ class MarcadorController extends Controller
             $marcador->turno=$request->turno;
             $marcador->cuenta_id=$request->user_id;
             $marcador->fecha_ref=$fecha_analisis;
+            $marcador->tareo_id=null;
             $marcador->save();
-            $tareo_anterior=Tareo::where('fecha',$fecha_analisis)
+            $fecha=$fecha_analisis->format('Y-m-d');
+            // dd($fecha);
+            $tareo_anterior=Tareo::where('fecha',$fecha)
                         ->where('turno_id',$request->turno)
                         ->where('codigo_operador',$operador->dni)
                         ->orderBy('id','DESC')
@@ -141,6 +144,7 @@ class MarcadorController extends Controller
                 $marcador->tareo_id=$tareo_anterior->id;
                 $marcador->save();
             }
+
         }else{
             if (!is_null($marcador->salida)) {
                 $newMarcador=$marcador;
@@ -150,6 +154,7 @@ class MarcadorController extends Controller
                 $marcador->salida=null;
                 $marcador->cuenta_id=$request->user_id;
                 $marcador->turno=$request->turno;
+                $marcador->tareo_id=null;
                 $marcador->fecha_ref=$newMarcador->fecha_ref;
                 $marcador->save();
                 $tareo_anterior=Tareo::where('fecha',$newMarcador->fecha_ref)
@@ -161,6 +166,7 @@ class MarcadorController extends Controller
                     $marcador->tareo_id=$tareo_anterior->id;
                     $marcador->save();
                 }
+
             }else{
                 $marcador->salida=$fecha_analisis;
                 $marcador->save();
