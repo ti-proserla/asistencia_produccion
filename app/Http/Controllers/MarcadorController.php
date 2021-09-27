@@ -405,6 +405,7 @@ class MarcadorController extends Controller
 
     public function store2(Request $request) 
     {    
+        dd("marcador jayanca");
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
             $operador=new Operador();
