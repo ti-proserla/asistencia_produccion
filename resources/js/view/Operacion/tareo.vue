@@ -187,8 +187,7 @@ export default {
                     axios.post(url_base+'/tareo',this.tareo)
                     .then(response => {
                         var respuesta=response.data;
-                        console.log(respuesta);
-                        
+                        console.log(respuesta);                        
                         switch (respuesta.status) {
                             case "ERROR":
                                 this.alert=respuesta;
@@ -196,14 +195,13 @@ export default {
                                 this.clearAlert();
                                 break;
                             case "WARNING":
-                                if((navigator.userAgent).search('Android')>-1){
-                                    swal("", respuesta.data, 'warning');
-                                }
-                                this.tareo.codigo_barras=null;
+                                // this.tareo.codigo_barras=null;
                                 this.alert={
                                     status: 'warning',
                                     data: respuesta.data
                                 };
+                                this.tareo.codigo_barras=null;
+                                this.clearAlert();
                                 break;
                             case "OK":
                                 // swal("", respuesta.data.nom_operador+" "+ respuesta.data.ape_operador, 'warning');

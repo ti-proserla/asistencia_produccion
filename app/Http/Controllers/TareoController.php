@@ -21,7 +21,6 @@ class TareoController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
         $operador=Operador::where('dni',$request->codigo_barras)->first();
         if ($operador==null) {
             $operador=new Operador();
@@ -36,12 +35,6 @@ class TareoController extends Controller
             ->where(DB::raw("DATE(ingreso)"),$fecha_hoy)
             ->where("turno",$request->turno)
             ->first();
-        // if ($marcador==null) {
-        //     return response()->json([
-        //         "status"    =>"WARNING",
-        //         "data"  =>'Operador no marco Asistencia.'
-        //     ]);
-        // }
         
         $tareo_anterior=Tareo::where('fecha',$request->fecha)
                             ->where('turno_id',$request->turno)
@@ -49,8 +42,6 @@ class TareoController extends Controller
                             ->orderBy('id','DESC')
                             ->first();
 
-
-        // dd($operador->dni);
         $tareo_existe=Tareo::where('codigo_operador',$operador->dni)
                 ->where('linea_id',$request->linea_id)
                 ->where('proceso_id',$request->proceso_id)
@@ -61,29 +52,34 @@ class TareoController extends Controller
                 ->where('fecha',$request->fecha)
                 ->orderBy('id','DESC')
                 ->first();
-        // dd($tareo_existe,$tareo_anterior);
         if ($tareo_anterior!=null) {
-            // dd($tareo_anterior,$request->all());
-            // dd($request->all());
-            if ($tareo_anterior->id==$tareo_existe->id) {
-                return response()->json([
-                    "status" => "warning",
-                    "message" => "Ya fue tareado."
-                ]);
+            if ($tareo_existe!=null) {
+                if ($tareo_anterior->id==$tareo_existe->id) {
+                    return response()->json([
+                        "status" => "WARNING",
+                        "data" => "Ya fue tareado."
+                    ]);
+                }
             }
+            /**
+             * En caso tenga una marca a cerrar, 
+             * se creara un tareo con la Hora ingreso de realizada la operacion
+             */
             $marca_a_cerrar = Marcador::where('tareo_id',$tareo_anterior->id)
                         ->whereNull('salida')
                         ->first();
-            $marca_a_cerrar->salida=Carbon::now();
-            $marca_a_cerrar->save();
-            $marca_creada=new Marcador();
-            $marca_creada->codigo_operador=$operador->dni;
-            $marca_creada->ingreso=Carbon::now();
-            $marca_creada->salida=null;
-            $marca_creada->turno=$request->turno;
-            $marca_creada->cuenta_id=$request->user_id;
-            $marca_creada->fecha_ref=Carbon::now();
-            $marca_creada->save();
+            if ($marca_a_cerrar) {
+                $marca_a_cerrar->salida=Carbon::now();
+                $marca_a_cerrar->save();
+                $marca_creada=new Marcador();
+                $marca_creada->codigo_operador=$operador->dni;
+                $marca_creada->ingreso=Carbon::now();
+                $marca_creada->salida=null;
+                $marca_creada->turno=$request->turno;
+                $marca_creada->cuenta_id=$request->user_id;
+                $marca_creada->fecha_ref=Carbon::now();
+                $marca_creada->save();
+            }
         }        
         
         $tareo=new Tareo();

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Marcador;
+use App\Model\Tareo;
 use App\Model\Operador;
 use App\Model\Planilla;
 use App\Model\Turno;
@@ -122,6 +123,7 @@ class MarcadorController extends Controller
         }
         
         if (is_null($marcador)) {
+            
             $marcador=new Marcador();
             $marcador->codigo_operador=$operador->dni;
             $marcador->ingreso=$fecha_analisis;
@@ -130,6 +132,15 @@ class MarcadorController extends Controller
             $marcador->cuenta_id=$request->user_id;
             $marcador->fecha_ref=$fecha_analisis;
             $marcador->save();
+            $tareo_anterior=Tareo::where('fecha',$fecha_analisis)
+                        ->where('turno_id',$request->turno)
+                        ->where('codigo_operador',$operador->dni)
+                        ->orderBy('id','DESC')
+                        ->first();
+            if ($tareo_anterior!=null) {
+                $marcador->tareo_id=$tareo_anterior->id;
+                $marcador->save();
+            }
         }else{
             if (!is_null($marcador->salida)) {
                 $newMarcador=$marcador;
@@ -141,9 +152,27 @@ class MarcadorController extends Controller
                 $marcador->turno=$request->turno;
                 $marcador->fecha_ref=$newMarcador->fecha_ref;
                 $marcador->save();
+                $tareo_anterior=Tareo::where('fecha',$newMarcador->fecha_ref)
+                        ->where('turno_id',$request->turno)
+                        ->where('codigo_operador',$operador->dni)
+                        ->orderBy('id','DESC')
+                        ->first();
+                if ($tareo_anterior!=null) {
+                    $marcador->tareo_id=$tareo_anterior->id;
+                    $marcador->save();
+                }
             }else{
                 $marcador->salida=$fecha_analisis;
                 $marcador->save();
+                $tareo_anterior=Tareo::where('fecha',$marcador->fecha_ref)
+                        ->where('turno_id',$request->turno)
+                        ->where('codigo_operador',$operador->dni)
+                        ->orderBy('id','DESC')
+                        ->first();
+                if ($tareo_anterior!=null) {
+                    $marcador->tareo_id=$tareo_anterior->id;
+                    $marcador->save();
+                }
             }
             
         }
