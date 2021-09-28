@@ -165,9 +165,11 @@ export default {
             axios.get(url_base+'/linea?all=true')
             .then(response => {
                 this.lineas = response.data;
-                if (this.lineas.length>0) {
-                    this.tareo.linea_id=this.lineas[0].id;
-                }
+                this.lineas.push({
+                    id: '',
+                    nombre: 'Sin Linea'
+                })
+                this.tareo.linea_id='';
             });
         },
         listarProcesos(){

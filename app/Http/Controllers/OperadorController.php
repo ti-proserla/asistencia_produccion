@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Peru\Http\ContextClient;
 use Peru\Jne\{Dni, DniParser};
+use Peru\Jne\DniFactory;
 
 use App\Http\Requests\NuevoOperador;
 use App\Http\Requests\OperadorEditar;
@@ -149,8 +150,18 @@ class OperadorController extends Controller
                 ]); 
             }
         }
-        $cs = new Dni(new ContextClient(), new DniParser());
+
+        $factory = new DniFactory();
+        $cs = $factory->create();
+
         $person = $cs->get($dni);
+        if (!$person) {
+            echo 'Not found';
+            return;
+        }
+
+        // $cs = new Dni(new ContextClient(), new DniParser());
+        // $person = $cs->get($dni);
         if (!$person) {
             return json_encode([
                 "status" => "ERROR",
