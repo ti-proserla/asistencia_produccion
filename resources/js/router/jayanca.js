@@ -152,6 +152,11 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/reporte-marcas-v2', 
+        component: require('../view/Reportes/v2.marcas.vue').default,
+        beforeEnter: auth
+    },
+    { 
         path: '/marcas-noche', 
         component: require('../view/Reportes/marcas-noche.vue').default,
         beforeEnter: auth

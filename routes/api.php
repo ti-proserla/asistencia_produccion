@@ -72,6 +72,7 @@ Route::get('reporte-semana-partida', 'ReporteController@semana_partida');
 Route::get('reporte-pendientes', 'ReporteController@pendientes')->middleware('auth.token');
 Route::get('reporte/pendientes-regularizar', 'ReporteController@pendientesRegularizar');
 Route::get('reporte-marcas', 'ReporteController@marcas');
+Route::get('v2/reporte-marcas', 'ReporteController@marcasV2');
 Route::get('reporte-marcas/{codigo}', 'ReporteController@marcasXCodigo');
 
 Route::post('conteo','ConteoController@nuevo');

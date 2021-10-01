@@ -6,8 +6,8 @@ use App\Model\Operador;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
-use Peru\Http\ContextClient;
-use Peru\Jne\{Dni, DniParser};
+// use Peru\Http\ContextClient;
+// use Peru\Jne\{Dni, DniParser};
 use Peru\Jne\DniFactory;
 
 use App\Http\Requests\NuevoOperador;

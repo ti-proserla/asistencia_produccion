@@ -114,6 +114,12 @@
                 <p>Reporte de Marcas</p>
             </router-link>
         </li>
+        <li v-if="existe('reporte-marcas-v2')">
+            <router-link to="/reporte-marcas-v2">
+                <i class="material-icons">book</i>
+                <p>Reporte de Marcas V2.0</p>
+            </router-link>
+        </li>
         <li v-if="existe('marcas-noche')">
             <router-link to="/marcas-noche">
                 <i class="material-icons">book</i>

@@ -346,6 +346,115 @@ class ReporteController extends Controller
                     ]);
             }
     }
+    public function marcasV2(Request $request){
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        $texto_busqueda=explode(" ",$request->search);
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+
+        /**
+         * Query fundo WHERE
+         */
+        if ($request->fundo_id==null||$request->fundo_id=="null") {
+            $query_fundo="";
+        }else{
+            $fundo_id=$request->fundo_id;
+            $query_fundo="AND marcador.fundo_id='$fundo_id'";
+        }
+        /**
+         * Query turno WHERE
+         */
+        $query_turno="";
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
+            $query_turno="AND turno=".$request->turno;
+        }
+        
+        $periodo=NPeriodo::where(DB::raw("FORMAT(FECHA_INI,'yyyy-MM-dd')"),'<=',$request->fecha)
+                    ->where(DB::raw("FORMAT(FECHA_FIN,'yyyy-MM-dd')"),'>=',$request->fecha)
+                    ->select(DB::raw("PERIODO periodo, SEMANA semana"))
+                    ->where('IDPLANILLA','=','OBR')
+                    ->first();
+        $periodo_s=$periodo->periodo.'-'.$periodo->semana;
+
+        $query="SELECT 	dni,
+                        CONCAT(operador.ape_operador,', ',operador.nom_operador) NombreApellido,
+                        '$periodo_s' periodo,
+                        IFNULL(T.area_id,C.area_id ) codActividad,
+                        IFNULL(T.labor_id,C.labor_id ) codLabor,
+                        IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                        IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
+                        GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
+                        ROUND(SUM(TIMESTAMPDIFF(MINUTE,marcador.ingreso,IF(marcador.salida is null,marcador.ingreso,marcador.salida))/60 ),2) AS total,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=2 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Lunes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=3 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Martes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=4 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Miercoles,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=5 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Jueves,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=6 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Viernes,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=7 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Sabado,
+                        ROUND( SUM( CASE WHEN DAYOFWEEK(fecha_ref)=1 THEN ( IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60) ) ELSE 0 END  ) , 2) as Domingo 
+                FROM	operador 
+                        INNER JOIN marcador on operador.dni = marcador.codigo_operador
+                        LEFT JOIN tareo AS T
+                            on T.id = marcador.tareo_id 
+                        LEFT JOIN labor on labor.id = T.labor_id
+                        LEFT JOIN cargo AS C on C.id=operador.cargo_id
+                where 	fecha_ref = ?  and ingreso is not null 
+                        $query_busqueda 
+                        $query_fundo
+                        $query_turno
+                        and operador.planilla_id = ? 
+                group by dni,T.labor_id 
+                ORDER BY NombreApellido ASC";
+            
+            if ($request->has('excel')) {
+                /**
+                 * Nombre de excel
+                 */
+                $nom_excel="";
+                $turno=$request->turno;
+                $fecha=$request->fecha;
+                $planilla=Planilla::where('id',$request->planilla_id)->first();
+                $nom_planilla=$planilla->nom_planilla;
+                $nom_excel="turno-$turno-dia-$fecha-$nom_planilla.xlsx";
+                $raw_query=DB::select(DB::raw("$query"),[
+                    $request->fecha,$request->planilla_id       
+                ]);
+                if ($request->excel=='nisira') {
+                    return Excel::download(new HorasSemanaTrabajadorExport($raw_query), "Nisira-".$nom_excel);
+                }else{
+                    return Excel::download(new MarcasTurnoExport($raw_query,$fecha),$nom_excel);
+                }
+            }else{
+                /**
+                 * Paginacion
+                 */
+                $per_page=15;
+                $current_page=$request->page;
+                $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"),[
+                        $request->fecha,$request->planilla_id,$request->turno        
+                        ])[0]->conteo;
+                $last_page=(int)ceil($total/$per_page);
+                $offset=($current_page-1)*$per_page;
+    
+                $raw_query=DB::select(DB::raw("$query limit $per_page offset $offset"),[
+                    $request->fecha,$request->planilla_id,$request->turno
+                    ]);
+                return response()->json([
+                        "current_page"  =>  $current_page,
+                        "data"          =>  $raw_query,
+                        "total"         =>  $total,
+                        "last_page"     =>  $last_page
+                    ]);
+            }
+    }
 
     public function marcasPorCodigo(Request $request,$codigo){
         DB::select(DB::raw('select * from users where active = ?'
