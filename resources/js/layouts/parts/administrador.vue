@@ -120,6 +120,12 @@
                 <p>Reporte de Marcas V2.0</p>
             </router-link>
         </li>
+        <li v-if="existe('reporte-semana-partida-v2')">
+            <router-link to="/reporte-semana-partida-v2">
+                <i class="material-icons">book</i>
+                <p>Reporte por Semana Partida V2.0</p>
+            </router-link>
+        </li>
         <li v-if="existe('marcas-noche')">
             <router-link to="/marcas-noche">
                 <i class="material-icons">book</i>

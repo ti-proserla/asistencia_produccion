@@ -141,6 +141,7 @@ var routes =[
         component: require('../view/Reportes/j.semana-partida.vue').default,
         beforeEnter: auth
     },
+    
     { 
         path: '/reporte-pendientes', 
         component: require('../view/Reportes/pendientes.vue').default,
@@ -154,6 +155,11 @@ var routes =[
     { 
         path: '/reporte-marcas-v2', 
         component: require('../view/Reportes/v2.marcas.vue').default,
+        beforeEnter: auth
+    },
+    { 
+        path: '/reporte-semana-partida-v2', 
+        component: require('../view/Reportes/v2.j.semana-partida.vue').default,
         beforeEnter: auth
     },
     { 
