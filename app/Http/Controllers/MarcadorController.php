@@ -18,13 +18,16 @@ use Illuminate\Support\Facades\DB;
 class MarcadorController extends Controller
 {
     public function index(Request $request){
-        $marcas=Marcador::where('codigo_operador',$request->codigo_operador)
-            ->where(DB::raw('DATE(fecha_ref)'),$request->fecha);
+        $marcas=Marcador::leftJoin('tareo','tareo.id','=','marcador.tareo_id')
+            ->join('labor','labor.id','=','tareo.labor_id')
+            ->select('marcador.*','tareo.labor_id','labor.nom_labor')
+            ->where('marcador.codigo_operador',$request->codigo_operador)
+            ->where(DB::raw('DATE(marcador.fecha_ref)'),$request->fecha);
         if ($request->turno!=null) {
-            $marcas=$marcas->where('turno',$request->turno);
+            $marcas=$marcas->where('marcador.turno',$request->turno);
         }
         if ($request->fundo_id!=null) {
-            $marcas=$marcas->where('fundo_id',$request->fundo_id);
+            $marcas=$marcas->where('marcador.fundo_id',$request->fundo_id);
         }
         $marcas=$marcas->get();
         return response()->json($marcas);

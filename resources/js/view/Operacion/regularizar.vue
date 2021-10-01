@@ -46,13 +46,14 @@
     <div class="card">
         <div class="card-body">
             <div class="row">
-                <div class="col-lg-8 offset-lg-2">
+                <div class="col-lg-10 offset-lg-1">
                     <table class="table table-striped">
                         <thead>
                             <tr>
                                 <th>N° Par</th>
                                 <th>Ingreso</th>
                                 <th>Salida</th>
+                                <th>Labor</th>
                                 <th>Editar</th>
                                 <th>Eliminar</th>
                             </tr>
@@ -64,6 +65,7 @@
                                 <td v-else><input type="datetime-local" v-model="marca_edit.ingreso"></td>
                                 <td v-if="marca_edit_index!=index">{{marca.salida}}</td>
                                 <td v-else><input type="datetime-local" v-model="marca_edit.salida"></td>
+                                <td>{{ marca.labor_id }} - {{ marca.nom_labor}}</td>
                                 <td v-if="marca_edit_index!=index">
                                     <button class="btn-link-warning" @click="selectEdit(index)">
                                         <i class="material-icons">edit</i>
@@ -85,7 +87,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="text-center" colspan="5">
+                                <td class="text-center" colspan="6">
                                     <button class="btn btn-sm btn-success" @click="agregar">Agregar Marca</button>
                                 </td>
                             </tr>
