@@ -173,6 +173,11 @@ var routes =[
         beforeEnter: auth
     },
     { 
+        path: '/rango-v2',
+        component: require('../view/Reportes/v2.rango.vue').default,
+        beforeEnter: auth
+    },
+    { 
         path: '/capturador', 
         component: require('../view/capturador.vue').default,
         beforeEnter: auth

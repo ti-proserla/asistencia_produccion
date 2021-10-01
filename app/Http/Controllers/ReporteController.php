@@ -774,6 +774,104 @@ class ReporteController extends Controller
         return response()->json($datos);
     }
 
+    public function rangoV2(Request $request){
+        /**
+         * Genera un array de palabras de busqueda
+         */
+        // dd($request->all());
+        if ($request->search==null||$request->search=="null") {
+            $request->search="";
+        }
+        $texto_busqueda=explode(" ",$request->search);
+        $query_busqueda="";
+        for ($i=0; $i < count($texto_busqueda); $i++) { 
+            $query_busqueda=$query_busqueda." AND CONCAT(dni,' ',nom_operador,' ',ape_operador) like '%".$texto_busqueda[$i]."%'";
+        }
+
+        /**
+         * Query fundo WHERE
+         */
+        if ($request->fundo_id==null||$request->fundo_id=="null") {
+            $query_fundo="";
+        }else{
+            $fundo_id=$request->fundo_id;
+            $query_fundo="AND fundo_id='$fundo_id'";
+        }
+        /**
+         * Query turno WHERE
+         */
+        $query_turno="";
+        if ($request->turno==null||$request->turno=="null") {
+        }else{
+            $query_turno="AND turno=".$request->turno;
+        }
+
+        /**
+         * YYYY-MM
+         */
+        // $fecha=$request->year.'-'.str_pad($request->week, 2, "0", STR_PAD_LEFT);
+        $fecha_inicio=$request->fecha_inicio;
+        $fecha_fin=$request->fecha_fin;
+
+        $query = "SELECT	O.dni,
+                        CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
+                        IFNULL(T.area_id,C.area_id ) codActividad,
+                        IFNULL(T.labor_id,C.labor_id ) codLabor,
+                        IFNULL(T.proceso_id,C.proceso_id) codProceso,
+                        IFNULL(labor.nom_labor,C.nom_cargo) nom_labor,
+                        L.nombre linea,
+                        M.marcas,
+                        M.h_trabajadas,
+                        M.fecha_ref,
+                        M.tareo_id,
+                        ROUND( (	
+                                        (TIME_TO_SEC(s) - TIME_TO_SEC(i))
+                                        + TIME_TO_SEC( IF(i < '22:00', IF( '06:00' < i , i , '06:00' ) , '22:00' ) ) 
+                                        - TIME_TO_SEC( IF(s < '22:00', IF( '06:00' < s , s , '06:00' ) , '22:00' ) )
+                                        + IF(s<i, TIME_TO_SEC('24:00') - (TIME_TO_SEC('22:00')-TIME_TO_SEC('06:00')),0)
+                        )/3600 , 2) h_nocturnas
+                FROM (
+                SELECT 		codigo_operador,
+                                        fecha_ref,
+                                        tareo_id,
+                                    GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
+                                    DATE_FORMAT(MIN(ingreso),'%H:%i') i,
+                                    DATE_FORMAT(MAX(salida),'%H:%i') s,
+                                    ROUND( SUM(IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60)) , 2) h_Trabajadas
+                        FROM 		marcador 
+                        WHERE 		fecha_ref >= ? AND
+                                    fecha_ref <= ?
+                                    $query_fundo
+                                    $query_turno
+                        GROUP BY 	codigo_operador,fecha_ref
+                ) M 
+                INNER JOIN  operador O on O.dni=M.codigo_operador
+                LEFT JOIN tareo T ON T.id=M.tareo_id
+                LEFT JOIN labor on labor.id = T.labor_id
+                LEFT JOIN cargo AS C on C.id=O.cargo_id
+                LEFT JOIN linea AS L on L.id=T.linea_id
+                WHERE       O.planilla_id=?
+                            $query_busqueda
+                ";
+        if ($request->has('excel')) {
+            $raw_query=DB::select(DB::raw("$query"),[
+                $fecha_inicio,
+                $fecha_fin,
+                $request->planilla_id
+            ]);
+            $planilla=Planilla::where('id',$request->planilla_id)->first();
+            $nom_planilla=$planilla->nom_planilla;
+            return Excel::download(new HorasNocturnasExport($raw_query), "rpt-rango-$fecha_inicio-a-$fecha_fin-$nom_planilla.xlsx");
+        }else{
+            $datos=$this->paginate($query,[
+                $fecha_inicio,
+                $fecha_fin,
+                $request->planilla_id
+            ],15,$request->page);
+        }
+        return response()->json($datos);
+    }
+
     public function paginate($query,$param,$per_page = 10,$page = 1){
         $total=DB::select(DB::raw("SELECT count(*) conteo FROM ($query) AL"),$param)[0]->conteo;
         $last_page=(int)ceil($total/$per_page);

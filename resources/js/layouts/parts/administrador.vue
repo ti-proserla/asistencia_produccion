@@ -126,6 +126,12 @@
                 <p>Reporte por Semana Partida V2.0</p>
             </router-link>
         </li>
+        <li v-if="existe('rango-v2')">
+            <router-link to="/rango-v2">
+                <i class="material-icons">book</i>
+                <p>RPT Rango de Fechas V.2</p>
+            </router-link>
+        </li>
         <li v-if="existe('marcas-noche')">
             <router-link to="/marcas-noche">
                 <i class="material-icons">book</i>
