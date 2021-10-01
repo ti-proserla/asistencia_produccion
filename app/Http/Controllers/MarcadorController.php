@@ -19,7 +19,7 @@ class MarcadorController extends Controller
 {
     public function index(Request $request){
         $marcas=Marcador::leftJoin('tareo','tareo.id','=','marcador.tareo_id')
-            ->join('labor','labor.id','=','tareo.labor_id')
+            ->leftJoin('labor','labor.id','=','tareo.labor_id')
             ->select('marcador.*','tareo.labor_id','labor.nom_labor')
             ->where('marcador.codigo_operador',$request->codigo_operador)
             ->where(DB::raw('DATE(marcador.fecha_ref)'),$request->fecha);
