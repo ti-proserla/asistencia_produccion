@@ -77,7 +77,7 @@ class TareoController extends Controller
                 $marca_creada->salida=null;
                 $marca_creada->turno=$request->turno;
                 $marca_creada->cuenta_id=$request->user_id;
-                $marca_creada->fecha_ref=Carbon::now();
+                $marca_creada->fecha_ref=$marca_a_cerrar->fecha_ref;
                 $marca_creada->save();
             }
         }        
