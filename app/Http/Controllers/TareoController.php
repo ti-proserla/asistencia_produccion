@@ -31,10 +31,6 @@ class TareoController extends Controller
             $operador->save();
         }
         $fecha_hoy=Carbon::parse($request->fecha)->format('Y-m-d');
-        $marcador=Marcador::where('codigo_operador',$operador->dni)
-            ->where(DB::raw("DATE(ingreso)"),$fecha_hoy)
-            ->where("turno",$request->turno)
-            ->first();
         
         $tareo_anterior=Tareo::where('fecha',$request->fecha)
                             ->where('turno_id',$request->turno)
@@ -94,6 +90,7 @@ class TareoController extends Controller
         $tareo->turno_id=$request->turno;
         $tareo->save();
 
+        //Marcas anteriores, regulariza si se hizo un tareo post marcas
         $marcas=Marcador::where('codigo_operador',$operador->dni)
             ->where('fecha_ref',$request->fecha)
             ->where("turno",$request->turno)
