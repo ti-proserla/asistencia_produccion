@@ -59,7 +59,7 @@ class OperadorController extends Controller
         $operador->ape_operador=strtoupper($request->ape_operador);
         $operador->planilla_id=($request->planilla_id==0&&$request->planilla_id==null) ? 1 : $request->planilla_id;
         $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
-        $operador->edad=$request->edad;
+        $operador->edad=($request->edad==0)? null: $request->edad;
         $operador->procedencia_id=$request->procedencia_id;
         $operador->save();
         if($request->file('foto')!=null){
@@ -93,7 +93,7 @@ class OperadorController extends Controller
         $operador->ape_operador=strtoupper(utf8_decode($request->ape_operador));
         $operador->planilla_id=($request->planilla_id==0&&$request->planilla_id==null) ? 1 : $request->planilla_id;
         $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
-        $operador->edad=$request->edad;
+        $operador->edad=($request->edad==0)? null: $request->edad;
         $operador->procedencia_id=$request->procedencia_id;
         $operador->save();
         
