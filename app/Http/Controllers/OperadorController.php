@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model\Operador;
+use App\Model\Procedencia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
@@ -58,6 +59,8 @@ class OperadorController extends Controller
         $operador->ape_operador=strtoupper($request->ape_operador);
         $operador->planilla_id=($request->planilla_id==0&&$request->planilla_id==null) ? 1 : $request->planilla_id;
         $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
+        $operador->edad=$request->edad;
+        $operador->procedencia_id=$request->procedencia_id;
         $operador->save();
         if($request->file('foto')!=null){
             $foto = $request->file('foto');
@@ -90,6 +93,8 @@ class OperadorController extends Controller
         $operador->ape_operador=strtoupper(utf8_decode($request->ape_operador));
         $operador->planilla_id=($request->planilla_id==0&&$request->planilla_id==null) ? 1 : $request->planilla_id;
         $operador->cargo_id=($request->cargo_id==0) ? null : $request->cargo_id;
+        $operador->edad=$request->edad;
+        $operador->procedencia_id=$request->procedencia_id;
         $operador->save();
         
         if($request->file('foto')!=null){
@@ -174,5 +179,48 @@ class OperadorController extends Controller
                 "status" => "OK",
                 "data"   =>$person
             ]);
+    }
+
+    public function masivo(Request $request){
+        // dd($request->datos);
+        DB::beginTransaction();
+        $actualizados=0;
+        foreach ($request->datos as $key => $item) {
+            if (!isset($item["DNI"])||!isset($item["EDAD"])||!isset($item["PROCEDENCIA"])) {
+                
+                // DB::rollback();
+                // return response()->json([
+                //     "status"=> "ERROR",
+                //     "data"  => "Existen datos vacios."
+                // ]);
+            }else {
+                
+                $dni=$item["DNI"];
+                $edad=$item["EDAD"];
+                $nom_procedencia=$item["PROCEDENCIA"];
+                
+                $operador=Operador::where('dni',$dni)->first();
+    
+                if ($operador!=null) {
+                    $procedencia=Procedencia::where('nom_procedencia',strtoupper($nom_procedencia))->first();
+                    if ($procedencia==null) {
+                        $procedencia=new Procedencia();
+                        $procedencia->nom_procedencia=strtoupper($nom_procedencia);
+                        $procedencia->save();
+                    }
+                    $operador->edad=$edad;
+                    $operador->procedencia_id=$procedencia->id;
+                    $operador->save();
+                    $actualizados++;
+                }else{
+                }
+            }
+
+        }
+        DB::commit();
+        return response()->json([
+            "status"    => "OK",
+            "message"   => "Carga Masiva: $actualizados Actualizados.",
+        ]);
     }
 }

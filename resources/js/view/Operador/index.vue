@@ -20,6 +20,12 @@
                                 <option value="">Sin Cargo</option>
                                 <option v-for="cargo in cargos" :value="cargo.id">{{ cargo.nom_cargo }}</option>
                             </Select>
+                            <Input title="Edad:" v-model="operador.edad" :error="errors.edad" type="number"></Input>
+                            <Select title="Procedencia:" v-model="operador.procedencia_id" :error="errors.procedencia_id">
+                                <option value=""></option>
+                                <option v-for="procedencia in procedencias" :value="procedencia.id">{{ procedencia.nom_procedencia }}</option>
+                            </Select>
+
                             <div class="croppa-center">
                                 <croppa 
                                     @new-image-drawn="girarIfxe()" 
@@ -49,9 +55,12 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-2">
+                                <masivo></masivo>
+                            </div>
+                            <div class="col-2">
                                 <label for="" class="my-3">Buscar: </label>
                             </div>
-                            <div class="col-8">
+                            <div class="col-6">
                                 <input @keyup="listar(1)" class="form-control" v-model="search"></input>
                             </div>
                         </div>
@@ -134,6 +143,11 @@
                                 <option value=""></option>
                                 <option v-for="cargo in cargos" :value="cargo.id">{{ cargo.nom_cargo }}</option>
                             </Select>
+                            <Input title="Edad:" v-model="operador_editar.edad" :error="errors_editar.edad" type="number"></Input>
+                            <Select title="Procedencia:" v-model="operador_editar.procedencia_id" :error="errors_editar.procedencia_id">
+                                <option value=""></option>
+                                <option v-for="procedencia in procedencias" :value="procedencia.id">{{ procedencia.nom_procedencia }}</option>
+                            </Select>
                             <div class="croppa-center my-3">
                                 
                                 <croppa @new-image-drawn="girarIfxe2()" placeholder="Seleccionar imagen" data-exif-orientation="6" :initial-image="url_imagen"  v-model="myCroppa2" :width="croppaConfig.horizontal" :height="croppaConfig.vertical" :quality="croppaConfig.quality" :prevent-white-space="true">
@@ -190,18 +204,21 @@
 import VueBarcode from 'vue-barcode';
 import Input from '../../dragon-desing/dg-input.vue'
 import Select from '../../dragon-desing/dg-select.vue'
+import Masivo from './Masivo.vue';
 
 export default {
     components:{
         Input,
         Select,
-        'barcode': VueBarcode 
+        'barcode': VueBarcode,
+        Masivo 
     },
     data() {
         return {
             search: null,
             operador: this.iniOperador(), //datos de logeo
             operador_editar: this.iniOperador(),
+            procedencias: [],
             planillas:  [],
             cargos:     [],
             errors:     {}, //datos de errores
@@ -274,6 +291,7 @@ export default {
     mounted() {
         this.listar();
         this.listarPlanilla();
+        this.listarProcedencias();
         this.listarCargo();
     },
     methods: {
@@ -330,6 +348,12 @@ export default {
                 this.operador.planilla_id=this.planillas[0].id;
             })
         },
+        listarProcedencias(){
+            axios.get(url_base+'/procedencia?all=true')
+            .then(response => {
+                this.procedencias = response.data;
+            })
+        },
         listarCargo(){
             axios.get(url_base+'/cargo?all=true')
             .then(response => {
@@ -343,7 +367,9 @@ export default {
                 dni: null,
                 nom_operador: null,
                 ape_operador:null,
-                planilla_id: null
+                planilla_id: null,
+                procedencia_id: '',
+                edad: 0,
             }
         },
         verFotoCheck(id){

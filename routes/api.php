@@ -26,8 +26,10 @@ Route::resource('cuenta', 'CuentaController');
 
 Route::post('login','CuentaController@login')->name('cuenta.login');
 Route::get('operador/unitarios', 'OperadorController@unitarios');
+Route::post('operador/masivo', 'OperadorController@masivo');
 Route::resource('operador', 'OperadorController');
 Route::post('operador/{id}/estado','OperadorController@estado')->name('operador.estado');
+Route::resource('procedencia', 'ProcedenciaController');
 Route::resource('planilla', 'PlanillaController');
 Route::post('planilla/{id}/estado','PlanillaController@estado')->name('planilla.estado');
 Route::resource('cargo', 'CargoController');

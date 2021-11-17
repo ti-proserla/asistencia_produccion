@@ -13,3 +13,4 @@ yarn-error.log
 /public/js/app.js
 /public/mix-manifest.json
 /empresa.json
+package-lock.json

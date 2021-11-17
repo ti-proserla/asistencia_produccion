@@ -153,6 +153,7 @@ var router = (mix_empresa=="PROSERLA") ? require('./router/proserla.js').default
 import Dashboard from './App.vue';
 Vue.component('empty',require("./layouts/empty.vue").default);
 Vue.component('panel',require("./layouts/panel.vue").default);
+Vue.component("masivo", require("./view/Operador/Masivo.vue").default);
 
 const app = new Vue({
     el: '#app',
