@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98ed896ad8d55beb69c8514c8502fa44",
+    "content-hash": "3dcec97e7f31a1ee66116ea76867c5af",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -631,16 +631,16 @@
         },
         {
             "name": "giansalex/peru-consult",
-            "version": "v4.5.0-BETA.2",
+            "version": "v4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/giansalex/peru-consult.git",
-                "reference": "9ca909b40723a4dd663cd0526f610499cfaf2eb5"
+                "reference": "1e95abbaa6a797d854d72b5143f89167da44b353"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/giansalex/peru-consult/zipball/9ca909b40723a4dd663cd0526f610499cfaf2eb5",
-                "reference": "9ca909b40723a4dd663cd0526f610499cfaf2eb5",
+                "url": "https://api.github.com/repos/giansalex/peru-consult/zipball/1e95abbaa6a797d854d72b5143f89167da44b353",
+                "reference": "1e95abbaa6a797d854d72b5143f89167da44b353",
                 "shasum": ""
             },
             "require": {
@@ -688,7 +688,7 @@
             ],
             "support": {
                 "issues": "https://github.com/giansalex/peru-consult/issues",
-                "source": "https://github.com/giansalex/peru-consult/tree/v4.5.0-BETA.2"
+                "source": "https://github.com/giansalex/peru-consult/tree/v4.5.0"
             },
             "funding": [
                 {
@@ -700,7 +700,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2021-09-30T02:59:45+00:00"
+            "time": "2021-11-09T02:46:21+00:00"
         },
         {
             "name": "guzzlehttp/psr7",

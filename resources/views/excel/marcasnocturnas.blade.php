@@ -3,6 +3,7 @@
         <tr>
             <th>DNI</th>
             <th>Apellidos y Nombres</th>
+            <th>Procedencia</th>
             <th>Fecha</th>
             <th>Cod.Actividad</th>
             <th>Cod.Labor</th>
@@ -24,6 +25,7 @@
             <tr>
                 <td>{{ $operador->dni }}</td>
                 <td>{{ $operador->NombreApellido }}</td>
+                <td>{{ $operador->nom_procedencia }}</td>
                 <td>{{ $operador->fecha_ref }}</td>
                 <td>{{ $operador->codActividad }}</td>
                 <td>{{ $operador->codLabor }}</td>

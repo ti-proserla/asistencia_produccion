@@ -682,7 +682,6 @@ class ReporteController extends Controller
         /**
          * Genera un array de palabras de busqueda
          */
-        // dd($request->all());
         if ($request->search==null||$request->search=="null") {
             $request->search="";
         }
@@ -815,6 +814,7 @@ class ReporteController extends Controller
 
         $query = "SELECT	O.dni,
                         CONCAT(O.nom_operador,' ',O.ape_operador) NombreApellido,
+                        P.nom_procedencia,
                         IFNULL(T.area_id,C.area_id ) codActividad,
                         IFNULL(T.labor_id,C.labor_id ) codLabor,
                         IFNULL(T.proceso_id,C.proceso_id) codProceso,
@@ -850,6 +850,7 @@ class ReporteController extends Controller
                 LEFT JOIN labor on labor.id = T.labor_id
                 LEFT JOIN cargo AS C on C.id=O.cargo_id
                 LEFT JOIN linea AS L on L.id=T.linea_id
+                LEFT JOIN procedencia AS P on P.id=O.procedencia_id
                 WHERE       O.planilla_id=?
                             $query_busqueda
                 ";
@@ -859,6 +860,7 @@ class ReporteController extends Controller
                 $fecha_fin,
                 $request->planilla_id
             ]);
+            // dd($raw_query);
             $planilla=Planilla::where('id',$request->planilla_id)->first();
             $nom_planilla=$planilla->nom_planilla;
             return Excel::download(new HorasNocturnasExport($raw_query), "rpt-rango-$fecha_inicio-a-$fecha_fin-$nom_planilla.xlsx");

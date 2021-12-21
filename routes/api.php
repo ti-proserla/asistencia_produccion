@@ -135,15 +135,15 @@ Route::post('sincronizar/in/marcas',"SincronizarController@marcas");
 
 Route::get('jne-masivo', function () {
     
-
-    $operadores=Operador::where('nom_operador','Nuevo')->get();
+    $operadores=Operador::where('nom_operador','Nuevo')->limit(30)->get();
+    // dd($operadores);
     foreach ($operadores as $key => $operador) {
         $cs = new Dni(new ContextClient(), new DniParser());
         $person = $cs->get($operador->dni);
         if (!$person) {
             
         }else{
-
+            // dd("hola");
             $operador->nom_operador=strtoupper(utf8_decode($person->nombres));        
             $operador->ape_operador=strtoupper(utf8_decode($person->apellidoPaterno." ".$person->apellidoMaterno));
             $operador->save();
