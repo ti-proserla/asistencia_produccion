@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Exports\HorasSemanaTrabajadorExport;
 use App\Exports\HorasNocturnasExport;
+use App\Exports\HorasRangoExport;
 use App\Exports\MarcasTurnoExport;
 use App\Model\NPeriodo;
 use Maatwebsite\Excel\Facades\Excel;
@@ -863,7 +864,7 @@ class ReporteController extends Controller
             // dd($raw_query);
             $planilla=Planilla::where('id',$request->planilla_id)->first();
             $nom_planilla=$planilla->nom_planilla;
-            return Excel::download(new HorasNocturnasExport($raw_query), "rpt-rango-$fecha_inicio-a-$fecha_fin-$nom_planilla.xlsx");
+            return Excel::download(new HorasRangoExport($raw_query), "rpt-rango-$fecha_inicio-a-$fecha_fin-$nom_planilla.xlsx");
         }else{
             $datos=$this->paginate($query,[
                 $fecha_inicio,
