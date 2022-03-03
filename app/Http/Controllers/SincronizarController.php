@@ -74,6 +74,7 @@ class SincronizarController extends Controller
         $consumidores_fundos=Consumidor::whereIn('IDCONSUMIDOR',$parametros)
                                 ->selectRaw('RTRIM(IDCONSUMIDOR) idconsumidor,RTRIM(DESCRIPCION) nom_fundo')
                                 ->get();
+        
         // dd($parametros,$consumidores_fundos);
         // foreach ($consumidores_fundos as $key => $value) {
         //     try {
@@ -99,6 +100,7 @@ class SincronizarController extends Controller
                 $proceso->fundo_id=$value->fundo_id;
                 $proceso->save();        
                 echo "Guardado<br>";
+                // dd($proceso,$value);
             } catch (\Exception $ex) {
                 echo "Existente<br>";
             }

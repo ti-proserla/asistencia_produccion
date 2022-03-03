@@ -13,6 +13,7 @@ use Peru\Jne\DniFactory;
 
 use App\Http\Requests\NuevoOperador;
 use App\Http\Requests\OperadorEditar;
+use Carbon\Carbon;
 
 class OperadorController extends Controller
 {
@@ -186,7 +187,13 @@ class OperadorController extends Controller
         DB::beginTransaction();
         $actualizados=0;
         foreach ($request->datos as $key => $item) {
-            if (!isset($item["DNI"])||!isset($item["EDAD"])||!isset($item["PROCEDENCIA"])) {
+            // dd($item);
+            if (
+                !isset($item["DNI"])||
+                // !isset($item["EDAD"])||
+                // !isset($item["PROCEDENCIA"])||
+                !isset($item["FECHA_INGRESO"])
+                ) {
                 
                 // DB::rollback();
                 // return response()->json([
@@ -196,20 +203,22 @@ class OperadorController extends Controller
             }else {
                 
                 $dni=$item["DNI"];
-                $edad=$item["EDAD"];
-                $nom_procedencia=$item["PROCEDENCIA"];
-                
+                // $edad=$item["EDAD"];
+                // $nom_procedencia=$item["PROCEDENCIA"];
+                $fecha_ingreso=$item["FECHA_INGRESO"];
+                // dd($fecha_ingreso);
                 $operador=Operador::where('dni',$dni)->first();
     
                 if ($operador!=null) {
-                    $procedencia=Procedencia::where('nom_procedencia',strtoupper($nom_procedencia))->first();
-                    if ($procedencia==null) {
-                        $procedencia=new Procedencia();
-                        $procedencia->nom_procedencia=strtoupper($nom_procedencia);
-                        $procedencia->save();
-                    }
-                    $operador->edad=$edad;
-                    $operador->procedencia_id=$procedencia->id;
+                    // $procedencia=Procedencia::where('nom_procedencia',strtoupper($nom_procedencia))->first();
+                    // if ($procedencia==null) {
+                    //     $procedencia=new Procedencia();
+                    //     $procedencia->nom_procedencia=strtoupper($nom_procedencia);
+                    //     $procedencia->save();
+                    // }
+                    // $operador->edad=$edad;
+                    // $operador->procedencia_id=$procedencia->id;
+                    $operador->fecha_ingreso=Carbon::parse($fecha_ingreso);
                     $operador->save();
                     $actualizados++;
                 }else{
