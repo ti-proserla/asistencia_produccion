@@ -102,10 +102,10 @@
 </template>
 <style>
     .fotocheck2 .franja-vertical{
-        background-color: #ff5416;
+        background-color: #00b050;
     }
     .franja-horizontal{
-        background-color: #532122;
+        background-color: #1f497d;
     }
 </style>
 <script>
