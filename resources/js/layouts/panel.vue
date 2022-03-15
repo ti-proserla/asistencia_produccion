@@ -23,8 +23,7 @@
             <slot/>
         </div>
         <div class="footer">
-            {{ (empresa=='PROSERLA') ? 'Proserla @ Area de TI' : 'Jayanca Fruits & Proserla @ Area de TI'}}
-            
+            Proserla @ Area de TI
         </div>
     </div>
 </template>
