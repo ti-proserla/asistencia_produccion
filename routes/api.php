@@ -102,11 +102,6 @@ Route::get('rpt/horas_nocturnas','ReporteController@horas_nocturnas');
 Route::get('rpt/rango','ReporteController@rango');
 Route::get('v2/rpt/rango','ReporteController@rangoV2');
 
-// use Carbon\Carbon;
-Route::get('/producto', function () {
-    // dd(Carbon::now()->addMinutes(45)->format('H:i'));
-});
-
 /**
  * Para trabajadores
  */
@@ -149,43 +144,4 @@ Route::get('jne-masivo', function () {
             $operador->save();
         }
     }
-
-    // for ($i=0; $i < count($fotos); $i++) { 
-    //     $foto=($fotos)[$i];
-    //     $codigo=$foto["codigo"];
-    //     if (strlen($codigo)==8) {
-    //         $cs = new Dni(new ContextClient(), new DniParser());
-    //         $person = $cs->get($codigo);
-    //         $operador=Operador::where('dni',$codigo)->first();
-
-    //         if (!$person) {
-    //             if ($operador==null) {
-    //                 $operador=new Operador();
-    //                 $operador->dni=$codigo;
-    //                 $operador->nom_operador="Nuevo";        
-    //                 $operador->ape_operador="Trabajador";
-    //                 $operador->planilla_id=1;
-    //                 $operador->cargo_id=null;
-    //                 $operador->save();
-    //             }
-    //         }else {
-    //             // dd($person);
-    //             if ($operador==null) {
-    //                 $operador=new Operador();
-    //                 $operador->dni=$codigo;
-    //                 $operador->nom_operador=strtoupper(utf8_decode($person->nombres));        
-    //                 $operador->ape_operador=strtoupper(utf8_decode($person->apellidoPaterno." ".$person->apellidoMaterno));
-    //                 $operador->planilla_id=1;
-    //                 $operador->cargo_id=null;
-    //                 $operador->save();
-    //             }
-
-    //         }
-    //         $fileName = $codigo.".jpeg";
-    //         \Image::make($foto["foto"])
-    //             ->save(public_path('/storage/operador/'.$fileName));
-    //         $operador->foto=$fileName;
-    //         $operador->save();
-    //     }
-    // }
 });
