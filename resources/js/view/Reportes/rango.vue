@@ -142,7 +142,7 @@ export default {
     },
     computed: {
         url(){
-            return url_base+'/rpt/rango?search='+this.search+'fecha_inicio='+this.consulta.fecha_inicio+'&fecha_fin='+this.consulta.fecha_fin+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
+            return url_base+'/rpt/rango?search='+this.search+'&fecha_inicio='+this.consulta.fecha_inicio+'&fecha_fin='+this.consulta.fecha_fin+'&planilla_id='+this.consulta.planilla_id+'&turno='+this.consulta.turno+'&excel';
         }
     },
     mounted() {
