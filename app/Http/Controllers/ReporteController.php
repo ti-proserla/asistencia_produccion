@@ -727,18 +727,32 @@ class ReporteController extends Controller
                             M.marcas,
                             M.h_trabajadas,
                             M.fecha_ref,
-                            ROUND( (	
-                                    (TIME_TO_SEC(s) - TIME_TO_SEC(i))
-                                    + TIME_TO_SEC( IF(i < '22:00', IF( '06:00' < i , i , '06:00' ) , '22:00' ) ) 
-                                    - TIME_TO_SEC( IF(s < '22:00', IF( '06:00' < s , s , '06:00' ) , '22:00' ) )
-                                    + IF(s<i, TIME_TO_SEC('24:00') - (TIME_TO_SEC('22:00')-TIME_TO_SEC('06:00')),0)
-                            )/3600 , 2) h_nocturnas
-                FROM (
+                            M.h_nocturnas
+                    FROM (
                         SELECT 		codigo_operador,
                                     fecha_ref,
                                     GROUP_CONCAT(CONCAT_WS('@',marcador.ingreso,marcador.salida) ORDER BY marcador.ingreso ASC SEPARATOR '@') AS marcas, 
-                                    DATE_FORMAT(MIN(ingreso),'%H:%i') i,
-                                    DATE_FORMAT(MAX(salida),'%H:%i') s,
+                                    ROUND( 
+                                        SUM(
+                                            IF(
+                                                ingreso <= DATE_ADD(marcador.fecha_ref, interval 22 HOUR) AND salida>= DATE_ADD(marcador.fecha_ref, interval 30 HOUR), 
+                                                8,
+                                                IF(
+                                                    DATE_ADD(marcador.fecha_ref, interval 22 HOUR) BETWEEN ingreso AND salida,
+                                                    TIMESTAMPDIFF(MINUTE,DATE_ADD(marcador.fecha_ref, interval 22 HOUR),salida)/60,
+                                                    IF(
+                                                        DATE_ADD(marcador.fecha_ref, interval 30 HOUR) BETWEEN ingreso AND salida,
+                                                        TIMESTAMPDIFF(MINUTE,ingreso,DATE_ADD(marcador.fecha_ref, interval 30 HOUR))/60,
+                                                        IF(
+                                                            ingreso BETWEEN DATE_ADD(marcador.fecha_ref, interval 22 HOUR) AND DATE_ADD(marcador.fecha_ref, interval 30 HOUR),
+                                                            TIMESTAMPDIFF(MINUTE,ingreso,salida)/60,
+                                                            0
+                                                        )
+                                                    )
+                                                )
+                                            )
+                                        )	
+                                    , 2) h_nocturnas,
                                     ROUND( SUM(IF(salida is null,0,TIMESTAMPDIFF(MINUTE,ingreso,salida)/60)) , 2) h_Trabajadas
                         FROM 		marcador 
                         WHERE 		fecha_ref >= ? AND
@@ -746,13 +760,13 @@ class ReporteController extends Controller
                                     $query_fundo
                                     $query_turno
                         GROUP BY 	codigo_operador,fecha_ref
-                ) M 
-                INNER JOIN  operador O on O.dni=M.codigo_operador
-                LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
-                LEFT JOIN labor on labor.id = T.labor_id
-                LEFT JOIN cargo AS C on C.id=O.cargo_id
-                LEFT JOIN linea AS L on L.id=T.linea_id
-                WHERE       O.planilla_id=?
+                    ) M 
+                    INNER JOIN  operador O on O.dni=M.codigo_operador
+                    LEFT JOIN (SELECT * FROM tareo GROUP BY codigo_operador,fecha) AS T on T.codigo_operador = M.codigo_operador and T.fecha = fecha_ref 
+                    LEFT JOIN labor on labor.id = T.labor_id
+                    LEFT JOIN cargo AS C on C.id=O.cargo_id
+                    LEFT JOIN linea AS L on L.id=T.linea_id
+                    WHERE       O.planilla_id=?
                             $query_busqueda
                 ";
         if ($request->has('excel')) {
