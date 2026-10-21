@@ -312,11 +312,17 @@ class MarcadorController extends Controller
         //     }
             
         // }
-        return response()->json([
-            "status"=> "OK",
-            "data"  => $operador->nom_operador." ".$operador->ape_operador." (".$request->codigo_barras.")",
-            "foto"  => $operador->foto
-        ]);
+        $marcas_registradas = Marcador::where('codigo_operador', $operador->dni)
+    ->whereDate('ingreso', Carbon::now()->toDateString())
+    ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'));
+
+return response()->json([
+    "status" => "OK",
+    "data" => $operador->nom_operador . " " . $operador->ape_operador,
+    "dni" => $operador->dni,
+    "marcas_registradas" => $marcas_registradas,
+    "foto" => $operador->foto
+]);
         
     }
 
