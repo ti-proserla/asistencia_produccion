@@ -114,7 +114,7 @@ export default {
     }
     this.foto = resp.foto;
     this.dni = resp.dni;
-    this.marcas_registradas = resp.marcas_registradas ?? 0;
+   this.marcas_registradas = resp.marcas_registradas != null ? resp.marcas_registradas : 0;
     break;
                             case "ERROR":
                                 this.alert={
