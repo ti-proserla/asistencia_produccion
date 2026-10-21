@@ -40,7 +40,7 @@
 <div class="text-center">
     <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
 
-    <div v-if="alert && alert.status === 'primary'" class="mt-3">
+    <div v-if="dni" class="mt-3">
         <p><strong>DNI:</strong> {{ dni }}</p>
         <h5 class="text-success">
             Marcas registradas hoy: {{ marcas_registradas }}
