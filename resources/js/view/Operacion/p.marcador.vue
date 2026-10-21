@@ -31,8 +31,17 @@
                         {{ alert.data }}
                     </div>
                     <div class="text-center">
-                        <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
-                    </div>
+    <img v-if="foto!=null"
+         style="max-width: 40%;height: auto;"
+         :src="url(foto)" alt="">
+
+    <div v-if="alert && alert.status === 'primary'" class="mt-3">
+        <p><strong>DNI:</strong> {{ dni }}</p>
+        <h5 class="text-success">
+            Marcas registradas hoy: {{ marcas_registradas }}
+        </h5>
+    </div>
+</div>
                 </div>
             </div>
         </div>
@@ -55,6 +64,8 @@ export default {
             respuesta: null,
             alert: null,
             foto: null,
+            dni: null,
+            marcas_registradas: 0,
         }
     },
     computed: {
@@ -105,6 +116,8 @@ export default {
                                         data: resp.data
                                     }
                                     this.foto=resp.foto;
+                                    this.dni = resp.dni;
+                                    this.marcas_registradas = resp.marcas_registradas;
                                     break;
                                 case "ERROR":
                                     this.alert={
