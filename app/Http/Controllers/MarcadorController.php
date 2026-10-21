@@ -495,11 +495,18 @@ class MarcadorController extends Controller
             }
             
         }
-        return response()->json([
-            "status"=> "OK",
-            "data"  => $operador->nom_operador." ".$operador->ape_operador,
-            "foto"  => $operador->foto
-        ]);
+        $marcas_registradas = Marcador::where('codigo_operador', $operador->dni)
+    ->where('fundo_id', $request->fundo)
+    ->whereDate('ingreso', Carbon::now()->toDateString())
+    ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'));
+
+return response()->json([
+    "status" => "OK",
+    "data" => $operador->nom_operador . " " . $operador->ape_operador,
+    "dni" => $operador->dni,
+    "marcas_registradas" => $marcas_registradas,
+    "foto" => $operador->foto
+]);
     }
     
     public function update(Request $request,$id){
