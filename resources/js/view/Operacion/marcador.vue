@@ -36,9 +36,18 @@
                     <div v-if="alert!=null" :class="'alert alert-'+alert.status" role="alert">
                         {{ alert.data }}
                     </div>
-                    <div class="text-center">
-                        <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
-                    </div>
+                   
+<div class="text-center">
+    <img v-if="foto!=null" style="max-width: 40%;height: auto;" :src="url(foto)" alt="">
+
+    <div v-if="alert && alert.status === 'primary'" class="mt-3">
+        <p><strong>DNI:</strong> {{ dni }}</p>
+        <h5 class="text-success">
+            Marcas registradas hoy: {{ marcas_registradas }}
+        </h5>
+    </div>
+</div>
+
                 </div>
             </div>
         </div>
@@ -54,16 +63,17 @@ export default {
         Input,
         DigitalClock
     },
-    data() {
-        return {
-            turnos:[],
-            codigo_barras: null,
-            respuesta: null,
-            // turno: localStorage.getItem('turno') || null,
-            alert: null,
-            foto: null,
-        }
-    },
+ data() {
+    return {
+        turnos: [],
+        codigo_barras: null,
+        respuesta: null,
+        alert: null,
+        foto: null,
+        dni: null,
+        marcas_registradas: 0,
+    }
+},
     computed: {
         ...mapState(['turno']),
     },
@@ -97,13 +107,15 @@ export default {
                             case "VALIDATION":
                                 this.errors_editar=resp.data;
                                 break;
-                            case "OK":
-                                this.alert={
-                                    status: 'primary',
-                                    data: resp.data
-                                }
-                                this.foto=resp.foto;
-                                break;
+                           case "OK":
+    this.alert = {
+        status: 'primary',
+        data: resp.data
+    }
+    this.foto = resp.foto;
+    this.dni = resp.dni;
+    this.marcas_registradas = resp.marcas_registradas ?? 0;
+    break;
                             case "ERROR":
                                 this.alert={
                                     status: 'warning',
