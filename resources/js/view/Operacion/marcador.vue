@@ -116,11 +116,15 @@ export default {
     this.dni = resp.dni;
    this.marcas_registradas = resp.marcas_registradas != null ? resp.marcas_registradas : 0;
     break;
-                           case "ERROR":
+case "ERROR":
     this.alert = {
         status: 'warning',
         data: resp.data
     };
+
+    if (resp.dni != null) {
+        this.dni = resp.dni;
+    }
 
     if (resp.marcas_registradas != null) {
         this.marcas_registradas = resp.marcas_registradas;
