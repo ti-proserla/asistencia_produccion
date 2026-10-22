@@ -119,9 +119,10 @@ class MarcadorController extends Controller
                     $min=Carbon::parse($marcador->salida)->addMinutes($tiempo_entre_marcas+1)->format('H:i');
                 }
                 return response()->json([
-                        "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)",
-                     "marcas_registradas" => Marcador::where('codigo_operador', $operador->dni)
+    "status" => "ERROR",
+    "data" => "Usted marco recientemente. (Proxima marca $min)",
+    "dni" => $operador->dni,
+    "marcas_registradas" => Marcador::where('codigo_operador', $operador->dni)
         ->whereDate('ingreso', Carbon::now()->toDateString())
         ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'))
 ]);
