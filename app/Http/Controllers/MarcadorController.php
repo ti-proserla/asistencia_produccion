@@ -120,8 +120,11 @@ class MarcadorController extends Controller
                 }
                 return response()->json([
                         "status"    =>  "ERROR",
-                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)"
-                    ]);
+                        "data"      =>  "Usted marco recientemente. (Proxima marca $min)",
+                     "marcas_registradas" => Marcador::where('codigo_operador', $operador->dni)
+        ->whereDate('ingreso', Carbon::now()->toDateString())
+        ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'))
+]);
             }
         }
         
