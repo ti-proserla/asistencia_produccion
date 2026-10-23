@@ -123,7 +123,7 @@ class MarcadorController extends Controller
     "data" => "Usted marco recientemente. (Proxima marca $min)",
     "dni" => $operador->dni,
     "marcas_registradas" => Marcador::where('codigo_operador', $operador->dni)
-        ->whereDate('ingreso', Carbon::now()->toDateString())
+        ->whereDate('fecha_ref', Carbon::now()->toDateString())
         ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'))
 ]);
             }
@@ -317,7 +317,7 @@ class MarcadorController extends Controller
             
         // }
         $marcas_registradas = Marcador::where('codigo_operador', $operador->dni)
-    ->whereDate('ingreso', Carbon::now()->toDateString())
+    ->whereDate('fecha_ref', Carbon::now()->toDateString())
     ->sum(DB::raw('1 + CASE WHEN salida IS NOT NULL THEN 1 ELSE 0 END'));
 
 return response()->json([
